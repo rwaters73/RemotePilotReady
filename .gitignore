@@ -1,0 +1,12 @@
+# FAA reference PDFs stay local and are never committed (D-028).
+# Official source URLs are recorded in the references index.
+references/*.pdf
+
+# Secrets and local environment files
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+
+# Claude Code personal settings
+.claude/settings.local.json
