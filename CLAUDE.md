@@ -31,6 +31,8 @@ Each document has one job. Do not record the same thing in two places.
 | `docs/LESSONS_LEARNED.md` | What went wrong or surprised us, and what to do differently. |
 | `docs/SESSION_STARTER.md` | Rewritten at the end of every session. |
 | `docs/Communication_Preferences.md` | Rick's working and communication style. Shared across his projects. |
+| `docs/QUESTION_FORMAT.md` | The question file format. Read it before writing, reviewing, or loading questions. |
+| `docs/plans/` | Approved plans. The builder reads the plan named in its task. |
 
 ## Agents
 
@@ -62,7 +64,19 @@ Site copy, UI text, emails, and the privacy policy follow the public-text writin
 
 ## Commands
 
-To be added once the app is scaffolded (install, dev server, tests, type checks, deploy preview).
+Run from the repo root in Git Bash (`cd /c/Projects/RemotePilotReady`). Needs Node 22.18 or later.
+
+| Command | Does |
+| --- | --- |
+| `npm ci` | Install dependencies from `package-lock.json` |
+| `npm run qbank:validate` | Validate every file in `questions/` against `docs/QUESTION_FORMAT.md` |
+| `npm run qbank:hash -- questions/RPR-NNNN.md` | Print a question's content_hash |
+| `npm run qbank:test` | Run the question bank tool tests |
+| `npm run qbank:typecheck` | Type-check the question bank tools |
+| `npm run qbank:acs:check` | Re-extract the ACS codes from `references/uas_acs.pdf` and compare with `data/acs-10b-knowledge.json` |
+| `npm run qbank:refs:check` | Compare each file in `references/` with its checksum in `data/references.json` |
+
+App commands (dev server, deploy preview) are added when the app is scaffolded (B-115).
 
 ## Sessions
 

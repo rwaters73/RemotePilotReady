@@ -23,3 +23,11 @@ Each entry: date, what happened, and what to do differently.
 
 - Scaling the ACS percentage ranges down to short exams produced ranges with no whole-number count in them. Check that a scaled rule still has valid integer answers before adopting it.
 - Docs copied from another project (the agents, `Communication_Preferences.md`) carried that project's specifics with them. Review any copied file for leftovers before agents rely on it.
+- Git Bash treats backslashes as escapes: `cd C:\Projects\RemotePilotReady` became `C:ProjectsRemotePilotReady` and failed. Give Rick Git Bash paths as `/c/Projects/RemotePilotReady`.
+- A `<placeholder>` in a shell command is read as a redirect, so it fails with a confusing error. Give literal commands, or say exactly what to replace and show a filled-in example.
+- `pdftotext -layout` pairs ACS codes with the wrong descriptions; `-raw` pairs them correctly. One code (UA.I.B.K24) follows a form feed at a page break, so a line-anchored match misses it. Count the extracted codes against an independent extraction before trusting them.
+- Check which documents the ACS actually cites for each task before choosing source documents. Part 107 alone left Remote ID (Task I.F, Part 89 only) with no regulation to key to.
+- Searching for "AC 107-2" mostly finds the 2016 original. The current revision is AC 107-2A, posted on faa.gov; no mail request needed.
+- An amendment list written in one pass contained a rule ("Rick clearing held sends it to draft") that contradicted another ("approved content is never edited"). The builder caught it. Before handing off amendments, check each new rule against the others.
+- Each Claude Code agent starts fresh and does not see the previous agent's output. Save the approved plan to a file in the repo (`docs/plans/`) and point the next agent to it.
+- The tester could not render PDF pages on Windows (no pdftoppm). A Claude app session can render pages in its own workspace and check them visually; use that for "compare against the printed page" steps.

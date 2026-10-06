@@ -1,6 +1,6 @@
 # Remote Pilot Ready: Project Vision
 
-Status: Draft v0.10 (2026-10-06)
+Status: Draft v0.11 (2026-10-06)
 Owner: Rick, Wisecrum Associates LLC
 Domains: remotepilotready.com, remotepilotready.space (Cloudflare Registrar)
 
@@ -91,17 +91,17 @@ Pending decisions (see `BACKLOG.md`): whether to show each missed question's exp
 
 ## Content rules
 
-- The question bank is original. Sources are FAA publications only: 14 CFR Part 107, the Remote Pilot ACS, the Remote Pilot Study Guide (FAA-G-8082-22), the Pilot's Handbook of Aeronautical Knowledge, the AIM, the FAA Testing Supplement (FAA-CT-8080-2H), and FAA-published sample questions.
+- The question bank is original. Sources are FAA publications only: 14 CFR Parts 107, 89 (Remote ID), and 48 (registration), AC 107-2A, the Remote Pilot ACS, the Remote Pilot Study Guide (FAA-G-8082-22), the Pilot's Handbook of Aeronautical Knowledge, the AIM, the FAA Testing Supplement (FAA-CT-8080-2H), and FAA-published sample questions.
 - No questions copied or adapted from commercial prep providers.
-- The question bank lives as files in the repo, one file per question, with its media alongside. The database is loaded from these files.
+- The question bank lives as files in the repo, one file per question, in the format defined in `docs/QUESTION_FORMAT.md`. Testing Supplement figures and legends are shared images in `figures/`, referenced from each question (D-044). The database is loaded from these files.
 - Public launch requires at least 300 reviewer-approved questions. A smaller bank is acceptable while Rick uses the site for his own study.
 - When the site tells users to consult an FAA document, it links to the official FAA source. The site never hosts FAA reference documents for download. Figures extracted from the Testing Supplement for use in questions are the exception.
-- Every question stores: ACS area and task code, source document and edition, the exact source passage or figure supporting the answer, and a short explanation.
+- Every question stores: its ACS knowledge-element code (the area comes from the code), its sources (document, edition, location, and the exact passage as printed), any figures or legends it uses, three options with one keyed answer, a short explanation, and a review block. Area I questions cite at least one 14 CFR source (D-047).
 - Drafting: Claude writes questions from the source text.
-- Review: a separate reviewer agent, without access to the drafting rationale, verifies that the cited passage supports the keyed answer and that no distractor is also defensible. Questions that fail or are ambiguous are held back, not published.
+- Review: a separate reviewer agent, without access to the drafting rationale, verifies that the cited passage supports the keyed answer and that no distractor is also defensible. Questions that fail or are ambiguous are held back, not published. Approved questions are never edited; a fix means retiring the question and writing a new one (D-051).
 - Live feedback: "Report this question" submissions go into a review queue.
 - Beta exit condition: Rick passes the Part 107 exam, then reviews all flagged and reported questions.
-- Maintenance: when the FAA revises the ACS or the Testing Supplement, questions tagged to the old edition are re-checked.
+- Maintenance: when the FAA revises any reference document, questions citing the old edition are re-checked. The validator flags them by comparing each source's edition with `data/references.json` (D-053).
 
 ## Technical decisions
 
@@ -112,7 +112,9 @@ Pending decisions (see `BACKLOG.md`): whether to show each missed question's exp
 | Domains | Cloudflare Registrar | At-cost renewals; DNS, hosting, and registration in one account |
 | Database | Neon Postgres, Free plan | Scales to zero and wakes automatically on the next query; no manual reactivation as with Supabase Free |
 | Auth | Neon Auth (managed Better Auth) | Included in Neon Free up to 60,000 MAU; avoids building auth |
-| Testing Supplement figures | Rasterized from the PDF at ~300 dpi, one image per figure, stored as site assets | Lets questions display the actual figure |
+| Testing Supplement figures | Figures and legends rasterized from the PDF at ~300 dpi, one image each, stored in `figures/` with an index | Lets questions display the actual figure and legend |
+| Question bank tools | TypeScript scripts run by Node 22.18+ (`npm run qbank:*`): validator, hash, ACS extraction, reference checksum check | Usable before the app exists (D-058) |
+| Exam answers | Radio buttons; no free-text answers | D-060 |
 
 Testing Supplement: FAA-CT-8080-2H (2018, effective June 11, 2018, 113 pages), stored at `references/sport_rec_private_akts.pdf`. As of 2026-10-01, the FAA's testing supplements page lists it as the current edition for Remote Pilot (UAG). Its front matter carries no copyright notice, and as a work of the U.S. government it is not subject to copyright (17 U.S.C. 105), so its figures can be published. Recheck the FAA page for a newer edition before launch.
 
@@ -120,25 +122,15 @@ Testing Supplement: FAA-CT-8080-2H (2018, effective June 11, 2018, 113 pages), s
 
 - `docs/`: project documents (see Project documents below).
 - `images/`: branding (logo, favicons). Originals are kept as delivered.
-- `references/`: FAA source documents used to write and check questions. Read-only inputs, never edited, and never committed to git (`references/*.pdf` is in `.gitignore`). Each document's official source URL is recorded so the file can be downloaded again. Files keep the names the FAA gives them; the table below maps each document to its file.
+- `questions/`: the question bank, one file per question (`docs/QUESTION_FORMAT.md`).
+- `figures/`: Testing Supplement figures and legends extracted for questions, with `index.json`.
+- `data/`: `references.json` (the reference document index) and `acs-10b-knowledge.json` (the 176 ACS knowledge codes).
+- `scripts/qbank/`: the question bank validator and tools.
+- `references/`: FAA source documents used to write and check questions. Read-only inputs, never edited, and never committed to git (`references/*.pdf` is in `.gitignore`). Files keep the names the FAA gives them.
 
-| Document | Edition | File | Official source |
-| --- | --- | --- | --- |
-| 14 CFR Part 107, Small Unmanned Aircraft Systems | eCFR, current as of Sept. 30, 2026 | `references/14 CFR Part 107 -  9-30-2026.pdf` | https://www.ecfr.gov/current/title-14/chapter-I/subchapter-F/part-107 (text of the regulation, not a PDF) |
-| Remote Pilot sUAS Airman Certification Standards (FAA-S-ACS-10B) | April 2021, effective April 6, 2021 | `references/uas_acs.pdf` | https://www.faa.gov/training_testing/testing/acs/uas_acs.pdf |
-| Airman Knowledge Testing Supplement (FAA-CT-8080-2H) | 2018, effective June 11, 2018 | `references/sport_rec_private_akts.pdf` | https://www.faa.gov/sites/faa.gov/files/training_testing/testing/supplements/sport_rec_private_akts.pdf |
-| Remote Pilot sUAS Study Guide (FAA-G-8082-22) | August 2016 | `references/remote_pilot_study_guide.pdf` | https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/remote_pilot_study_guide.pdf |
+The single index of reference documents is `data/references.json` (D-056): for each document, its key, kind, title, document number, edition, official URL, local file name, and SHA-256 checksum of the copy questions were written against. `npm run qbank:refs:check` compares the local files to those checksums. It currently lists nine documents: 14 CFR Parts 107, 89, and 48; FAA-S-ACS-10B; FAA-CT-8080-2H; FAA-G-8082-22; FAA-H-8083-25C; the AIM; and AC 107-2A.
 
-SHA-256 checksums of the local copies, used to tell when a downloaded file differs from the one questions were written against:
-
-| File | SHA-256 |
-| --- | --- |
-| `14 CFR Part 107 -  9-30-2026.pdf` | `b1b93795f43c39b8ae47283d347b1d709bfb70ccb719b6a65529da6f9174fc5e` |
-| `uas_acs.pdf` | `9ee24463b40f023a3140d0c8a4d14ab295ede7a869fbacb7b7cd5ceb4caef431` |
-| `sport_rec_private_akts.pdf` | `738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd` |
-| `remote_pilot_study_guide.pdf` | `55d0e7772ecd16dc201f21b0286f9d7777f67e894a97a9b074fa27464903e05f` |
-
-The eCFR is the FAA's continuously updated text of the regulation. The Part 107 PDF is a dated snapshot of it; when the eCFR changes, download a new snapshot and recheck affected questions.
+The eCFR is the FAA's continuously updated text of the regulations. Each CFR PDF is a dated snapshot of it; when the eCFR changes, download a new snapshot and recheck affected questions.
 
 The Study Guide predates the 2021 Part 107 amendments (operations over people, night operations, recurrent training) and the Remote ID rule. Where it conflicts with the current 14 CFR Part 107, the regulation governs, and questions must not be keyed to outdated Study Guide text.
 
@@ -175,3 +167,5 @@ All project documents live in `docs/`. Each has one job, so nothing is tracked i
 | `PROGRESS.md` | Current state of the project and a dated log of each session. |
 | `LESSONS_LEARNED.md` | Project-specific lessons: what went wrong or surprised us, and what to do differently. |
 | `SESSION_STARTER.md` | Rewritten at the end of every session. The next session reads it first. |
+| `QUESTION_FORMAT.md` | The question file format, enforced by the validator. |
+| `plans/` | Approved plans handed to the builder, kept as the record of what was approved (D-059). |

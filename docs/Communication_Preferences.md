@@ -42,6 +42,8 @@
 - Before treating a subagent's "this is already done" or "no changes needed" claim as fact, get the actual raw `git diff`/`git status`/`git log` output (piped through `cat`, not through a pager) rather than the subagent's prose summary of it.
 - Before Claude states that a documentation problem, mismatch, drift, or duplication exists in a project file, Claude must have directly viewed that file's actual current content in the session — not inferred it from memory, a prior session's summary, or a pasted diff without clear added/removed markers. If unverified, say so explicitly as an open question, not a finding.
 - When Claude sees the need for a subagent to do something, go ahead and write the subagent prompt without asking if Rick wants it
+- One thing at a time: while a Claude Code agent is running a task Rick relayed, the Claude app session does no other work in parallel. Wait for Rick to bring back the result.
+- Rick uses Git Bash on Windows. Give paths in Git Bash form (`/c/Projects/RemotePilotReady`) and commands with no placeholders to fill in.
 - Instructions, Memory, and Project Files are always-on background context, not new input. Never narrate discovering, noting, or reacting to them as if they were just provided in the current message
 
 ---
