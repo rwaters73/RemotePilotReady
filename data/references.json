@@ -1,0 +1,94 @@
+{
+  "documents": [
+    {
+      "key": "cfr-107",
+      "kind": "cfr",
+      "title": "14 CFR Part 107, Small Unmanned Aircraft Systems",
+      "document_number": "14 CFR Part 107",
+      "edition": "eCFR, current as of Sept. 30, 2026",
+      "official_url": "https://www.ecfr.gov/current/title-14/chapter-I/subchapter-F/part-107",
+      "local_file": "14 CFR Part 107 -  9-30-2026.pdf",
+      "sha256": "b1b93795f43c39b8ae47283d347b1d709bfb70ccb719b6a65529da6f9174fc5e"
+    },
+    {
+      "key": "cfr-89",
+      "kind": "cfr",
+      "title": "14 CFR Part 89, Remote Identification of Unmanned Aircraft",
+      "document_number": "14 CFR Part 89",
+      "edition": "eCFR, current as of Oct. 2, 2026",
+      "official_url": "https://www.ecfr.gov/current/title-14/chapter-I/subchapter-F/part-89",
+      "local_file": "14 CFR Part 89 (up to date as of 10-02-2026).pdf",
+      "sha256": "f7b42d23bd794ff4957a277764b2d7f86418b56ad141465c7d503d0f876c07da"
+    },
+    {
+      "key": "cfr-48",
+      "kind": "cfr",
+      "title": "14 CFR Part 48, Registration and Marking Requirements for Small Unmanned Aircraft",
+      "document_number": "14 CFR Part 48",
+      "edition": "eCFR, current as of Oct. 2, 2026",
+      "official_url": "https://www.ecfr.gov/current/title-14/chapter-I/subchapter-C/part-48",
+      "local_file": "14 CFR Part 48 (up to date as of 10-02-2026).pdf",
+      "sha256": "3f5e63ac00288b58b2a981bbc0e949a4fe01ff569cb77f806ec5207ff81f84b3"
+    },
+    {
+      "key": "acs-10b",
+      "kind": "faa",
+      "title": "Remote Pilot sUAS Airman Certification Standards (FAA-S-ACS-10B)",
+      "document_number": "FAA-S-ACS-10B",
+      "edition": "April 2021, effective April 6, 2021",
+      "official_url": "https://www.faa.gov/training_testing/testing/acs/uas_acs.pdf",
+      "local_file": "uas_acs.pdf",
+      "sha256": "9ee24463b40f023a3140d0c8a4d14ab295ede7a869fbacb7b7cd5ceb4caef431"
+    },
+    {
+      "key": "akts-2h",
+      "kind": "faa",
+      "title": "Airman Knowledge Testing Supplement (FAA-CT-8080-2H)",
+      "document_number": "FAA-CT-8080-2H",
+      "edition": "2018, effective June 11, 2018",
+      "official_url": "https://www.faa.gov/sites/faa.gov/files/training_testing/testing/supplements/sport_rec_private_akts.pdf",
+      "local_file": "sport_rec_private_akts.pdf",
+      "sha256": "738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd"
+    },
+    {
+      "key": "study-guide-22",
+      "kind": "faa",
+      "title": "Remote Pilot sUAS Study Guide (FAA-G-8082-22)",
+      "document_number": "FAA-G-8082-22",
+      "edition": "August 2016",
+      "official_url": "https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/remote_pilot_study_guide.pdf",
+      "local_file": "remote_pilot_study_guide.pdf",
+      "sha256": "55d0e7772ecd16dc201f21b0286f9d7777f67e894a97a9b074fa27464903e05f"
+    },
+    {
+      "key": "phak-25c",
+      "kind": "faa",
+      "title": "Pilot's Handbook of Aeronautical Knowledge",
+      "document_number": "FAA-H-8083-25C",
+      "edition": "2023",
+      "official_url": "https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/phak",
+      "local_file": "faa-h-8083-25c.pdf",
+      "sha256": "247929cace0ab56b376e683eba540cc4c8f39f199ab35414e8b604e24f395cb7"
+    },
+    {
+      "key": "aim",
+      "kind": "faa",
+      "title": "Aeronautical Information Manual",
+      "document_number": null,
+      "edition": "Basic 2/20/25 with Changes 1-3, Change 3 effective 7/9/26",
+      "official_url": "https://www.faa.gov/air_traffic/publications/atpubs/aim_html/",
+      "local_file": "AIM_Basic_w_Chg_1_and_2_and_3_dtd_7-9-26_FINAL.pdf",
+      "sha256": "8b11e7a168e1ef9ea16853b8ab7b3353f01490dffb51f2736a0a72e6278f8ff5"
+    },
+    {
+      "key": "ac-107-2a",
+      "kind": "faa",
+      "title": "Small Unmanned Aircraft System (Small UAS)",
+      "document_number": "AC 107-2A",
+      "edition": "2/1/21",
+      "official_url": "https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentID/1038977",
+      "local_file": "AC_107-2A.pdf",
+      "sha256": "9787897fb128e26a737b2d429cca57b83a81cfe2f0019a852f72111ee0b559d5"
+    }
+  ]
+}

@@ -1,0 +1,1085 @@
+{
+  "doc": "acs-10b",
+  "source_sha256": "9ee24463b40f023a3140d0c8a4d14ab295ede7a869fbacb7b7cd5ceb4caef431",
+  "extracted_with": "pdftotext -raw -enc UTF-8 (Xpdf 4.00)",
+  "areas": [
+    {
+      "numeral": "I",
+      "title": "Regulations"
+    },
+    {
+      "numeral": "II",
+      "title": "Airspace & Requirements"
+    },
+    {
+      "numeral": "III",
+      "title": "Weather"
+    },
+    {
+      "numeral": "IV",
+      "title": "Loading & Performance"
+    },
+    {
+      "numeral": "V",
+      "title": "Operations"
+    }
+  ],
+  "elements": [
+    {
+      "code": "UA.I.A.K1",
+      "area": "I",
+      "task": "A",
+      "description": "Applicability of 14 CFR part 107 to small unmanned aircraft operations."
+    },
+    {
+      "code": "UA.I.A.K2",
+      "area": "I",
+      "task": "A",
+      "description": "Definitions used in 14 CFR part 107."
+    },
+    {
+      "code": "UA.I.A.K3",
+      "area": "I",
+      "task": "A",
+      "description": "The ramifications of falsification, reproduction, or alteration of a certificate, rating, authorization, record, or report."
+    },
+    {
+      "code": "UA.I.A.K4",
+      "area": "I",
+      "task": "A",
+      "description": "Accident reporting."
+    },
+    {
+      "code": "UA.I.A.K5",
+      "area": "I",
+      "task": "A",
+      "description": "Inspection, testing, and demonstration of compliance."
+    },
+    {
+      "code": "UA.I.A.K6",
+      "area": "I",
+      "task": "A",
+      "description": "Multiple category sUAS."
+    },
+    {
+      "code": "UA.I.A.K7",
+      "area": "I",
+      "task": "A",
+      "description": "Record retention."
+    },
+    {
+      "code": "UA.I.A.K8",
+      "area": "I",
+      "task": "A",
+      "description": "Previously manufactured sUAS."
+    },
+    {
+      "code": "UA.I.B.K1",
+      "area": "I",
+      "task": "B",
+      "description": "Registration requirements for sUAS."
+    },
+    {
+      "code": "UA.I.B.K2",
+      "area": "I",
+      "task": "B",
+      "description": "Requirement for the sUAS to be in a condition for safe operation."
+    },
+    {
+      "code": "UA.I.B.K3",
+      "area": "I",
+      "task": "B",
+      "description": "Medical condition(s) that would interfere with safe operation of an sUAS."
+    },
+    {
+      "code": "UA.I.B.K4",
+      "area": "I",
+      "task": "B",
+      "description": "Responsibility and authority of the remote PIC."
+    },
+    {
+      "code": "UA.I.B.K4a",
+      "area": "I",
+      "task": "B",
+      "description": "a. Allowing a person other than the remote PIC to manipulate the flight controls"
+    },
+    {
+      "code": "UA.I.B.K5",
+      "area": "I",
+      "task": "B",
+      "description": "Regulatory deviation and reporting requirements for in-flight emergencies."
+    },
+    {
+      "code": "UA.I.B.K6",
+      "area": "I",
+      "task": "B",
+      "description": "Hazardous operations."
+    },
+    {
+      "code": "UA.I.B.K6a",
+      "area": "I",
+      "task": "B",
+      "description": "a. Careless or reckless"
+    },
+    {
+      "code": "UA.I.B.K6b",
+      "area": "I",
+      "task": "B",
+      "description": "b. Dropping an object"
+    },
+    {
+      "code": "UA.I.B.K7",
+      "area": "I",
+      "task": "B",
+      "description": "Operating from a moving aircraft or moving land- or water-borne vehicle."
+    },
+    {
+      "code": "UA.I.B.K8",
+      "area": "I",
+      "task": "B",
+      "description": "Alcohol or drugs and the provisions on prohibition of use."
+    },
+    {
+      "code": "UA.I.B.K9",
+      "area": "I",
+      "task": "B",
+      "description": "Daylight operations."
+    },
+    {
+      "code": "UA.I.B.K10",
+      "area": "I",
+      "task": "B",
+      "description": "Visual line of sight (VLOS) aircraft operations."
+    },
+    {
+      "code": "UA.I.B.K11",
+      "area": "I",
+      "task": "B",
+      "description": "Requirements when a visual observer is used."
+    },
+    {
+      "code": "UA.I.B.K12",
+      "area": "I",
+      "task": "B",
+      "description": "Prohibition of operating multiple sUAS."
+    },
+    {
+      "code": "UA.I.B.K13",
+      "area": "I",
+      "task": "B",
+      "description": "Prohibition of carrying hazardous material."
+    },
+    {
+      "code": "UA.I.B.K14",
+      "area": "I",
+      "task": "B",
+      "description": "Staying safely away from other aircraft and right-of-way rules."
+    },
+    {
+      "code": "UA.I.B.K14a",
+      "area": "I",
+      "task": "B",
+      "description": "a. See and avoid other aircraft and other potential hazard considerations of the remote PIC"
+    },
+    {
+      "code": "UA.I.B.K15",
+      "area": "I",
+      "task": "B",
+      "description": "Operations over human beings (Refer to Area of Operation I, Task E)."
+    },
+    {
+      "code": "UA.I.B.K16",
+      "area": "I",
+      "task": "B",
+      "description": "Prior authorization required for operation in certain airspace."
+    },
+    {
+      "code": "UA.I.B.K17",
+      "area": "I",
+      "task": "B",
+      "description": "Operating in the vicinity of airports."
+    },
+    {
+      "code": "UA.I.B.K18",
+      "area": "I",
+      "task": "B",
+      "description": "Operating in prohibited or restricted areas."
+    },
+    {
+      "code": "UA.I.B.K19",
+      "area": "I",
+      "task": "B",
+      "description": "Flight restrictions in the proximity of certain areas designated by notice to airmen (NOTAM)."
+    },
+    {
+      "code": "UA.I.B.K20",
+      "area": "I",
+      "task": "B",
+      "description": "Preflight familiarization, inspection, and actions for aircraft operations."
+    },
+    {
+      "code": "UA.I.B.K21",
+      "area": "I",
+      "task": "B",
+      "description": "Operating limitations for sUAS."
+    },
+    {
+      "code": "UA.I.B.K21a",
+      "area": "I",
+      "task": "B",
+      "description": "a. Maximum groundspeed"
+    },
+    {
+      "code": "UA.I.B.K21b",
+      "area": "I",
+      "task": "B",
+      "description": "b. Altitude limitations"
+    },
+    {
+      "code": "UA.I.B.K21c",
+      "area": "I",
+      "task": "B",
+      "description": "c. Minimum visibility"
+    },
+    {
+      "code": "UA.I.B.K21d",
+      "area": "I",
+      "task": "B",
+      "description": "d. Cloud clearance requirements"
+    },
+    {
+      "code": "UA.I.B.K22",
+      "area": "I",
+      "task": "B",
+      "description": "Requirements for a Remote Pilot Certificate with an sUAS rating."
+    },
+    {
+      "code": "UA.I.B.K23",
+      "area": "I",
+      "task": "B",
+      "description": "Automated operations."
+    },
+    {
+      "code": "UA.I.B.K24",
+      "area": "I",
+      "task": "B",
+      "description": "Civil twilight operations."
+    },
+    {
+      "code": "UA.I.B.K25",
+      "area": "I",
+      "task": "B",
+      "description": "Night operations."
+    },
+    {
+      "code": "UA.I.B.K26",
+      "area": "I",
+      "task": "B",
+      "description": "Transportation of property."
+    },
+    {
+      "code": "UA.I.B.K27",
+      "area": "I",
+      "task": "B",
+      "description": "ATC transponder equipment prohibition."
+    },
+    {
+      "code": "UA.I.B.K28",
+      "area": "I",
+      "task": "B",
+      "description": "ADS-B Out prohibition."
+    },
+    {
+      "code": "UA.I.C.K1",
+      "area": "I",
+      "task": "C",
+      "description": "Offenses involving alcohol or drugs."
+    },
+    {
+      "code": "UA.I.C.K2",
+      "area": "I",
+      "task": "C",
+      "description": "The consequences of refusing to submit to a drug or alcohol test or to furnish test results."
+    },
+    {
+      "code": "UA.I.C.K3",
+      "area": "I",
+      "task": "C",
+      "description": "The eligibility requirements for a Remote Pilot Certificate with an sUAS rating."
+    },
+    {
+      "code": "UA.I.C.K4",
+      "area": "I",
+      "task": "C",
+      "description": "Aeronautical knowledge recency."
+    },
+    {
+      "code": "UA.I.D.K1",
+      "area": "I",
+      "task": "D",
+      "description": "Waiver policy and requirements."
+    },
+    {
+      "code": "UA.I.E.K1",
+      "area": "I",
+      "task": "E",
+      "description": "Remote pilot responsibilities when operating over people."
+    },
+    {
+      "code": "UA.I.E.K2",
+      "area": "I",
+      "task": "E",
+      "description": "Operations over people at night."
+    },
+    {
+      "code": "UA.I.E.K3",
+      "area": "I",
+      "task": "E",
+      "description": "Category of operations, including:"
+    },
+    {
+      "code": "UA.I.E.K3a",
+      "area": "I",
+      "task": "E",
+      "description": "a. Category 1"
+    },
+    {
+      "code": "UA.I.E.K3b",
+      "area": "I",
+      "task": "E",
+      "description": "b. Category 2"
+    },
+    {
+      "code": "UA.I.E.K3c",
+      "area": "I",
+      "task": "E",
+      "description": "c. Category 3"
+    },
+    {
+      "code": "UA.I.E.K3d",
+      "area": "I",
+      "task": "E",
+      "description": "d. Category 4"
+    },
+    {
+      "code": "UA.I.E.K4",
+      "area": "I",
+      "task": "E",
+      "description": "Selecting an operational area."
+    },
+    {
+      "code": "UA.I.E.K5",
+      "area": "I",
+      "task": "E",
+      "description": "Minimum distances from a person."
+    },
+    {
+      "code": "UA.I.E.K6",
+      "area": "I",
+      "task": "E",
+      "description": "Operations over moving vehicles."
+    },
+    {
+      "code": "UA.I.E.K7",
+      "area": "I",
+      "task": "E",
+      "description": "Modifications to an sUAS."
+    },
+    {
+      "code": "UA.I.E.K8",
+      "area": "I",
+      "task": "E",
+      "description": "Closed and restricted access sites."
+    },
+    {
+      "code": "UA.I.E.K9",
+      "area": "I",
+      "task": "E",
+      "description": "Remote Pilot operating instructions."
+    },
+    {
+      "code": "UA.I.E.K10",
+      "area": "I",
+      "task": "E",
+      "description": "Required components and Category declaration."
+    },
+    {
+      "code": "UA.I.E.K11",
+      "area": "I",
+      "task": "E",
+      "description": "Optional components."
+    },
+    {
+      "code": "UA.I.E.K12",
+      "area": "I",
+      "task": "E",
+      "description": "Applicant produced, designed, or modified sUAS for operations over people."
+    },
+    {
+      "code": "UA.I.E.K13",
+      "area": "I",
+      "task": "E",
+      "description": "Declaration of Compliance (DoC)."
+    },
+    {
+      "code": "UA.I.E.K14",
+      "area": "I",
+      "task": "E",
+      "description": "Maintenance of an sUAS that is eligible for operations over people."
+    },
+    {
+      "code": "UA.I.E.K15",
+      "area": "I",
+      "task": "E",
+      "description": "Means of Compliance (MoC)."
+    },
+    {
+      "code": "UA.I.E.K16",
+      "area": "I",
+      "task": "E",
+      "description": "Impact kinetic energy."
+    },
+    {
+      "code": "UA.I.E.K17",
+      "area": "I",
+      "task": "E",
+      "description": "Exposed rotating parts."
+    },
+    {
+      "code": "UA.I.F.K1",
+      "area": "I",
+      "task": "F",
+      "description": "Standard remote identification."
+    },
+    {
+      "code": "UA.I.F.K2",
+      "area": "I",
+      "task": "F",
+      "description": "Alternative remote identification."
+    },
+    {
+      "code": "UA.I.F.K3",
+      "area": "I",
+      "task": "F",
+      "description": "Operations for aeronautical research."
+    },
+    {
+      "code": "UA.I.F.K4",
+      "area": "I",
+      "task": "F",
+      "description": "ADS-B Out."
+    },
+    {
+      "code": "UA.I.F.K5",
+      "area": "I",
+      "task": "F",
+      "description": "Confirmation of identification."
+    },
+    {
+      "code": "UA.I.F.K6",
+      "area": "I",
+      "task": "F",
+      "description": "Minimum message elements broadcast for remote identification."
+    },
+    {
+      "code": "UA.I.F.K7",
+      "area": "I",
+      "task": "F",
+      "description": "Product labeling."
+    },
+    {
+      "code": "UA.II.A.K1",
+      "area": "II",
+      "task": "A",
+      "description": "General airspace:"
+    },
+    {
+      "code": "UA.II.A.K1a",
+      "area": "II",
+      "task": "A",
+      "description": "a. Class B controlled airspace"
+    },
+    {
+      "code": "UA.II.A.K1b",
+      "area": "II",
+      "task": "A",
+      "description": "b. Class C controlled airspace"
+    },
+    {
+      "code": "UA.II.A.K1c",
+      "area": "II",
+      "task": "A",
+      "description": "c. Class D controlled airspace"
+    },
+    {
+      "code": "UA.II.A.K1d",
+      "area": "II",
+      "task": "A",
+      "description": "d. Class E controlled airspace"
+    },
+    {
+      "code": "UA.II.A.K1e",
+      "area": "II",
+      "task": "A",
+      "description": "e. Class G uncontrolled airspace"
+    },
+    {
+      "code": "UA.II.A.K2",
+      "area": "II",
+      "task": "A",
+      "description": "Special-use airspace, such as prohibited, restricted, warning areas, military operation areas, alert areas, and controlled firing areas."
+    },
+    {
+      "code": "UA.II.A.K3",
+      "area": "II",
+      "task": "A",
+      "description": "Other airspace areas, such as Airport Advisory Services, Military Training Routes (MTRs), Temporary Flight Restrictions (TFRs), Parachute Jump Operations, Terminal Radar Service Areas (TRSAs), National Security Areas (NSA) and Visual Flight Rules (VFR) routes."
+    },
+    {
+      "code": "UA.II.A.K4",
+      "area": "II",
+      "task": "A",
+      "description": "Air Traffic Control (ATC) and the NAS."
+    },
+    {
+      "code": "UA.II.B.K1",
+      "area": "II",
+      "task": "B",
+      "description": "Basic weather minimums."
+    },
+    {
+      "code": "UA.II.B.K2",
+      "area": "II",
+      "task": "B",
+      "description": "ATC authorizations and related operating limitations."
+    },
+    {
+      "code": "UA.II.B.K3",
+      "area": "II",
+      "task": "B",
+      "description": "Operations near airports."
+    },
+    {
+      "code": "UA.II.B.K4",
+      "area": "II",
+      "task": "B",
+      "description": "Potential flight hazards."
+    },
+    {
+      "code": "UA.II.B.K4a",
+      "area": "II",
+      "task": "B",
+      "description": "a. Common aircraft accident causal factors"
+    },
+    {
+      "code": "UA.II.B.K4b",
+      "area": "II",
+      "task": "B",
+      "description": "b. Avoid flight beneath unmanned balloons"
+    },
+    {
+      "code": "UA.II.B.K4c",
+      "area": "II",
+      "task": "B",
+      "description": "c. Emergency airborne inspection of other aircraft"
+    },
+    {
+      "code": "UA.II.B.K4d",
+      "area": "II",
+      "task": "B",
+      "description": "d. Precipitation static"
+    },
+    {
+      "code": "UA.II.B.K4e",
+      "area": "II",
+      "task": "B",
+      "description": "e. Light amplification by stimulated emission of radiation (laser) operations and reporting illumination of aircraft"
+    },
+    {
+      "code": "UA.II.B.K4f",
+      "area": "II",
+      "task": "B",
+      "description": "f. Avoiding flight in the vicinity of thermal plumes such as smoke stacks and cooling towers"
+    },
+    {
+      "code": "UA.II.B.K4g",
+      "area": "II",
+      "task": "B",
+      "description": "g. Flying in the wire environment"
+    },
+    {
+      "code": "UA.II.B.K5",
+      "area": "II",
+      "task": "B",
+      "description": "The NOTAM system, including how to obtain an established NOTAM through Flight Service."
+    },
+    {
+      "code": "UA.II.B.K6",
+      "area": "II",
+      "task": "B",
+      "description": "Operator equipment for night flight."
+    },
+    {
+      "code": "UA.II.B.K7",
+      "area": "II",
+      "task": "B",
+      "description": "Ground structures and ground structure lighting."
+    },
+    {
+      "code": "UA.II.B.K8",
+      "area": "II",
+      "task": "B",
+      "description": "Hazards on the ground that do not have lighting."
+    },
+    {
+      "code": "UA.II.B.K9",
+      "area": "II",
+      "task": "B",
+      "description": "Manned aircraft lighting."
+    },
+    {
+      "code": "UA.II.B.K10",
+      "area": "II",
+      "task": "B",
+      "description": "sUAS lighting requirements."
+    },
+    {
+      "code": "UA.III.A.K1",
+      "area": "III",
+      "task": "A",
+      "description": "Internet weather briefing and sources of weather available for flight planning purposes."
+    },
+    {
+      "code": "UA.III.A.K2",
+      "area": "III",
+      "task": "A",
+      "description": "Aviation routine weather reports (METAR)."
+    },
+    {
+      "code": "UA.III.A.K3",
+      "area": "III",
+      "task": "A",
+      "description": "Terminal aerodrome forecasts (TAF)."
+    },
+    {
+      "code": "UA.III.A.K4",
+      "area": "III",
+      "task": "A",
+      "description": "Weather charts."
+    },
+    {
+      "code": "UA.III.A.K5",
+      "area": "III",
+      "task": "A",
+      "description": "Automated surface observing systems (ASOS) and automated weather observing systems (AWOS)."
+    },
+    {
+      "code": "UA.III.B.K1",
+      "area": "III",
+      "task": "B",
+      "description": "Weather factors and their effects on performance."
+    },
+    {
+      "code": "UA.III.B.K1a",
+      "area": "III",
+      "task": "B",
+      "description": "a. Density altitude"
+    },
+    {
+      "code": "UA.III.B.K1b",
+      "area": "III",
+      "task": "B",
+      "description": "b. Wind and currents"
+    },
+    {
+      "code": "UA.III.B.K1c",
+      "area": "III",
+      "task": "B",
+      "description": "c. Atmospheric stability, pressure, and temperature"
+    },
+    {
+      "code": "UA.III.B.K1d",
+      "area": "III",
+      "task": "B",
+      "description": "d. Air masses and fronts"
+    },
+    {
+      "code": "UA.III.B.K1e",
+      "area": "III",
+      "task": "B",
+      "description": "e. Thunderstorms and microbursts"
+    },
+    {
+      "code": "UA.III.B.K1f",
+      "area": "III",
+      "task": "B",
+      "description": "f. Tornadoes"
+    },
+    {
+      "code": "UA.III.B.K1g",
+      "area": "III",
+      "task": "B",
+      "description": "g. Icing"
+    },
+    {
+      "code": "UA.III.B.K1h",
+      "area": "III",
+      "task": "B",
+      "description": "h. Hail"
+    },
+    {
+      "code": "UA.III.B.K1i",
+      "area": "III",
+      "task": "B",
+      "description": "i. Fog"
+    },
+    {
+      "code": "UA.III.B.K1j",
+      "area": "III",
+      "task": "B",
+      "description": "j. Ceiling and visibility"
+    },
+    {
+      "code": "UA.III.B.K1k",
+      "area": "III",
+      "task": "B",
+      "description": "k. Lightning"
+    },
+    {
+      "code": "UA.IV.A.K1",
+      "area": "IV",
+      "task": "A",
+      "description": "General loading and performance, including:"
+    },
+    {
+      "code": "UA.IV.A.K1a",
+      "area": "IV",
+      "task": "A",
+      "description": "a. Effects of loading changes"
+    },
+    {
+      "code": "UA.IV.A.K1b",
+      "area": "IV",
+      "task": "A",
+      "description": "b. Balance, stability, and center of gravity"
+    },
+    {
+      "code": "UA.IV.A.K2",
+      "area": "IV",
+      "task": "A",
+      "description": "Importance and use of performance data to calculate the effect on the aircraft’s performance of an sUAS."
+    },
+    {
+      "code": "UA.V.A.K1",
+      "area": "V",
+      "task": "A",
+      "description": "Airport operations with and without an operating control tower."
+    },
+    {
+      "code": "UA.V.A.K2",
+      "area": "V",
+      "task": "A",
+      "description": "The description and use of a Common Traffic Advisory Frequency (CTAF) to monitor manned aircraft communications."
+    },
+    {
+      "code": "UA.V.A.K3",
+      "area": "V",
+      "task": "A",
+      "description": "Recommended traffic advisory procedures used by manned aircraft pilots such as self-announcing of position and intentions."
+    },
+    {
+      "code": "UA.V.A.K4",
+      "area": "V",
+      "task": "A",
+      "description": "Aeronautical advisory communication station (UNICOM) and associated communication procedures used by manned aircraft pilots."
+    },
+    {
+      "code": "UA.V.A.K5",
+      "area": "V",
+      "task": "A",
+      "description": "Automatic Terminal Information Service (ATIS)."
+    },
+    {
+      "code": "UA.V.A.K6",
+      "area": "V",
+      "task": "A",
+      "description": "Aircraft call signs and registration numbers."
+    },
+    {
+      "code": "UA.V.A.K7",
+      "area": "V",
+      "task": "A",
+      "description": "The phonetic alphabet."
+    },
+    {
+      "code": "UA.V.A.K8",
+      "area": "V",
+      "task": "A",
+      "description": "Phraseology: altitudes, directions, speed, and time."
+    },
+    {
+      "code": "UA.V.B.K1",
+      "area": "V",
+      "task": "B",
+      "description": "Types of airports such as towered, uncontrolled towered, heliport, and seaplane bases."
+    },
+    {
+      "code": "UA.V.B.K2",
+      "area": "V",
+      "task": "B",
+      "description": "ATC towers, such as ensuring the remote pilot can monitor and interpret ATC communications to improve situational awareness."
+    },
+    {
+      "code": "UA.V.B.K3",
+      "area": "V",
+      "task": "B",
+      "description": "Runway markings and signage."
+    },
+    {
+      "code": "UA.V.B.K4",
+      "area": "V",
+      "task": "B",
+      "description": "Traffic patterns used by manned aircraft pilots."
+    },
+    {
+      "code": "UA.V.B.K5",
+      "area": "V",
+      "task": "B",
+      "description": "Security Identification Display Areas (SIDA)."
+    },
+    {
+      "code": "UA.V.B.K6",
+      "area": "V",
+      "task": "B",
+      "description": "Sources for airport data."
+    },
+    {
+      "code": "UA.V.B.K6a",
+      "area": "V",
+      "task": "B",
+      "description": "a. Aeronautical charts"
+    },
+    {
+      "code": "UA.V.B.K6b",
+      "area": "V",
+      "task": "B",
+      "description": "b. Chart Supplements"
+    },
+    {
+      "code": "UA.V.B.K7",
+      "area": "V",
+      "task": "B",
+      "description": "Avoiding bird and wildlife hazards and reporting collisions between aircraft and wildlife."
+    },
+    {
+      "code": "UA.V.B.K8",
+      "area": "V",
+      "task": "B",
+      "description": "Airport and seaplane base lighting."
+    },
+    {
+      "code": "UA.V.C.K1",
+      "area": "V",
+      "task": "C",
+      "description": "Emergency planning and communication."
+    },
+    {
+      "code": "UA.V.C.K2",
+      "area": "V",
+      "task": "C",
+      "description": "Characteristics and potential hazards of lithium batteries."
+    },
+    {
+      "code": "UA.V.C.K2a",
+      "area": "V",
+      "task": "C",
+      "description": "a. Safe transportation such as proper inspection and handling"
+    },
+    {
+      "code": "UA.V.C.K2b",
+      "area": "V",
+      "task": "C",
+      "description": "b. Safe charging"
+    },
+    {
+      "code": "UA.V.C.K2c",
+      "area": "V",
+      "task": "C",
+      "description": "c. Safe usage"
+    },
+    {
+      "code": "UA.V.C.K2d",
+      "area": "V",
+      "task": "C",
+      "description": "d. Risks of fires involving lithium batteries"
+    },
+    {
+      "code": "UA.V.C.K3",
+      "area": "V",
+      "task": "C",
+      "description": "Loss of aircraft control link and fly-aways."
+    },
+    {
+      "code": "UA.V.C.K4",
+      "area": "V",
+      "task": "C",
+      "description": "Loss of Global Positioning System (GPS) signal during flight and potential consequences."
+    },
+    {
+      "code": "UA.V.C.K5",
+      "area": "V",
+      "task": "C",
+      "description": "Frequency spectrums and associated limitations."
+    },
+    {
+      "code": "UA.V.C.K6",
+      "area": "V",
+      "task": "C",
+      "description": "Procedures for operations over people."
+    },
+    {
+      "code": "UA.V.C.K7",
+      "area": "V",
+      "task": "C",
+      "description": "Procedures for operations at night."
+    },
+    {
+      "code": "UA.V.D.K1",
+      "area": "V",
+      "task": "D",
+      "description": "Aeronautical decision-making (ADM)."
+    },
+    {
+      "code": "UA.V.D.K1a",
+      "area": "V",
+      "task": "D",
+      "description": "a. Effective team communication"
+    },
+    {
+      "code": "UA.V.D.K1b",
+      "area": "V",
+      "task": "D",
+      "description": "b. Task management"
+    },
+    {
+      "code": "UA.V.D.K2",
+      "area": "V",
+      "task": "D",
+      "description": "Crew Resource Management (CRM)."
+    },
+    {
+      "code": "UA.V.D.K3",
+      "area": "V",
+      "task": "D",
+      "description": "Situational awareness."
+    },
+    {
+      "code": "UA.V.D.K4",
+      "area": "V",
+      "task": "D",
+      "description": "Hazardous attitudes."
+    },
+    {
+      "code": "UA.V.D.K5",
+      "area": "V",
+      "task": "D",
+      "description": "Hazard identification and risk assessment."
+    },
+    {
+      "code": "UA.V.E.K1",
+      "area": "V",
+      "task": "E",
+      "description": "Physiological considerations and their effects on safety such as dehydration and heatstroke."
+    },
+    {
+      "code": "UA.V.E.K2",
+      "area": "V",
+      "task": "E",
+      "description": "Drug and alcohol use."
+    },
+    {
+      "code": "UA.V.E.K3",
+      "area": "V",
+      "task": "E",
+      "description": "Prescription and over-the-counter medication."
+    },
+    {
+      "code": "UA.V.E.K4",
+      "area": "V",
+      "task": "E",
+      "description": "Hyperventilation."
+    },
+    {
+      "code": "UA.V.E.K5",
+      "area": "V",
+      "task": "E",
+      "description": "Stress and fatigue."
+    },
+    {
+      "code": "UA.V.E.K6",
+      "area": "V",
+      "task": "E",
+      "description": "Factors affecting vision."
+    },
+    {
+      "code": "UA.V.E.K7",
+      "area": "V",
+      "task": "E",
+      "description": "Fitness for flight."
+    },
+    {
+      "code": "UA.V.E.K8",
+      "area": "V",
+      "task": "E",
+      "description": "Physiological aspects of night operation."
+    },
+    {
+      "code": "UA.V.E.K9",
+      "area": "V",
+      "task": "E",
+      "description": "Night illusions."
+    },
+    {
+      "code": "UA.V.F.K1",
+      "area": "V",
+      "task": "F",
+      "description": "Basic maintenance."
+    },
+    {
+      "code": "UA.V.F.K2",
+      "area": "V",
+      "task": "F",
+      "description": "Preflight inspection."
+    },
+    {
+      "code": "UA.V.F.K3",
+      "area": "V",
+      "task": "F",
+      "description": "Techniques to mitigate mechanical failures of all elements used in sUAS operations such as the battery and any device(s) used to operate the sUAS."
+    },
+    {
+      "code": "UA.V.F.K4",
+      "area": "V",
+      "task": "F",
+      "description": "Appropriate record keeping."
+    },
+    {
+      "code": "UA.V.F.K5",
+      "area": "V",
+      "task": "F",
+      "description": "Persons that may perform maintenance on an sUAS."
+    },
+    {
+      "code": "UA.V.F.K6",
+      "area": "V",
+      "task": "F",
+      "description": "Preflight inspection for night operations."
+    },
+    {
+      "code": "UA.V.F.K7",
+      "area": "V",
+      "task": "F",
+      "description": "Manufacturer's Declaration of Compliance for Category 2 and 3 operations."
+    }
+  ]
+}

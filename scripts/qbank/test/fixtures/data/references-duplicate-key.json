@@ -1,0 +1,24 @@
+{
+  "documents": [
+    {
+      "key": "acs-10b",
+      "kind": "faa",
+      "title": "Fixture document",
+      "document_number": null,
+      "edition": "Fixture edition",
+      "official_url": "https://www.faa.gov/",
+      "local_file": "fixture.pdf",
+      "sha256": "9ee24463b40f023a3140d0c8a4d14ab295ede7a869fbacb7b7cd5ceb4caef431"
+    },
+    {
+      "key": "acs-10b",
+      "kind": "faa",
+      "title": "Fixture document",
+      "document_number": null,
+      "edition": "Fixture edition",
+      "official_url": "https://www.faa.gov/",
+      "local_file": "fixture.pdf",
+      "sha256": "9ee24463b40f023a3140d0c8a4d14ab295ede7a869fbacb7b7cd5ceb4caef431"
+    }
+  ]
+}

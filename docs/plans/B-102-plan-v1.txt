@@ -1,0 +1,718 @@
+ ▐▛███▛█   Claude Code v2.1.291
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   C:\Projects\RemotePilotReady
+
+
+❯ Session 2. Task: B-102, question bank file format. Plan only; do not write    
+  files.                                                                        
+                                                                                
+  Read docs/SESSION_STARTER.md; read docs/PROJECT_VISION.md,                    
+  docs/DECISION_LOG.md, and docs/BACKLOG.md (B-101, B-102, B-104, B-114) first. 
+                                                                                
+  Decisions made in Session 2 (not yet in DECISION_LOG.md; treat as approved by 
+  Rick):                                                                        
+  1. One Markdown file per question, YAML front matter for structured fields,   
+  stem in the body,                                                             
+     then a "## Explanation" section.                                           
+  2. Exactly three options, keys A, B, C, single correct answer.                
+  3. Flat folder questions/RPR-NNNN.md. IDs sequential, never reused, no        
+  meaning encoded.                                                              
+     New ID = highest existing + 1; q-writer runs one batch at a time.          
+  4. Testing Supplement figures are shared in figures/ (fig-NN.png plus         
+  figures/index.json),                                                          
+     referenced by number from the question (figure: 26 or null). This replaces 
+  D-023's                                                                       
+     "media alongside each question".                                           
+  5. acs_code only (e.g. UA.I.B.K10, sub-elements like UA.I.B.K14a exist). Area 
+  is derived                                                                    
+     from the code. Valid codes are the 176 knowledge elements in FAA-S-ACS-10B 
+     (references/uas_acs.pdf); the valid list must be a committed data file     
+  extracted from                                                                
+     the ACS, not hand-typed.                                                   
+  6. sources: list, at least one entry, each with doc (key into the references  
+  index),                                                                       
+     edition, location, passage (exact quote). Any Area I question must include 
+  a cfr-107 source.                                                             
+  7. Review block, the only fields q-reviewer may change:                       
+     review: {status, reviewed_by, reviewed_at, content_hash, notes}            
+     status: draft | approved | returned | held | retired.                      
+     q-writer sets only draft. q-reviewer sets approved/returned/held. Only     
+  Rick sets retired                                                             
+     or clears held.                                                            
+  8. content_hash = SHA-256 over the whole file with the review block removed,  
+  after                                                                         
+     normalizing line endings to LF and trimming trailing whitespace. The DB    
+  loader refuses any                                                            
+     approved question whose hash does not match. Loader loads approved and     
+  retired only;                                                                 
+     retired are never drawn into new exams.                                    
+  9. References now include the AIM (Basic 2/20/25 with Changes 1-3, Change 3   
+  effective                                                                     
+     7/9/26) and PHAK FAA-H-8083-25C (2023). Doc keys needed for: cfr-107,      
+  acs-10b,                                                                      
+     akts-2h, study-guide-22, phak-25c, aim.                                    
+                                                                                
+  Plan these deliverables:                                                      
+  a. docs/QUESTION_FORMAT.md: the spec, with one complete example question.     
+  b. The references index data file (remaining part of B-114): doc key, title,  
+  document                                                                      
+     number, edition, official URL, local file name, SHA-256. Values come from  
+     PROJECT_VISION.md plus item 9.                                             
+  c. The ACS valid-codes data file and how it is extracted and checked.         
+  d. A standalone validator script (TypeScript, runnable before the app exists) 
+  that checks                                                                   
+     every file in questions/: schema, ID/filename match, acs_code validity,    
+  doc keys exist,                                                               
+     Area I CFR rule, figure exists in figures/index.json when not null, status 
+  values, and                                                                   
+     the content_hash rule. Include a deliberate failing fixture for each       
+  check, so each                                                                
+     check is shown to reject bad input, not just accept good input.            
+  e. Whether a .gitattributes file is needed so line endings stay stable across 
+  Rick's two                                                                    
+     Windows machines.                                                          
+  f. Changes needed to .claude/agents/q-writer.md and q-reviewer.md so they     
+  follow this format.                                                           
+     List the changes; Rick will apply edits to .claude/ himself.               
+                                                                                
+  Flag anything in these decisions that conflicts with existing docs or is      
+  ambiguous; do not                                                             
+  resolve it silently. Return the plan for Rick's approval.                     
+
+● I'll start by reading the session docs and the current repo state.
+
+  Searched for 1 pattern, read 10 files, ran 5 shell commands (ctrl+o to expand)
+
+● Checking ACS code structure in the PDF text now (176 unique knowledge codes
+  confirmed), then the plan.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+● Checking ACS references to other CFR parts (they affect the Area I CFR rule),
+  then writing up the plan.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Pulling an exact CFR passage for the spec's example question.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Checking the tester and builder agent lines that touch the question bank,
+  since decision 4 changes D-023.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Plan: B-102, question bank file format (Session 2)
+
+  1. Goal
+
+  Define the question file format so q-writer and q-reviewer can start work.
+  B-102 delivers six things: the spec (docs/QUESTION_FORMAT.md), the references
+  index data file (the last part of B-114), the ACS valid-codes data file with
+  its extractor, a standalone TypeScript validator with a failing fixture for
+  each check, a .gitattributes decision, and a list of edits to the two question
+  agents. Nothing about the exam, review, or readiness is built here, but the
+  format sets constraints those features will depend on (see Risks).
+
+  2. Current state (checked this session)
+
+  - Git: main, clean, one commit (07f09e3). There is no package.json,
+    questions/, figures/, data/ or scripts/ yet. .gitignore has no node_modules/
+    entry.
+  - Docs: SESSION_STARTER still says "Nothing is in git yet," but B-008 is
+    actually done (there's a commit and an origin/main). It's a stale doc,
+    nothing more. PROJECT_VISION line 96 and D-023 (DECISION_LOG line 29) still
+    say "media alongside." The planner, builder and tester agents repeat D-023
+    (planner.md:29, builder.md:30, tester.md:28).
+  - Agent file names are .claude/agents/q_writer.md and q_reviewer.md, with
+    underscores. The task calls them q-writer.md and q-reviewer.md, which are
+    the names inside the files.
+  - q_reviewer.md has tools: Read, Grep, Glob, Edit and no Bash. It has no way
+    to compute a SHA-256 (see Open question 1).
+  - q_reviewer.md:45 says a returned question stays draft. Decision 7 adds a
+    returned status, so this line has to change.
+  - ACS: pdftotext -raw on references/uas_acs.pdf gives exactly 176 unique K 
+    codes. Per area: I=77, II=26, III=17, IV=4, V=52. There are no R or S codes.
+    - -layout mode pairs codes with the wrong descriptions. For example, it
+      labels UA.I.B.K10 as "Alcohol or drugs," but the ACS's own intro says K10
+      is VLOS. -raw pairs them correctly, so the extractor must use -raw.
+    - "UA.I.B.K10:" also appears twice in non-element text (the intro example
+      and the appendix). The extractor must skip those.
+    - The UA.I.B.K24 line has unusual whitespace after the code, so the regex
+      must accept any whitespace, including U+00A0.
+    - Codes like K14a are lettered sub-elements ("a. See and avoid…"). Both K14
+      and K14a are among the 176.
+  - pdftotext is Xpdf 4.00, bundled with Git for Windows at C:\Program 
+    Files\Git\mingw64\bin\pdftotext.exe.
+  - Node is v24.15.0 on the desktop, and process.features.typescript = "strip",
+    so .ts files run directly without tsx. The laptop's version is unknown. One
+    side effect to report: running npx tsx --version to check this put tsx into
+    the npm cache. Nothing changed in the repo.
+  - Line endings: core.autocrlf=true is set system-wide. The index is all LF,
+    and so is the working tree except docs/Communication_Preferences.md, which
+    is CRLF.
+  - Reference checksums: the four existing files match PROJECT_VISION. The two
+    new ones:
+    - AIM_Basic_w_Chg_1_and_2_and_3_dtd_7-9-26_FINAL.pdf:
+      8b11e7a168e1ef9ea16853b8ab7b3353f01490dffb51f2736a0a72e6278f8ff5
+    - faa-h-8083-25c.pdf:
+      247929cace0ab56b376e683eba540cc4c8f39f199ab35414e8b604e24f395cb7
+    - The PHAK front matter confirms FAA-H-8083-25C, 2023. The AIM front matter
+      confirms Basic, February 20, 2025.
+  - Testing Supplement: the text has Figures 1–82 and Legends 1–19 (Appendix 1).
+    Decision 4 only covers figures.
+  - CFR snapshot: it contains Part 107 only. It has no Part 89 (Remote ID) or
+    Part 48 (registration). ACS Area I Task F (Remote ID, UA.I.F.K1–K6) cites 14
+    CFR part 89 only.
+
+  3. Proposed changes
+
+  Touched (new): docs/QUESTION_FORMAT.md, data/references.json,
+  data/acs-10b-knowledge.json, figures/index.json (empty shell),
+  questions/.gitkeep, scripts/qbank/**, package.json, package-lock.json,
+  .gitattributes
+  Touched (edit): .gitignore (add node_modules/)
+  Not touched:
+  - docs/ other than the new spec. The DECISION_LOG, VISION, BACKLOG and other
+    doc updates belong to the end-of-session routine.
+  - .claude/, which Rick edits.
+  - references/, which is only read by the ACS extractor and the reference
+    checker.
+  - images/.
+  - No question files go in questions/, and the spec's example must never be
+    copied there.
+
+  Before starting: on whichever machine runs the builder, git pull, node 
+  --version (must be ≥ 22.18), then npm ci after the package.json exists.
+
+  3.1 package.json (root, new)
+
+  - "private": true, "type": "module", "engines": {"node": ">=22.18.0"}.
+  - Runtime dependency: yaml (v2, ISC).
+  - Dev dependencies: typescript, @types/node (Apache-2.0 / MIT).
+  - No test framework; tests use node --test.
+  - Commit package-lock.json.
+  - Scripts:
+    - qbank:validate → node scripts/qbank/validate.ts
+    - qbank:hash → node scripts/qbank/hash-cli.ts (prints the hash of each file
+      argument)
+    - qbank:acs:extract → node scripts/qbank/extract-acs.ts
+    - qbank:acs:check → node scripts/qbank/extract-acs.ts --check
+    - qbank:refs:check → node scripts/qbank/check-references.ts
+    - qbank:test → node --test "scripts/qbank/test/**/*.test.ts"
+    - qbank:typecheck → tsc -p scripts/qbank/tsconfig.json
+  - scripts/qbank/tsconfig.json: noEmit, strict, module/moduleResolution: 
+    nodenext, allowImportingTsExtensions, erasableSyntaxOnly,
+    verbatimModuleSyntax. That means no enums, no namespaces, and relative
+    imports end in .ts, which Node's type stripping requires.
+
+  3.2 docs/QUESTION_FORMAT.md (the spec)
+
+  Sections:
+
+  1. Where things live:
+     - questions/RPR-NNNN.md
+     - figures/fig-NN.png and figures/index.json
+     - data/references.json
+     - data/acs-10b-knowledge.json
+  2. IDs:
+     - Format is RPR- plus 4 digits, matching the file name.
+     - A new ID is the highest existing ID + 1. IDs are never reused and carry
+       no meaning.
+     - Question files are never deleted. An abandoned question is retired
+       instead. Deleting the highest file would otherwise let the "+1" rule
+       reuse its ID.
+     - Run git pull before every q-writer batch, so the two machines can't
+       collide on IDs.
+  3. File layout:
+     - Line 1 is ---, then YAML front matter, then ---.
+     - The stem follows as plain paragraphs, then a line exactly ## Explanation,
+       then the explanation.
+     - Front matter keys appear in this fixed order: id, acs_code, figure,
+       options, answer, sources, review. No other keys are allowed; in
+       particular there is no area key, because the area is derived from the
+       code.
+     - review must be the last key, in block style (not {…}), with children
+       indented.
+     - No YAML comments and no HTML comments. This keeps drafting notes out of
+       files under D-004.
+  4. Field reference:
+     - acs_code: must be in data/acs-10b-knowledge.json. The area is the Roman
+       numeral in the code.
+     - figure: null or a positive integer that is in figures/index.json.
+     - options: a mapping with exactly the keys A, B, C (my reading of decision
+       2; see Open question 9). Each value is a non-empty, double-quoted string,
+       and the three must differ ignoring case and whitespace.
+     - answer: one of A, B, C.
+     - sources: a list with at least one entry. Each entry has doc, edition
+       (copied exactly from the index), location, and passage. All are non-empty
+       strings.
+     - Area I questions need at least one cfr-107 source.
+  5. Body rules:
+     - The stem is non-empty, with no headings, no HTML (< followed by a letter
+       or /), and no images (![).
+     - The explanation has the same restrictions.
+     - Both follow the public-text writing rules.
+     - A "passage" means the words as printed. Line-break hyphenation and
+       whitespace are normalized, and characters like § are used as printed.
+  6. Review block and status lifecycle: a who-sets-what table based on
+     decision 7. Recommended transitions to confirm are in Open question 5.
+     - For a new question, q-writer writes status: draft and sets the other four
+       review fields to null.
+     - approved requires reviewed_by, reviewed_at ("YYYY-MM-DD", quoted), and a
+       matching content_hash.
+     - returned and held require reviewed_by, reviewed_at, and non-empty notes.
+     - draft, returned and held must have content_hash: null.
+  7. content_hash algorithm, step by step (also see Open question 8):
+     a. The file must be UTF-8 with no BOM.
+     b. Convert CRLF and lone CR to LF.
+     c. Remove the line review: and every line after it up to, but not
+        including, the closing ---.
+     d. Strip trailing spaces and tabs from every line.
+     e. Remove trailing empty lines and end with exactly one LF.
+     f. Take the SHA-256 and write it as lowercase hex.
+     - It's computed with npm run qbank:hash -- questions/RPR-NNNN.md. Because
+       the review block is excluded, a status change never changes the hash.
+  8. Loader contract, for the future loader plan:
+     - It loads approved and retired questions only.
+     - It refuses any approved question whose hash doesn't match.
+     - Retired questions are never drawn into new exams.
+     - The pending points are in Open questions 5, 6 and 10.
+  9. The validator: how to run it, and the list of checks with their IDs (from
+     3.6).
+  10. A complete example (illustration only, never placed in questions/), using
+      the exact passage I extracted from the local CFR:
+
+  ---
+  id: RPR-0001
+  acs_code: UA.I.B.K21a
+  figure: null
+  options:
+    A: "100 knots"
+    B: "87 knots"
+    C: "87 miles per hour"
+  answer: B
+  sources:
+    - doc: cfr-107
+      edition: "eCFR, current as of Sept. 30, 2026"
+      location: "§ 107.51(a)"
+      passage: "The groundspeed of the small unmanned aircraft may not exceed 87
+  knots (100 miles per hour)."
+  review:
+    status: approved
+    reviewed_by: q-reviewer
+    reviewed_at: "2026-10-07"
+    content_hash: "<builder fills in with npm run qbank:hash>"
+    notes: null
+  ---
+  Under 14 CFR part 107, what is the maximum groundspeed allowed for a small
+  unmanned aircraft?
+
+  ## Explanation
+
+  Section 107.51(a) limits a small unmanned aircraft to a groundspeed of 87
+  knots, which is 100 miles per hour. A limit of 87 miles per hour is lower than
+  the rule allows, and 100 knots is higher.
+
+  The builder computes the real hash for this exact text. A test (3.7) pulls
+  this block out of the spec and validates it, so the spec and the validator
+  can't drift apart.
+
+  3.3 data/references.json (the rest of B-114)
+
+  { "documents": [ { "key", "title", "document_number", "edition",
+  "official_url", "local_file", "sha256" } ] }
+
+  - title, edition, official_url, local_file and sha256 for cfr-107, acs-10b,
+    akts-2h and study-guide-22 are copied word for word from PROJECT_VISION
+    lines 127–138. The CFR file name has two spaces before "9-30-2026".
+  - The document_number values are 14 CFR Part 107, FAA-S-ACS-10B,
+    FAA-CT-8080-2H and FAA-G-8082-22.
+  - phak-25c:
+    - title "Pilot's Handbook of Aeronautical Knowledge"
+    - number "FAA-H-8083-25C"
+    - edition "2023"
+    - file faa-h-8083-25c.pdf
+    - sha 247929ca…7cb7 (full value in section 2)
+  - aim:
+    - title "Aeronautical Information Manual"
+    - number null
+    - edition "Basic 2/20/25 with Changes 1-3, Change 3 effective 7/9/26" (your
+      wording, verbatim)
+    - file AIM_Basic_w_Chg_1_and_2_and_3_dtd_7-9-26_FINAL.pdf
+    - sha 8b11e7a1…95cb7 (full value in section 2)
+  - The official_url values for the PHAK and the AIM are not in any doc, and the
+    builder must not guess them. See Open question 11.
+  - scripts/qbank/check-references.ts compares each local_file in references/ to
+    its sha256 and reports match, mismatch, or missing. It reports and doesn't
+    fail when a file is missing, because the laptop may not have all the PDFs.
+    You can drop this script if you'd rather not include it.
+
+  3.4 data/acs-10b-knowledge.json and how it's extracted
+
+  { "doc": "acs-10b", "source_sha256": "9ee24463…", "extracted_with": "pdftotext
+  -raw (Xpdf 4.00)",
+    "areas": [ { "numeral": "I", "title": "Regulations" }, … ],
+    "elements": [ { "code": "UA.I.B.K10", "area": "I", "task": "B",
+  "description": "Visual line of sight (VLOS) aircraft operations." }, … ] }
+
+  scripts/qbank/extract-acs.ts:
+  1. Checks the PDF's SHA-256 against references.json for acs-10b and stops if
+     it doesn't match.
+  2. Runs pdftotext from $PDFTOTEXT, then PATH, then the Git for Windows path,
+     always with -raw and never -layout.
+  3. Element lines match ^(UA\.(I|II|III|IV|V)\.([A-Z])\.K\d+[a-z]?)\s+(\S.*)$.
+     A description continues onto the following lines until the next code line
+     or a line that starts with Risk Management, Skills, References, Objective,
+     Task , or an area heading. Page-number-only lines are skipped.
+  4. Areas come from the Appendix 1 lines ^(I|II|III|IV|V)\. (.+?) \d+-\d+%$.
+  5. Writes the JSON with 2-space indent and LF line endings. --check
+     re-extracts and compares with the committed file, ignoring line-ending
+     differences.
+  6. Asserts exactly 176 unique codes, per-area counts I=77, II=26, III=17,
+     IV=4, V=52, five areas, and no empty description. These are hardcoded
+     literals, never read from the file under test.
+
+  A separate data check in the validator runs without the PDF:
+  - the codes are unique, match the regex, and number 176
+  - source_sha256 equals the acs-10b checksum in references.json
+
+  3.5 figures/index.json, questions/.gitkeep
+
+  - figures/index.json is { "source_doc": "akts-2h", "figures": [] }. B-102
+    defines the contract and B-101 fills it in. The validator requires number
+    (an integer) and file (a name in figures/) on each entry; extra fields are
+    allowed.
+  - The validator ignores .gitkeep.
+
+  3.6 Validator (scripts/qbank/)
+
+  Structure:
+  - lib/hash.ts holds the hash function. It's the single implementation, which
+    the future DB loader must import rather than re-implement.
+  - lib/parse.ts uses yaml parseDocument with unique keys and walks the document
+    to reject comments.
+  - lib/checks.ts is a registry of check IDs.
+  - lib/validate.ts exports a pure function, validateBank({questionsDir, 
+    figuresDir, referencesPath, acsPath}), which returns {file, check, severity,
+    message}[].
+  - The CLI wrappers print one line per issue plus a summary of counts by
+    status, and exit 1 on any error.
+
+  Checks:
+
+  ID: data
+  Rejects: Bad references.json or ACS file (see 3.4)
+  ────────────────────────────────────────
+  ID: file-name
+  Rejects: Anything in questions/ that isn't RPR-\d{4}.md (except .gitkeep)
+  ────────────────────────────────────────
+  ID: parse
+  Rejects: Missing or unclosed front matter, invalid YAML, duplicate keys, BOM,
+  YAML comments
+  ────────────────────────────────────────
+  ID: schema
+  Rejects: Missing, unknown or out-of-order keys; wrong types; options not
+  exactly A/B/C; duplicate or empty options; answer not A/B/C; bad figure type;
+   empty sources; incomplete source entry; review not last or in flow style
+  ────────────────────────────────────────
+  ID: body
+  Rejects: No stem; missing or repeated ## Explanation; empty explanation; extra
+
+  headings; HTML; images
+  ────────────────────────────────────────
+  ID: id-match
+  Rejects: id doesn't equal the file name
+  ────────────────────────────────────────
+  ID: id-sequence
+  Rejects: Gaps between RPR-0001 and the highest ID. This is a proposed addition
+
+  that enforces "never delete."
+  ────────────────────────────────────────
+  ID: acs-code
+  Rejects: Code not in the ACS file
+  ────────────────────────────────────────
+  ID: source-doc
+  Rejects: doc not a key in references.json
+  ────────────────────────────────────────
+  ID: source-edition
+  Rejects: edition doesn't match the index exactly. A proposed addition;
+  severity
+  is Open question 7.
+  ────────────────────────────────────────
+  ID: area-i-cfr
+  Rejects: Area I question with no cfr-107 source
+  ────────────────────────────────────────
+  ID: figure
+  Rejects: Non-null figure missing from the index, or its file missing on disk
+  ────────────────────────────────────────
+  ID: status
+  Rejects: Status not one of the five; required review fields missing for that
+  status (see 3.2 §6)
+  ────────────────────────────────────────
+  ID: content-hash
+  Rejects: Approved question with a null or mismatched hash; draft, returned or
+  held question with a non-null hash; retired question per Open question 6
+
+  3.7 Tests and fixtures (scripts/qbank/test/)
+
+  Fixture data:
+  - fixtures/figures/index.json lists figure 26 → fig-26.png and figure 27 →
+    fig-27.png.
+  - fixtures/figures/fig-26.png is a 1×1 PNG. fig-27.png is deliberately absent.
+  - Tests use the real data/references.json and the real ACS file.
+
+  fixtures/good/ (the positive control):
+  - RPR-0001: approved, Area I, cfr-107, correct hash
+  - RPR-0002: draft, Area V, figure 26
+  - RPR-0003: returned, with notes
+  - RPR-0004: retired, with hash
+
+  validateBank on this folder must return zero issues.
+
+  fixtures/bad/<case>/ holds one question each (two for the id-sequence gap).
+  Every file is valid except for one defect. Cases include:
+  - file-name
+  - parse-yaml, parse-no-frontmatter, parse-duplicate-key, parse-comment
+  - schema-missing-answer, schema-four-options, schema-duplicate-option,
+    schema-unknown-key-area, schema-key-order, schema-review-flow-style,
+    schema-empty-sources
+  - body-no-explanation, body-html
+  - id-match, id-sequence
+  - acs-code-unknown (UA.I.B.K99), acs-code-bad-area (UA.VI.A.K1)
+  - source-doc, source-edition, area-i-cfr (Area I with only a phak-25c source)
+  - figure-not-in-index (999), figure-file-missing (27)
+  - status-invalid, status-returned-no-notes
+  - content-hash-mismatch, content-hash-null-approved, content-hash-on-draft
+
+  What the tests assert:
+  - validate.test.ts holds a hardcoded literal table of case → expected check
+    ID. It does not build that table from the registry. For each case it asserts
+    the expected ID appears and no other check ID fires, so each check is shown
+    to discriminate.
+  - A second test asserts every ID in the registry has at least one bad case,
+    which catches a new check that has no fixture.
+  - One spawn test confirms the CLI exits 0 on good/ and 1 on a bad case.
+  - hash.test.ts:
+    - A known-answer vector: a literal input string with its expected hex, which
+      the builder computes independently with printf … | sha256sum in Git Bash,
+      not with lib/hash.ts.
+    - The CRLF, trailing-space and extra-trailing-newline variants hash the same
+      as the LF original. These are built in code, not as fixture files, so git
+      can't rewrite them.
+    - Changing the stem, an option, or a source changes the hash.
+    - Changing review.status, review.notes or reviewed_at does not change it.
+  - acs.test.ts:
+    - On the committed file: 176 codes, the per-area literals from 3.4, and
+      literal spot checks for UA.I.B.K10 (VLOS), UA.I.B.K14a, UA.I.B.K21d,
+      UA.I.A.K3 (wrapped line) and UA.I.B.K24 (after a page break).
+    - Feeding a duplicated code or a 175-entry list to the data check must fail.
+  - spec-example.test.ts pulls the example block out of docs/QUESTION_FORMAT.md
+    and validates it as RPR-0001.md.
+
+  Mutation proof: the builder deletes one check's registration and confirms its
+  named case fails, then restores it.
+
+  3.8 .gitattributes: yes, it's needed
+
+  autocrlf=true is set system-wide, and the working tree is already mixed. A
+  fresh clone on the laptop would check out every file as CRLF. The hash
+  normalizes line endings, so it's safe either way. Without the file, though,
+  you'd get diffs that change only line endings, the ACS --check comparison
+  would be noisy, and the fixtures would differ by machine.
+
+  * text=auto eol=lf
+  *.png binary
+  *.jpg binary
+  *.ico binary
+  *.pdf binary
+
+  After this is committed, on each machine with a clean tree: git add 
+  --renormalize ., then git status. Expect no changes or only
+  Communication_Preferences.md. To rewrite working files as LF, run git rm -r 
+  --cached -q . && git reset --hard, but only with a clean tree, because it
+  discards uncommitted changes. I'll give you the exact commands at commit time.
+
+  3.9 Changes for you to make to q_writer.md and q_reviewer.md
+
+  q_writer.md
+  1. Lines 35–37: replace "until that format exists…" with: follow
+     docs/QUESTION_FORMAT.md exactly, and re-read it at the start of each batch.
+  2. Lines 22–23: take the source list, doc keys and edition strings from
+     data/references.json, not PROJECT_VISION. Copy edition exactly. Quote
+     passage exactly.
+  3. Add ID rules:
+     - git pull has already been done by Rick before the batch.
+     - New ID = highest in questions/ + 1.
+     - Never delete or renumber a file.
+  4. Add: pick acs_code from data/acs-10b-knowledge.json and check that its
+     description fits the stem. An Area I question must cite cfr-107.
+  5. Lines 50–51: replace with: figure is the integer from figures/index.json.
+     If the figure isn't in the index, don't write the question.
+  6. Review block:
+     - For a new question, write status: draft and set every other review field
+       to null.
+     - When revising a returned question, set status: draft and leave the other
+       review fields alone.
+     - Never set any other status, and never touch content_hash.
+  7. Line 71: extend "never edit approved" to approved, held and retired.
+  8. Add: no YAML or HTML comments. Double-quote all option, edition, location
+     and passage strings.
+  9. Add: run npm run qbank:validate before finishing and fix your own files.
+     Report any errors in other files to Rick.
+
+  q_reviewer.md
+  1. Lines 48–52: replace the "until the schema exists" text with a pointer to
+     docs/QUESTION_FORMAT.md. The reviewer may change only the five review
+     fields.
+  2. Lines 43–47, recording results:
+     - Approved: status: approved, reviewed_by: q-reviewer, reviewed_at, and
+       content_hash from npm run qbank:hash.
+     - Returned: status: returned (replacing "leave the status as draft") with
+       findings in notes.
+     - Add held for questions that need Rick, such as a source conflict, a
+       source not in the references, or suspected copied content, with the
+       reason in notes.
+  3. Check 2 (line 24): get the edition from data/references.json.
+  4. Check 6: look up the figure in figures/index.json and view the PNG.
+  5. Check 7: compare the stem with the code's description in the ACS data file.
+  6. Add: only review draft questions, unless Rick asks for a recheck. Never
+     change a retired question or clear held.
+  7. Line 64: the summary table includes held.
+  8. Tools: depends on Open question 1.
+
+  Also in .claude/ (stale after decision 4): planner.md:29, builder.md:30 and
+  tester.md:28 cite "media alongside (D-023)." builder.md:54 should say that
+  validator fixtures under scripts/qbank/test/fixtures/ are test data, not bank
+  questions. Until it does, the builder treats this plan as the explicit
+  exception.
+
+  4. Risks
+
+  - Changing an approved question would rewrite history. Each attempt stores
+    option order as A/B/C keys (D-021), and the review shows the question and
+    its media (D-020). If approved text changes in place, old reviews show
+    content the user never saw, and old scores may no longer fit the key. The
+    format should treat approved content as immutable (Open question 5).
+  - A loader that drops held questions would break past reviews. If an approved
+    question later becomes held and the loader simply stops loading it, past
+    attempts lose their question. The loader must never delete rows; it should
+    only mark them as not drawable (Open question 5).
+  - Removing the review block by text depends on format rules. The validator
+    enforces those rules (review last, block style). A file that breaks them
+    fails validation instead of being hashed wrongly.
+  - pdftotext versions differ. Another build (for example Poppler) may produce
+    different raw text, so --check can fail because of the tool rather than the
+    PDF. extracted_with records the version used.
+  - B-115 scaffolding has to merge into this root package.json and must not
+    overwrite it.
+  - YAML typing: unquoted 400 parses as a number. The schema check catches it,
+    and the agents are told to quote strings.
+  - Area derivation feeds readiness (D-003) and exam weighting (D-032/033). The
+    future app must take area numerals and titles from the ACS data file rather
+    than hardcoding them.
+
+  5. Test plan for the tester
+
+  1. On a fresh npm ci: qbank:typecheck, qbank:test and qbank:validate all pass.
+     With questions/ empty, the validator reports 0 questions and exits 0.
+  2. Each bad fixture fails only its own check. Run the mutation proof on at
+     least two checks (content-hash and area-i-cfr): unregister the check and
+     confirm the named case fails.
+  3. Hash: take a copy of the spec example and convert it to CRLF, add trailing
+     spaces, and add blank lines at the end. The hash must not change. Then
+     change one character in option C. The hash must change, and an approved
+     copy must fail.
+  4. qbank:acs:check passes against the local PDF. Spot-check 10 descriptions
+     against the PDF pages by eye, including K14a, K21a–d, UA.I.A.K3 and
+     UA.I.B.K24.
+  5. qbank:refs:check reports six matches on the desktop.
+  6. After .gitattributes and renormalizing, git ls-files --eol shows i/lf for
+     all text and -text for PNGs.
+  7. On the laptop: git pull, node --version, npm ci, qbank:test. Confirm the
+     results are the same.
+  8. git status shows no stray files and nothing under references/.
+
+  6. Open questions
+
+  1. q-reviewer can't compute the hash. It has no Bash. Options:
+     - (a) Add Bash to q-reviewer, with instructions limiting it to npm run 
+       qbank:hash and qbank:validate, plus a .claude/settings.json allow rule
+       for just those. Any other command prompts you.
+     - (b) You run the hash and paste it.
+     - (c) A "stamp" script you run after review. This is weakest, because it
+       doesn't prove the hash matches what the reviewer read.
+
+     I recommend (a).
+  2. The Area I CFR rule conflicts with the ACS. Task F (Remote ID, six codes)
+     cites 14 CFR part 89 only, and K1 registration relies on parts 47/48. The
+     local CFR snapshot has none of these, and the ACS also cites AC 107-2,
+     which is not on the vision's source list.
+     - Should we add cfr-89/cfr-48 docs and change the rule to "at least one 14
+       CFR source"?
+     - Or should Task F questions wait until this is settled?
+  3. Legends and multiple figures. The supplement has Legends 1–19, and some
+     real questions refer to a figure plus a legend. Is figure: integer | null
+     enough for now, or should it be a list of keys like fig-26 and legend-1?
+  4. Figure-only sources. For chart reading there's no prose to quote. Should
+     passage hold the printed chart text, or be optional for akts-2h sources?
+  5. Lifecycle:
+     - Are approved questions immutable, so a fix means retiring the question
+       and writing a new ID? (I recommend yes.)
+     - When an approved question fails a recheck, does it go to held?
+     - When you clear held, does it go to draft only (recommended), so nothing
+       reaches approved without q-reviewer?
+     - Does the loader never delete database rows?
+  6. Retired: abandoned drafts get retired rather than deleted (needed for the
+     ID rule). Should a retired question need a matching hash only if it was
+     once approved, and should the loader load only retired questions that were
+     once approved? Do you want the id-sequence gap check?
+  7. Edition mismatch: should it be an error everywhere, or an error for drafts
+     and a "needs recheck" warning for approved questions, so a new AIM change
+     doesn't block deploys?
+  8. Hash details: I read "trimming trailing whitespace" as per line plus extra
+     blank lines at the end of the file. Files with a BOM are rejected rather
+     than stripped. Please confirm both.
+  9. Options location: I put them in the front matter as an A/B/C mapping, which
+     the decisions don't spell out. Is that what you meant?
+  10. Loader on a hash mismatch: should the whole load fail (recommended, since
+      a partial load silently shrinks the bank) or should it skip that question?
+  11. Official URLs for the PHAK and the AIM: please supply the pages you
+      downloaded them from.
+  12. Doc duplication: once data/references.json exists, PROJECT_VISION's
+      reference and checksum tables duplicate it. Should VISION point to the
+      data file instead? The decisions also need a new D-row replacing D-023, a
+      VISION line 96 edit, and the agent-text fixes in 3.9 (end-of-session
+      work).
+  13. Smaller points:
+      - reviewed_by values: q-reviewer | rick?
+      - Should the validator also reject options like "all/none/both of the
+        above"? They break once options are shuffled. This is outside the check
+        list you gave, so I left it out.
+
+  Summary for approval
+
+  Builds:
+  - the spec with a validated example
+  - data/references.json (six docs; two URLs pending from you)
+  - an ACS file extracted with pdftotext -raw, locked to the 176 codes I
+    confirmed in the PDF
+  - a dependency-light TypeScript validator with 14 checks, each shown to reject
+    a bad fixture
+  - .gitattributes with LF everywhere
+  - a root package.json
+
+  You apply the edits to q_writer.md and q_reviewer.md (underscored file names).
+  Nothing in questions/, .claude/, or references/ is written.
+
+  Before the builder starts, please decide:
+  - Q1: the reviewer can't compute hashes without Bash
+  - Q2: the Area I CFR rule vs. Remote ID and Part 89
+  - Q5: approved questions immutable and the loader never deleting rows
+  - Q11: the two URLs
+
+  The rest can be accepted as recommended.
+
+✻ Worked for 8m 21s · done 1:24 PM
+
+※ recap: The B-102 question file format plan is ready for your approval; nothing has been built yet. Next, decide four things before the builder starts: how the reviewer computes hashes, the Area I CFR rule versus Remote ID, freezing approved questions, and the PHAK and AIM URLs. (disable recaps in /config)

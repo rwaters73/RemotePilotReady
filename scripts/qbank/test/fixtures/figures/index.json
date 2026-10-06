@@ -1,0 +1,8 @@
+{
+  "source_doc": "akts-2h",
+  "items": [
+    { "key": "fig-26", "type": "figure", "number": 26, "file": "fig-26.png" },
+    { "key": "fig-27", "type": "figure", "number": 27, "file": "fig-27.png" },
+    { "key": "legend-1", "type": "legend", "number": 1, "file": "legend-1.png" }
+  ]
+}

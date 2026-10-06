@@ -1,0 +1,24 @@
+{
+  "name": "remote-pilot-ready",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "qbank:validate": "node scripts/qbank/validate.ts",
+    "qbank:hash": "node scripts/qbank/hash-cli.ts",
+    "qbank:acs:extract": "node scripts/qbank/extract-acs.ts",
+    "qbank:acs:check": "node scripts/qbank/extract-acs.ts --check",
+    "qbank:refs:check": "node scripts/qbank/check-references.ts",
+    "qbank:test": "node --test \"scripts/qbank/test/**/*.test.ts\"",
+    "qbank:typecheck": "tsc -p scripts/qbank/tsconfig.json"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.1",
+    "typescript": "^7.0.2"
+  }
+}

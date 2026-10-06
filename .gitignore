@@ -10,3 +10,6 @@ references/*.pdf
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Node dependencies
+node_modules/
