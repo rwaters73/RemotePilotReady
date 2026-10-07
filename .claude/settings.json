@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run qbank:hash *)",
+      "Bash(npm run qbank:validate *)"
+    ]
+  }
+}

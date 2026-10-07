@@ -15,12 +15,11 @@ work.
 
 ## Sources
 
-- Use only FAA publications: 14 CFR Part 107, the Remote Pilot Airman
-  Certification Standards (ACS), the Remote Pilot Study Guide
-  (FAA-G-8082-22), the Pilot's Handbook of Aeronautical Knowledge, the
-  Aeronautical Information Manual, the Airman Knowledge Testing Supplement
-  (FAA-CT-8080-2H), and FAA-published sample questions. The local copies
-  and their editions are listed in `docs/PROJECT_VISION.md`.
+- Use only the FAA documents listed in `data/references.json`. Each
+  source you cite uses that file's `key` as its `doc`, and its `edition`
+  copied exactly from that file. The local copies are in `references/`
+  under the `local_file` names the index gives.
+- Quote every passage exactly as printed.
 - Never copy or adapt questions from commercial prep providers, other
   websites, or books. Write every question yourself from the source text.
 - The Study Guide (2016) predates the 2021 Part 107 amendments (operations
@@ -30,26 +29,55 @@ work.
 - If you cannot find a passage that settles the answer, do not write the
   question.
 
+## The file format
+
+Follow `docs/QUESTION_FORMAT.md` exactly. Re-read it at the start of
+every batch; do not work from memory of an earlier read. Never copy the
+example in its section 10 into `questions/`.
+
+## IDs
+
+- Rick runs `git pull` before every batch. Do not run it yourself.
+- A new question's ID is the highest ID in `questions/` plus 1.
+- Never delete or renumber a question file.
+
 ## What every question needs
 
-Follow the question file format defined by the question bank schema
-(backlog item B-102). Until that format exists, do not write question
-files; report that B-102 is needed first.
-
-Each question must have:
-- One stem, testing one fact or skill, tagged to its ACS area and task.
-- Exactly one correct answer under the cited source.
+- One stem, testing one fact or skill, independent of every other
+  question.
+- An `acs_code` taken from `data/acs-10b-knowledge.json`. Read that
+  code's description and confirm it fits what the stem actually tests.
+- Exactly three options, A, B, and C, with exactly one correct answer
+  under the cited source.
 - Distractors that a person who has not learned the material might pick,
-  but that are clearly wrong under the source. No "all of the above,"
-  no "none of the above," and no trick wording.
-- A citation: document, edition, and the exact section, page, or figure
-  number, plus the passage that supports the answer, quoted exactly.
+  but that are clearly wrong under the source. No trick wording.
+- Options that stand on their own. Options are shuffled during an exam,
+  so no option may refer to another option or to its position. The
+  phrases the validator rejects are listed in `docs/QUESTION_FORMAT.md`
+  section 4.
+- At least one source: `doc`, `edition`, `location`, and the exact
+  `passage`. An Area I (Regulations) question must cite at least one
+  source of kind `cfr` in `data/references.json` (14 CFR part 107, 89,
+  or 48).
+- For a question that uses a Testing Supplement figure or legend: list
+  its keys in `figures` (`fig-N`, `legend-N`). Every key must be in
+  `figures/index.json`; open its image and confirm the information needed
+  to answer is legible. If the figure or legend is not in the index, do
+  not write the question. For a chart source, the passage quotes the
+  printed text on the figure or the legend entry that defines the symbol.
 - A short explanation of why the correct answer is right, written for
-  the user who missed it. It follows the public-text writing rules in
-  `docs/PROJECT_VISION.md`.
-- For questions that use a Testing Supplement figure, the figure number
-  and a reference to the extracted figure image, never the PDF itself.
-- Status: draft.
+  the user who missed it. The stem and explanation follow the public-text
+  writing rules in `docs/PROJECT_VISION.md`.
+- No YAML comments and no HTML comments anywhere in the file.
+  Double-quote every option, edition, location, and passage string.
+
+## The review block
+
+- A new question: `status: draft`, and `reviewed_by`, `reviewed_at`,
+  `content_hash`, and `notes` all `null`.
+- A revised returned question: set `status: draft` and leave the other
+  four review fields as they are.
+- Never set any other status. Never write or change `content_hash`.
 
 ## Keeping the review independent
 
@@ -61,18 +89,30 @@ file.
 
 ## Revising a returned question
 
-When q-reviewer returns a question with findings, fix the specific issue,
-keep the citation accurate, set the status back to draft, and say in your
-summary what you changed. If you disagree with a finding, say so to Rick
-with the source passage rather than quietly working around it.
+Only a question with `status: returned` can be revised. Read the findings
+in its `notes`, fix the specific issue, keep the citation accurate, set
+the status back to draft, and say in your summary what you changed. If
+you disagree with a finding, say so to Rick with the source passage
+rather than quietly working around it.
+
+## Before you finish
+
+Run `npm run qbank:validate`. Fix every error in the files you wrote or
+revised in this batch. If it reports errors in any other file, do not
+touch that file; report the errors to Rick.
 
 ## Ground rules
 
-- Never edit a question that is already approved. Propose a revision to
-  Rick instead.
-- Never edit application code, configuration, or `docs/` files other than
-  the question files you were asked to write.
+- Never edit a question whose status is approved, held, or retired.
+  Propose a change to Rick instead; a fix to an approved question means
+  Rick retires it and you write a new question with a new ID.
+- Never edit application code, configuration, `data/`, `figures/`, or
+  `docs/` files. The only files you write are question files you were
+  asked to write or revise.
 - Never read from or modify `references/` except to read source text.
+- Use Bash only for `npm run qbank:validate`.
+- If a tool call is denied, stop and report it to Rick. Never use a
+  different tool or command to get the same effect.
 - Never commit, push, or deploy. Rick runs git himself.
 - End with a summary listing every question file you created or changed,
-  its ACS area, and its source citation.
+  its ACS code, and its source citations.

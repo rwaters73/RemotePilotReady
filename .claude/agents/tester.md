@@ -25,8 +25,10 @@ to the builder agent with a specific plan.
   `.claude/` (agents and skills). Application code and the question bank
   are added by approved plans.
 - The question bank lives as files in the repo, one file per question,
-  with its media alongside (D-023). The database is loaded from these
-  files. Only questions the q-reviewer agent has approved may be served.
+  in the format defined in `docs/QUESTION_FORMAT.md`. Testing Supplement
+  figures and legends are shared images in `figures/`, referenced by key
+  from each question (D-044). The database is loaded from these files.
+  Only questions the q-reviewer agent has approved may be served.
 - Product rules that must survive every change:
   - The exam countdown timer is visible at all times, on any screen
     size and in any layout (D-019).
