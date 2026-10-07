@@ -1,0 +1,1577 @@
+Saved by architect-Claude, Session 3 (2026-10-07). The builder starts only after Rick approves this plan in his own message.
+
+ERRATUM (architect-Claude, Session 3). The planner's text below writes the caption regex in section 4.7 as ^(Figure|Legend)\s+(\d+).(\s|$) with an unescaped dot. v2 had the escaped form. Build it as:
+    ^(Figure|Legend)\s+(\d+)\.(\s|$)
+An unescaped dot would match "Figure 12 shows" as Figure 1. Add a figures-lib test case for exactly that string, which must not match as Figure 1.
+
+ARCHITECT CHECKS ON THE REAL PDF (Session 3, Poppler 24.02.0, all 98 item pages rendered at 300 dpi):
+- The 0.25 pt pixel-centre erase rule leaves no header or page-number ink on any page, and every erase rectangle contains ink.
+- fig-65 (page 96): the last erased row is 185; rows 183-186 have no ink in the header columns; the panel border starts at row 187 and is kept. This matches the worked example in 4.7.
+- fig-48 (page 79) under this plan's exact partition: 7 counted body words, 4 sideways, so it is "undetermined" (n < 8), not "upright". The earlier "50% of 10 words" came from a cruder count. The survey reports it as undetermined; it gets an eye check like every undetermined item.
+
+B-101 plan v3 (planner output, Session 3, 2026-10-07). Replaces v2 in full.
+The builder reads only this file.
+
+B-101 plan v3: extract the Testing Supplement figures and legends
+
+Numbering note: items inside sections use labels (R1, A1, C1 and so on) rather
+than numbered lists, so a Markdown viewer can't renumber them. v2's file had
+that problem in sections 7 to 12.
+
+1. Goal
+
+Add a script that renders all 79 figures and 19 legends from FAA-CT-8080-2H
+(references/sport_rec_private_akts.pdf). Each item becomes one image: the
+figure or legend body, its printed caption, and any note printed under the
+caption. The image never contains the "Appendix N" header or the page number.
+
+- Upright items (Rick, Session 3): keep the printed layout. The body and
+caption are cropped together exactly as printed.
+- Sideways items: only the body is turned upright, and the upright caption
+block is centred beneath it.
+
+Each item is written to figures/ as a lossless PNG and as a WebP for the site.
+figures/index.json records:
+- both files
+- the body and caption crops
+- the turn
+- the source PDF's SHA-256
+- the tool versions and settings.
+
+The builder writes the code. Architect-Claude runs it in the Linux workspace
+and checks every image by eye. Nothing in figures/ is committed until that
+check passes. Backlog item: B-101.
+
+2. Current state
+
+Checked by the planner this session on the desktop:
+
+- main is up to date with origin as of the last fetch. The last commit is
+f142503 (B-022). Untracked: docs/plans/B-101-plan-v1.txt and
+B-101-plan-v2.txt. Architect-Claude saves this plan as
+docs/plans/B-101-plan-v3.txt.
+- figures/index.json is {"source_doc": "akts-2h", "items": []}. figures/ holds
+only index.json. questions/ holds only .gitkeep.
+- references/sport_rec_private_akts.pdf is on the desktop (176,480,343 bytes).
+data/references.json lists akts-2h with sha256
+738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd. The script's
+preflight re-checks it.
+- scripts/qbank/lib/types.ts lines 69-79: FigureItem {key, type, number, file}
+and FigureIndex {source_doc, items}.
+- scripts/qbank/lib/data.ts:
+  - lines 99-129: checkFigureIndex(raw), which checks source_doc, items, type,
+number, a plain file name, key = type + number, and duplicate keys.
+  - line 17: FIGURE_KEY_RE.
+  - Its only caller is lib/validate.ts line 66.
+- scripts/qbank/lib/checks.ts lines 208-236: the "figure" check. Lines 230-232
+do existsSync(join(figuresDir, item.file)).
+- scripts/qbank/lib/validate.ts lines 64-70: loads the index, calls
+checkFigureIndex(indexRaw) on line 66, then checks source_doc against
+references.json on lines 68-70.
+- Fixtures:
+  - scripts/qbank/test/fixtures/figures/ holds index.json (fig-26, fig-27,
+legend-1, all with "file") plus fig-26.png and legend-1.png (70 bytes each).
+fig-27 has no file on purpose.
+  - The good fixture that uses figures is RPR-0002 (["fig-26", "legend-1"]).
+  - Four bad figure fixtures exist: figure-not-in-index, figure-file-missing
+(uses fig-27), figure-malformed-key and figure-duplicate-key.
+- validate.test.ts:
+  - BAD_CASES is a literal table (lines 38-87).
+  - The test "the real data files and the real questions folder validate" runs
+against the repo's own figures/index.json.
+- spec-example.test.ts reads only QUESTION_FORMAT.md section 10, so section 1
+edits don't affect it.
+- package.json: qbank:test runs "scripts/qbank/test/**/*.test.ts", so any new
+test file is picked up. There is no sharp dependency yet.
+- .gitattributes: * text=auto eol=lf, then *.png, *.jpg, *.ico and *.pdf as
+binary.
+- Tools on the desktop:
+  - extract-acs.ts falls back to C:\Program
+Files\Git\mingw64\bin\pdftotext.exe.
+  - Git Bash's PATH has /mingw64/bin/pdftotext, which is Xpdf 4.00 ("Glyph &
+Cog"). There is no pdftoppm and no pdfinfo, and no Python PDF library.
+  - So the planner could not re-measure any page positions. All the
+measurements below come from architect-Claude's run, and section 4.15 turns
+them into tests.
+- The agents' "open the image" lines are at q_writer.md:64 and
+q_reviewer.md:52. This plan does not touch them.
+
+Confirmed by architect-Claude (Poppler 24.02.0, pdftotext -bbox-layout, all 98
+item pages):
+
+- Mapping:
+  - There is exactly one caption line per item page.
+  - Legend N is on PDF page 12+N, printed page 1-N.
+  - Figures 1-15 are on page 34+N, 17-28 on page 33+N, and 31-82 on page 31+N.
+A figure's printed page is 2-(page-34).
+  - Figures 16, 29 and 30 don't exist.
+  - Figure 55 is on page 86 and is missing from the contents pages (7-9).
+  - Contents pages 7, 8 and 9 hold 40, 50 and 6 caption-like lines. Pages 1-6,
+10-12 and 32-34 hold none.
+- Embedded images are JPEG 2000 (190 /JPXDecode, 208 /SMask), so rendering
+depends on Poppler's OpenJPEG build.
+- Header group ("Appendix" plus its digit), measured extents:
+  - Left pages (48): x 36.0-79.1, y 33.8-44.3 pt.
+  - Right pages (50): x 514.5-558.0, y 33.8-44.7 pt.
+  - v2's windows would reject the digit on every page.
+- Page number: always one word, x 269.0-325.0, y 728.0-740.3 pt. Its centre
+runs from 279.0 to 315.0, alternating with left and right pages. There are no
+tab graphics.
+- Figure ink close to the header (measured at 300 dpi):
+  - fig-19 (page 52): the chart's top edge is at y 46.8 pt (pixel row 195) and
+runs from x 0 to about 518 pt.
+  - fig-65 (page 96, left page): the grey panel's top border is at y 44.88 pt
+(pixel row 187), 0.56 pt below the bottom of the "Appendix 2" word box (y
+44.3). It starts at about x 53 pt, so it overlaps the header horizontally.
+- Rotation:
+  - On every sideways item the body is printed sideways, but the caption, any
+caption-level note and the page number are printed upright. A note inside the
+sideways body (for example the NOTE on Figure 38) is part of the body.
+  - Exactly 13 items are sideways, confirmed by eye: legend-1, fig-3, fig-11,
+fig-18, fig-27, fig-35, fig-37, fig-38, fig-39, fig-40, fig-57, fig-72,
+fig-82.
+  - Detection (share >= 0.65 of at least 8 words of 3+ characters) finds
+exactly those 13 and no others, and all 13 have n >= 21.
+  - The nearest upright pages are fig-36 at 0.35 (40 words) and fig-43 at 0.32
+(53 words).
+  - Legends 2-19 and some figures are raster images with no body text.
+- Direction: Poppler lists sideways words in reading order.
+  - Votes (up / down): legend-1 568/0, fig-11 12/0, fig-18 50/0, fig-27 41/0,
+fig-35 72/0, fig-37 47/5, fig-38 61/0, fig-39 35/0, fig-40 48/0, fig-57 25/0,
+fig-72 13/0. All give rotate 90.
+  - fig-3 (page 37) has 0 votes and fig-82 (page 113) has 2. Both are
+altimeter faces, where each dial number is its own line.
+- Word shapes:
+  - Caption-block words reach a height/width ratio of 1.09 (short words such
+as "11.", "Air" and "vs.").
+  - For words of 4 or more characters: real sideways words go down to 1.04
+(1st percentile 1.14, 1,554 words). Upright words never exceed 1.00.
+- Unresolved data point: v1 and v2 recorded fig-48 at 50% of 10 words. That
+contradicts "nearest upright pages are fig-36 and fig-43". It changes no rule
+(0.50 < 0.65 either way). The survey prints fig-48's numbers, and the
+real-data test asserts that fig-48 is not sideways (section 4.15).
+- Architect workspace (Linux): Node 22.22.0 and Poppler 24.02.0. sharp 0.35.5
+installs and loads, with libvips 8.18.7 and libwebp 1.6.0.
+
+3. Sequence and who does what
+
+- S0. Rick runs git pull on the desktop. Do no figures work on the laptop
+until commit 2 is pushed. After pulling commit 1, the laptop needs npm ci,
+because sharp is a new dependency (part of B-023).
+- S1. Builder (Claude Code, desktop): everything in section 4.
+figures/index.json stays empty in its new shape, and
+data/figure-rotations.json has an empty list. The builder does not commit.
+- S2. Tester, stage A (desktop): section 8A. Every test passes except
+figures-real.test.ts, which must fail. Its output must contain "expected 98
+items, found 0" and "missing scripts/qbank/test/fixtures/figure-words.json".
+Those failures are the negative control showing the test can fail.
+- S3. Commit 1 (Rick): everything except figures-real.test.ts, with the
+commands in section 10. A fresh clone stays green.
+- S4. Architect-Claude (Linux workspace), section 9:
+  - Takes the commit-1 tree and the PDF.
+  - Runs the survey and fills data/figure-rotations.json.
+  - Saves the words fixture.
+  - Runs the extraction and checks every image by eye.
+  - Repeats until everything passes, with no commits in between.
+  - Applies the 300 MB gate before any transfer.
+- S5. Transfer to the desktop through the desktop link (no zip):
+  - The 196 images first, then scripts/qbank/test/fixtures/figure-words.json,
+then data/figure-rotations.json, then figures/index.json last.
+  - The architect reports the SHA-256 of index.json, figure-rotations.json and
+figure-words.json. Rick compares all three on the desktop, then runs npm run
+qbank:figures:check.
+  - Any file that has to be sent again goes from a fresh source path (lesson
+2026-10-02).
+- S6. Tester, stage B (desktop): section 8B.
+- S7. Commit 2 (Rick): figures/, data/figure-rotations.json, figure-words.json
+and figures-real.test.ts, with the commands in section 10.
+
+4. Changes, file by file
+
+4.1 package.json and package-lock.json
+
+- npm install --save-dev --save-exact sharp@0.35.5. If npm can't resolve
+exactly this version, stop and report; don't substitute another.
+- Add these scripts:
+  - "qbank:figures:survey": "node scripts/qbank/extract-figures.ts --survey"
+  - "qbank:figures:extract": "node scripts/qbank/extract-figures.ts"
+  - "qbank:figures:check": "node scripts/qbank/check-figures.ts"
+- Change no other scripts or dependencies.
+- Confirm package-lock.json lists @img/sharp-win32-x64, @img/sharp-linux-x64,
+@img/sharp-libvips-linux-x64, and the win32 libvips package sharp 0.35.5 uses
+(if it bundles one).
+
+4.2 .gitattributes
+
+Add the line *.webp binary. Change nothing else.
+
+4.3 scripts/qbank/lib/types.ts
+
+Replace FigureItem and FigureIndex (lines 69-79) with the following. Leave the
+rest of the file unchanged.
+
+export const FIGURE_FORMATS = ['png', 'webp'] as const;
+export type FigureFormat = (typeof FIGURE_FORMATS)[number];
+
+// left, top, width, height in pixels on the unrotated 300-dpi page render
+export type PixelRect = [number, number, number, number];
+
+export interface FigureFile {
+  name: string;   // `${key}.png` or `${key}.webp`
+  width: number;  // pixels of the final image
+  height: number;
+  bytes: number;
+  sha256: string; // 64 lowercase hex
+}
+
+export interface FigureItem {
+  key: string;
+  type: 'figure' | 'legend';
+  number: number;
+  page: number;               // 1-based PDF page
+  printed_page: string;       // e.g. "2-25"
+  rotate: 0 | 90 | 180 | 270; // clockwise, applied to the body only
+  body_px: PixelRect;
+  caption_px: PixelRect;
+  files: { png: FigureFile; webp: FigureFile & { lossless: boolean } };
+}
+
+export interface FigureExtraction {
+  poppler: string; sharp: string; libvips: string; dpi: number;
+  ink_threshold: number; erase_pad_pt: number; margin_px: number; pad_px:
+number;
+  png: { compression_level: number };
+  webp: { quality: number; effort: number; smart_subsample: boolean;
+          lossless_for_grayscale: boolean };
+}
+
+export interface FigureIndex {
+  source_doc: string;
+  source_sha256: string;
+  extracted_with: FigureExtraction | null;
+  items: FigureItem[];
+}
+
+export type RotationEvidence = 'words' | 'visual';
+export interface RotationEntry { key: string; rotate: 90 | 180 | 270;
+                                 evidence: RotationEvidence; }
+export interface RotationsFile { source_doc: string; source_sha256: string;
+                                 rotations: RotationEntry[]; }
+
+JSON key order:
+- Index item: key, type, number, page, printed_page, rotate, body_px,
+caption_px, files.
+- extracted_with: poppler, sharp, libvips, dpi, ink_threshold, erase_pad_pt,
+margin_px, pad_px, png, webp.
+
+4.4 scripts/qbank/lib/data.ts
+
+checkFigureIndex(raw, docs: ReferenceDoc[] | null) follows the same pattern as
+checkAcs. It collects every error, and rejects the following.
+
+Index level:
+- source_doc or items is missing.
+- Any top-level key other than source_doc, source_sha256, extracted_with,
+items.
+- source_sha256 is not 64 lowercase hex.
+- extracted_with is not null while items is empty, or is null while items is
+not empty.
+- When extracted_with is an object:
+  - It must have exactly the keys in FigureExtraction, including the png and
+webp sub-objects.
+  - poppler, sharp and libvips are non-empty strings.
+  - dpi is a positive integer.
+  - ink_threshold, margin_px and pad_px are non-negative integers.
+  - erase_pad_pt is a finite number >= 0.
+  - The png and webp fields have the types shown in 4.3.
+
+Item level:
+- Unknown keys. This catches a stale v1 index that has crop_px or file.
+- All existing checks on key, type and number. Keep FIGURE_KEY_RE.
+- page is not a positive integer.
+- printed_page does not match ^[12]-\d+$, or its appendix digit doesn't fit
+the type (1 for a legend, 2 for a figure).
+- rotate is not 0, 90, 180 or 270.
+- body_px or caption_px is not 4 non-negative integers with a width and height
+of at least 1.
+- rotate is not 0 and body_px top + height > caption_px top. Error text:
+"${where}: body_px must end above caption_px when rotate is not 0".
+- files does not have exactly the keys png and webp.
+- A file name is not exactly ${key}.png or ${key}.webp.
+- width, height or bytes is not a positive integer.
+- sha256 is not 64 lowercase hex.
+- webp.lossless is not a boolean.
+- The PNG and WebP width or height differ.
+- Duplicate keys (the existing check).
+
+Cross-check: if docs is not null and has an entry for source_doc,
+source_sha256 must equal its sha256. Error text: "figures/index.json
+source_sha256 does not match the akts-2h sha256 in references.json".
+
+4.5 scripts/qbank/lib/validate.ts
+
+Change line 66 to call checkFigureIndex(indexRaw, refsResult.docs). Keep lines
+68-70. Change nothing else.
+
+4.6 scripts/qbank/lib/checks.ts, the figure check
+
+Replace lines 230-232. When the item is found, then for each format in
+FIGURE_FORMATS, if figures/<item.files[fmt].name> is missing, report one issue
+per missing file:
+
+figure key "${key}" points to ${name}, which is missing from figures/
+
+Nothing else in checks.ts changes.
+
+4.7 New: scripts/qbank/lib/figures.ts (pure: no I/O, no Poppler, no sharp)
+
+Constants. Write all of these as literals. Don't compute or range-generate the
+expected sets or the window bounds.
+
+- RENDER_DPI = 300. S = 300/72 (points to pixels).
+- EXPECTED_PAGE_COUNT = 113.
+- PAGE_PT = {w: 594, h: 774}. PAGE_PX = {w: 2475, h: 3225}.
+- INK_THRESHOLD = 250. A pixel is ink if any channel is below 250.
+- MARGIN_PX = 24. This is the white margin around every image, and also the
+gap between a turned body and its caption.
+- PAD_PX = 4. Each crop is padded by this much, to keep anti-aliased edges.
+- Page-mark windows, in points. They come from section 2's measured extents
+plus 1.0 pt, and are used only to assert where the header and page number are.
+They never decide what is removed.
+  - HEADER_Y_PT = [32.8, 45.7]
+  - HEADER_LEFT_X_PT = [35.0, 80.1]
+  - HEADER_RIGHT_X_PT = [513.5, 559.0]
+  - PAGENUM_X_PT = [268.0, 326.0]
+  - PAGENUM_Y_PT = [727.0, 741.3]
+  - A box is inside a window when xMin >= lo_x, xMax <= hi_x, yMin >= lo_y and
+yMax <= hi_y.
+- ERASE_PAD_PT = 0.25. The padding around each page-mark word box that is
+erased. Never raise it: fig-65 leaves only 0.56 pt.
+- CAPTION_TOL_PT = 1.0.
+- MIN_WORD_CHARS = 3. MIN_DETECT_WORDS = 8. SIDEWAYS_SHARE = 0.65. These are
+unchanged, and proven on the real data.
+- DIRECTION_MIN_VOTES = 3. DIRECTION_AGREEMENT = 0.8.
+- CAPTION_SIDEWAYS_MIN_CHARS = 4. CAPTION_SIDEWAYS_RATIO = 1.02.
+- PPI_WARN = 330. WEBP_PSNR_WARN_DB = 35.
+- WEBP = {quality: 90, effort: 6, smartSubsample: true, losslessForGrayscale:
+true}.
+- PNG = {compressionLevel: 9, adaptiveFiltering: true, palette: false}.
+- EXPECTED_FIGURES and EXPECTED_LEGENDS: explicit arrays of numbers (1-15,
+17-28, 31-82 written out; 1-19 written out).
+- KNOWN_NOT_IN_CONTENTS = ['fig-55'].
+- SAVE_WORDS_CONTROLS = ['fig-36', 'fig-43', 'fig-48'], the upright pages
+nearest the detection line.
+
+Character count. Everywhere: the word's trimmed text length in Unicode code
+points ([...text.trim()].length).
+
+Point-to-pixel conversion. Two rules, both with S = 300/72:
+- Outward (for word boxes used in crops, caption zones and containment
+checks): left = floor(xMin·S), top = floor(yMin·S), right (exclusive) =
+ceil(xMax·S), bottom (exclusive) = ceil(yMax·S).
+- Pixel-centre (for erasing only): a pixel (px, py) is erased when its centre
+((px+0.5)/S, (py+0.5)/S) lies inside the box padded by ERASE_PAD_PT. That
+gives:
+  - first column = ceil((xMin - 0.25)·S - 0.5)
+  - last column = floor((xMax + 0.25)·S - 0.5)
+  - and the same for rows. Clamp to the page.
+  - No pixel whose centre is more than 0.25 pt outside a word box is erased.
+  - Worked example, fig-65: yMax 44.3 gives last erased row floor(185.125)
+= 185. The border is at row 187, so row 186 is clear.
+
+Text and mapping.
+
+- parseBboxLayout(xhtml): reads Poppler pdftotext -bbox-layout output into
+pages, then lines (keeping Poppler's line grouping and word order), then words
+with xMin, yMin, xMax, yMax in points. It decodes the five XML entities and
+numeric entities.
+- classifyPages(pages): a caption line is one whose text matches
+^(Figure|Legend)\s+(\d+).(\s|$).
+  - 0 caption lines: not an item page.
+  - 1: an item page.
+  - 2: an error.
+  - 3 or more: a contents page. Its entries are kept for the cross-check.
+- Mapping checks. Collect every problem before failing:
+  - Duplicate key (name both pages).
+  - Key not in the expected set.
+  - Expected key not found.
+  - Contents entries vs. found items: any difference other than
+KNOWN_NOT_IN_CONTENTS is an error. fig-55 is reported as a note.
+
+Page marks: checkPageMarks(page). This replaces v2's fixed strips. It returns
+the three mark words, the header side and errors. Every error names the page,
+the word, its box and the window.
+
+- Header:
+  - Candidates are words with text exactly "Appendix" whose box is inside
+HEADER_Y_PT and inside HEADER_LEFT_X_PT or HEADER_RIGHT_X_PT.
+  - There must be exactly one candidate.
+  - The next word on its Poppler line is the digit: "1" for a legend, "2" for
+a figure. Its box must be inside the same side's window.
+  - Record the side.
+  - If there are 0 candidates, the error lists every "Appendix" word on the
+page with its box.
+- Page number:
+  - Exactly one word must lie inside the page-number window (PAGENUM_X_PT x
+PAGENUM_Y_PT).
+  - It must match ^[12]-\d{1,2}$ with the right appendix digit.
+  - If there are 0 or 2+, the error lists every word matching ^[12]-\d{1,2}$
+on the page, and every word inside the window.
+- Words matching ^[12]-\d+$ or "Appendix" outside the windows are content, not
+marks.
+- Overlap: any other word whose box intersects (positive area) a mark word's
+box padded by ERASE_PAD_PT is an error: "word 'X' [box] on page P overlaps the
+header/page number". This replaces v2's "word in a strip" error. Such a word
+would be partly erased.
+- Within an appendix, printed page numbers rise by exactly 1 from one item
+page to the next.
+- Words anywhere else on the page, including above y 48 pt, are content.
+
+Partition into body and caption block (text): partitionWords(page, marks).
+
+- Content words: every word except the three mark words.
+- Caption line top: the smallest yMin among the caption line's words.
+- Caption-block words: content words with yMin >= caption line top -
+CAPTION_TOL_PT. That is the caption line plus every line printed beneath it.
+- Body words: every other content word.
+- Body lines: Poppler's lines filtered to body words, keeping order, with
+empty lines dropped. Caption lines are built the same way.
+- Error: no body words and (later, from pixels) no body ink. Message: "nothing
+printed above the caption on page P".
+
+Orientation detection: detectOrientation(bodyWords). Unchanged.
+
+- Count body words with at least MIN_WORD_CHARS characters. A word is sideways
+if (yMax - yMin) > (xMax - xMin).
+- n = the counted words. share = sideways / n.
+- Result:
+  - n < MIN_DETECT_WORDS: "undetermined" (a raster or sparse body).
+  - share >= SIDEWAYS_SHARE: "sideways".
+  - Otherwise: "upright".
+- Return n, the sideways count and the share. Note: 13/20 === 0.65 in IEEE
+doubles, because division is correctly rounded.
+- Why these values: on the real PDF the 13 sideways items all have n >= 21,
+and the nearest upright pages score 0.35 and 0.32.
+
+Direction: detectDirection(bodyLines), for "sideways" results only.
+
+- Within each body line, every pair of adjacent words (w_i, w_i+1) where both
+have at least MIN_WORD_CHARS characters and both are sideways is one vote.
+Pairs separated by a non-qualifying word don't vote.
+  - dy = centreY(second) - centreY(first).
+  - dy < 0 is bottom-to-top ("up").
+  - dy > 0 is top-to-bottom ("down").
+  - dy = 0 is ignored.
+- Result: {direction, up, down}. direction is:
+  - 90 when up + down >= DIRECTION_MIN_VOTES and up / (up + down) >=
+DIRECTION_AGREEMENT
+  - 270 when the same holds for down
+  - otherwise null.
+- null is not an error here; compareRotations decides what it means.
+- Bottom-to-top text needs rotate 90 (clockwise). Top-to-bottom text
+needs 270.
+- This relies on Poppler listing a rotated line's words in reading order,
+which architect-Claude confirmed (section 2).
+
+Caption-block sideways check: findCaptionSideways(captionWords). New in v3.
+
+- Returns the caption-block words with at least CAPTION_SIDEWAYS_MIN_CHARS (4)
+characters and (yMax - yMin) > CAPTION_SIDEWAYS_RATIO x (xMax - xMin),
+written with the multiplication, not a division.
+- Why: short upright words reach 1.09 (the figure number, "Air", "vs."). For
+4+ character words, upright never exceeds 1.00 and real sideways words start
+at 1.04. A limit of 1.02 sits midway, with 0.02 of margin on each side.
+- This rule is separate from detection's on purpose. Detection judges a page
+share where a few short-word misreadings don't matter. This check fires on a
+single word.
+- A sideways word of 1-3 characters is not caught here (risk R6).
+
+Rotations file.
+
+checkRotationsFile(raw, docs) rejects:
+- Keys other than source_doc, source_sha256, rotations.
+- source_doc that isn't "akts-2h".
+- source_sha256 that differs from akts-2h in docs.
+- An entry whose keys aren't exactly key, rotate, evidence.
+- A key that is malformed, not in the expected set, or listed twice.
+- rotate not 90, 180 or 270 (0 is never listed).
+- evidence not "words" or "visual".
+- evidence "words" with rotate 180 (detection can't see upside down).
+
+compareRotations(file, detections) returns errors and notes. Every case:
+
+- K1. Sideways, direction 90/270, no entry. Error: "KEY is printed sideways (S
+of N body words); add { "key": "KEY", "rotate": R, "evidence": "words" }".
+- K2. Sideways, direction 90/270, evidence "words", same rotate. Accepted.
+- K3. Sideways, direction 90/270, evidence "words", different rotate. Error
+naming both angles and the votes.
+- K4. Sideways, direction 90/270, evidence "visual". Error: "KEY's direction
+was found from its words (votes up U, down D); set evidence to words".
+- K5. Sideways, direction null, no entry. Error: "KEY is printed sideways (S
+of N body words) but its reading direction can't be read from its words (votes
+up U, down D); look at the page and add { "key": "KEY", "rotate": 90 or 270,
+"evidence": "visual" }".
+- K6. Sideways, direction null, evidence "visual", rotate 90 or 270. Accepted,
+and listed in the report as "sideways detected, direction confirmed by eye
+only".
+- K7. Sideways, direction null, evidence "visual", rotate 180. Error: "KEY is
+printed sideways; rotate must be 90 or 270".
+- K8. Sideways, direction null, evidence "words". Error: "KEY's reading
+direction can't be read from its words (votes up U, down D); use evidence
+visual".
+- K9. Upright, any entry. Error: "the rotations file turns KEY, but its body
+text is upright (share S of N words)".
+- K10. Undetermined (n < 8), evidence "words". Error: "KEY has too few body
+words to detect; use evidence visual".
+- K11. Undetermined, evidence "visual". Accepted, and listed as "rotation
+confirmed by eye only".
+- K12. Undetermined, no entry. Rotate 0, listed as "undetermined; upright by
+default; check by eye".
+
+Pixels, crops and composition. All functions take raw 8-bit RGB buffers (3
+channels, row-major) plus their width and height.
+
+- erasePageMarks(rgb, w, h, marks): returns a copy of the render with each
+mark word's pixel-centre erase rectangle set to 255, plus diagnostics:
+  - Error if any erase rectangle contains no ink before erasing: "no ink
+inside the WORD box on page P". This catches a mismatch between text
+coordinates and the render.
+  - Warning eraseTouch: ink in the 1-pixel ring directly outside any erase
+rectangle (clamped to the page, excluding pixels inside another erase
+rectangle). It gives the count, the box and which mark. This flags header
+glyphs that overhang their box, or content that runs into a mark box.
+  - All later steps (crops, diagnostics, composition) use the erased copy.
+That keeps the bottom rows of "Appendix 2" out of fig-65, whose crop starts at
+row 183, inside the header's rows.
+- computeCrops(erased, words, partition, rotated) returns body_px, caption_px
+and diagnostics.
+  - capTopPx = floor(caption line top x S) - PAD_PX.
+  - Caption zones: each caption-block word box (outward conversion), padded by
+PAD_PX.
+  - Each ink pixel in the erased render is classified:
+    - Above capTopPx: body ink.
+    - At or below capTopPx and inside a caption zone: caption ink.
+    - At or below capTopPx and outside every caption zone: when rotated, error
+"ink beside the caption block on page P" (count and box); when upright, body
+ink.
+  - Body tight box = bounding box of the body ink and the body word boxes.
+Caption tight box = bounding box of the caption ink and the caption-block word
+boxes.
+  - When rotated: error if the body tight box's bottom edge (exclusive) is
+below capTopPx: "body reaches the caption block on page P".
+  - When rotated: error if findCaptionSideways(caption-block words) is not
+empty: "caption block on page P contains sideways text: WORD [box] ratio R".
+  - Error if the body tight box is empty.
+  - body_px = the body tight box padded by PAD_PX, clamped to the page
+(columns 0-2474, rows 0-3224). When rotated, its bottom is also clamped to
+capTopPx.
+  - caption_px = the caption tight box padded by PAD_PX, clamped to columns
+0-2474 and rows capTopPx-3224.
+  - Source region R: for upright items, U = the smallest rectangle containing
+body_px and caption_px. For rotated items, the two rectangles themselves.
+  - Diagnostics:
+    - inkOutside: ink in the erased render outside R. Must be 0; anything else
+is an error and a bug.
+    - faintOutside: pixels with any channel below 255 in the erased render
+outside R. A warning, with the count and the box.
+    - touchesEdge: a crop that reaches row 0, row 3224, column 0 or
+column 2474. A warning naming the side. fig-19 is expected to warn "left" (its
+chart starts at x 0).
+  - Every content word must lie inside body_px or caption_px (outward
+conversion). If not, it's an error and a bug.
+- cropRgb(rgb, w, h, rect) returns the rectangle.
+- rotateRgb(rgb, w, h, angle): exact pixel mapping, with no resampling. For
+output pixel (x, y):
+  - 90: output is h wide and w high; out(x, y) = in(y, h - 1 - x).
+  - 180: output is w by h; out(x, y) = in(w - 1 - x, h - 1 - y).
+  - 270: output is h wide and w high; out(x, y) = in(w - 1 - y, x).
+- composeItem(erased, item fields) builds the final image on a white (255)
+canvas, with M = MARGIN_PX:
+  - rotate 0: the canvas is U.w + 2M wide and U.h + 2M high. Paste the erased
+render's U at (M, M).
+  - rotate 90, 180 or 270: B = rotateRgb(cropRgb(body_px), rotate) and C =
+cropRgb(caption_px). The canvas is max(B.w, C.w) + 2M wide (W) and B.h + C.h +
+3M high. Paste B at (floor((W - B.w) / 2), M) and C at (floor((W - C.w) / 2),
+2M + B.h).
+- isGrayscale(rgb): true only if every pixel has R = G = B.
+- psnr(a, b).
+- versionGuardDecision(existingIndex, currentVersions, allowFlag).
+- formatSizeReport(items).
+
+4.8 New: scripts/qbank/lib/poppler.ts
+
+Unchanged from v2.
+
+- Tools: pdfinfo, pdftotext, pdftoppm, pdfimages, pdffonts.
+- Lookup: each tool is looked up in $POPPLER_BIN (a folder; add .exe on win32)
+first, then on PATH.
+  - PATH is searched by splitting it on path.delimiter and checking each
+folder with existsSync. That gives an absolute path to name in messages.
+  - There is no Git-for-Windows fallback.
+- Version check:
+  - Run each tool with -v, reading stdout and stderr, and catching a non-zero
+exit as extract-acs.ts does.
+  - Output without "Poppler" is an error. If it contains "Glyph & Cog" but not
+"Poppler", say: "found Xpdf at <absolute path>; this script needs Poppler
+(pdftoppm, pdftotext -bbox-layout). Install Poppler and set POPPLER_BIN."
+  - A missing tool: "<tool> not found in POPPLER_BIN or PATH".
+  - All five tools must report the same version.
+  - Collect every tool's problem before failing.
+- Calls: execFileSync with argument arrays (no shell), so paths with spaces
+work on Windows.
+
+4.9 New: scripts/qbank/lib/figure-files.ts
+
+Unchanged from v2. verifyFigureFiles(dir, index) uses sharp and crypto, needs
+no Poppler, and returns errors and a size report.
+
+- The folder may contain only index.json, .gitkeep and the listed files. Name
+any other file.
+- For each listed file:
+  - It exists, and its byte count and SHA-256 match the index.
+  - sharp reports the right format.
+  - Its width and height match the index.
+  - It decodes fully (raw().toBuffer()), which catches truncated files.
+
+4.10 New: scripts/qbank/extract-figures.ts
+
+Flags:
+
+- --survey: writes nothing, except with --save-words.
+- --save-words FILE: only together with --survey.
+  - After a survey with no errors, it writes exactly one file, FILE, in the
+format in 4.12a.
+  - FILE must not be inside references/ or figures/.
+- --out DIR: default is the repo's figures/.
+- --only KEY,...: refused unless --out points somewhere other than the repo's
+figures/.
+- --allow-version-change.
+
+Usage errors are checked before any tool lookup and exit with code 2. Usage
+errors include:
+- --save-words without --survey
+- --save-words into references/ or figures/
+- --only without --out.
+
+The script reads references/ only and never writes there.
+
+Steps:
+
+1. Preflight:
+   - The PDF's SHA-256 must equal akts-2h.
+   - data/figure-rotations.json must pass checkRotationsFile.
+   - Poppler lookup (4.8).
+   - pdfinfo -f 1 -l 113 -box: 113 pages, each 594 x 774 pt, rot 0, MediaBox =
+CropBox. Anything else is an error.
+   - pdffonts on each item page: a font that isn't embedded is a warning.
+   - pdfimages -list: an image above PPI_WARN is a warning.
+2. Text: one call, pdftotext -bbox-layout -enc UTF-8 -f 1 -l 113, into a temp
+folder. Then parseBboxLayout.
+3. Mapping: all the mapping checks in 4.7.
+4. Page marks: checkPageMarks on every item page. Report how many headers are
+on each side (expected: 48 left, 50 right).
+5. Partition and detection:
+   - partitionWords, detectOrientation, and for sideways pages
+detectDirection.
+   - For every item that is detected sideways or listed in the rotations file,
+run the text-only partition checks:
+     - findCaptionSideways on the caption block.
+     - A body word reaching the caption rows.
+     - No body words. On text pages this is an error here; on undetermined
+pages, wait for the pixel check.
+6. Rotations: compareRotations.
+   - --survey prints one block per item page and stops here. Each block has:
+     - Page, printed page, key and caption text.
+     - The caption block's extra lines.
+     - Header side and the three mark boxes.
+     - n, sideways count, share, result, and direction with votes.
+     - The caption block's highest height/width ratio among 4+ character
+words.
+     - The rotations-file entry.
+     - Highest image ppi and fonts not embedded.
+   - Then it prints:
+     - a "suggested entries" JSON block with one {"key", "rotate", "evidence":
+"words"} per sideways item with a direction, in index order
+     - "sideways, direction unreadable; set by eye (90 or 270), evidence
+visual" with the keys (expected: fig-3, fig-82)
+     - the undetermined items for an eye check.
+   - Exit codes: 1 if steps 1-5 found any error, otherwise 0. Differences
+between the rotations file and detection (K1, K3-K10) are printed as "to do",
+not errors, because the file is being prepared. With --save-words, the file is
+written only when the exit code is 0.
+   - Without --survey, any compareRotations error stops the run with exit 1.
+7. Version guard: if --out already holds an index with items, and its Poppler,
+sharp or libvips version differs from the current tools, refuse without
+--allow-version-change. The message warns that every file would get new bytes,
+adding roughly 200 MB of new git history.
+8. Per item. Collect errors across all items and keep going:
+   - Render: pdftoppm -r 300 -f P -l P -singlefile -png -aa yes -aaVector yes
+into the temp folder.
+   - Decode with sharp to raw 3-channel RGB. Require 2475 x 3225 and 3
+channels.
+   - rotate = the rotations-file entry, or 0.
+   - Run erasePageMarks, then computeCrops on the erased copy (rotated =
+rotate is not 0), then composeItem from the erased copy. Assert the composed
+size equals the formula in 4.7.
+   - isGrayscale decides gray or RGB.
+   - PNG:
+     - Write with sharp from the composed raw buffer, using the PNG settings.
+Gray images are one-channel 8-bit gray. No metadata or ICC profile; the output
+is treated as sRGB.
+     - Decode the written PNG and require it to match the composed pixels
+exactly.
+   - WebP:
+     - Gray images: webp({lossless: true, effort: 6}).
+     - Colour images: webp({quality: 90, effort: 6, smartSubsample: true}).
+     - Decode the WebP and compute PSNR against the composed pixels. Warn
+below 35 dB (lossy only).
+   - All outputs go to the temp folder first.
+9. Finish:
+   - Only if every item succeeded, copy the files into --out, then write
+index.json last.
+   - Items are ordered figures by number, then legends by number.
+   - The JSON uses 2-space indents, a trailing LF and no timestamps, so two
+runs with the same tools and rotations file give identical output.
+   - extracted_with.libvips comes from sharp.versions.vips.
+extracted_with.erase_pad_pt is ERASE_PAD_PT.
+   - Run verifyFigureFiles on --out and print its report.
+   - Always delete the temp folder, in a finally block.
+10. Report:
+    - One line per item, for example:
+      legend-1  p13  1-1  rot 90 (words)  body 2050x2700  caption 560x60  out 
+2748x2182  gray  png 3,456,789  webp 1,234,567 (lossless)
+    - Then every warning, grouped by item.
+    - Then the "sideways detected, direction confirmed by eye only", "rotation
+confirmed by eye only" and "undetermined" lists.
+    - Then the tool versions.
+    - Then the size report:
+      - Items: 98 (79 figures, 19 legends), the number rotated (words /
+visual) and the number grayscale.
+      - PNG: N files, B bytes (MiB). WebP: N files, B bytes (MiB).
+      - The five largest files of each format.
+    - Exit 1 on any error. Warnings don't change the exit code.
+
+4.11 New: scripts/qbank/check-figures.ts
+
+Unchanged from v2.
+
+- Flag: --figures DIR.
+- Loads the index through checkFigureIndex(raw, refs.docs), then runs
+verifyFigureFiles.
+- Prints the errors and the size report. Exits 1 on any error.
+- Needs no Poppler and no PDF, so it runs on Windows.
+
+4.12 New: data/figure-rotations.json
+
+The builder writes:
+
+{
+  "source_doc": "akts-2h",
+  "source_sha256":
+"738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+  "rotations": []
+}
+
+The architect fills it from the survey: 11 "words" entries at 90, plus fig-3
+and fig-82 as "visual" at 90 or 270 by eye. Rick approves it with commit 2.
+
+4.12a New (commit 2, written by the survey): 
+scripts/qbank/test/fixtures/figure-words.json
+
+Written by --save-words. Pages are in index order (figures by number, then
+legends). It covers every item detected sideways plus the three
+SAVE_WORDS_CONTROLS. The format:
+
+{
+  "source_doc": "akts-2h",
+  "source_sha256": "738a0cd5…(full value)",
+  "poppler": "24.02.0",
+  "pages": [
+    {"key":"fig-3","page":37,"result":"sideways","caption_lines":[[{"t":"Figur
+e","b":[x0,y0,x1,y1]},…]],"body_lines":[[…]]},
+    …
+  ]
+}
+
+- The top level is pretty-printed with 2-space indents. Each page object is
+written compactly on its own line. There is a trailing LF.
+- Coordinates are Poppler's values as parsed.
+- "result" is the survey's detection result, recorded for reading only. The
+test recomputes it.
+- Expected size is well under 1 MB. The architect reports it.
+
+4.13 figures/index.json (commit 1)
+
+Pretty-printed, 2-space indent, trailing LF:
+
+{"source_doc": "akts-2h", "source_sha256": "738a0cd5…(full value)",
+"extracted_with": null, "items": []}
+
+4.14 Fixtures (scripts/qbank/test/fixtures/)
+
+- Rewrite figures/index.json in the new shape:
+  - The real akts-2h SHA-256.
+  - A valid placeholder extracted_with, including erase_pad_pt 0.25.
+  - These items:
+    - fig-26, rotate 0: both files present.
+    - fig-27: neither file present.
+    - fig-28: PNG only.
+    - fig-31: WebP only.
+    - legend-1, rotate 90: both files present, with body_px [0, 0, 1, 1] and
+caption_px [0, 1, 1, 1].
+  - File values are real for files that exist (bytes, SHA-256, 1 x 1), and
+well-formed for files that don't.
+- Keep fig-26.png and legend-1.png. Add figures/fig-26.webp,
+figures/legend-1.webp, figures/fig-28.png and figures/fig-31.webp: 1 x 1
+images made once with sharp.
+- New bad fixtures, each a copy of figure-file-missing/RPR-0001.md with only
+the figure key changed:
+  - bad/figure-webp-missing/RPR-0001.md uses fig-28.
+  - bad/figure-png-missing/RPR-0001.md uses fig-31.
+- figure-words.json is not written by the builder (see 4.12a).
+
+4.15 Tests
+
+validate.test.ts: add both new fixtures to BAD_CASES with check "figure".
+Nothing else changes.
+
+New figures-index.test.ts:
+- The fixture index passes checkFigureIndex.
+- Each of these rejections from 4.4 is shown with its own mutated copy,
+matching an error substring:
+  - missing webp
+  - wrong extension
+  - name not matching the key
+  - a slash in the name
+  - PNG and WebP sizes that differ
+  - an uppercase SHA
+  - zero bytes
+  - rotate 45
+  - an unknown item key crop_px (the v1 shape)
+  - an unknown top-level key
+  - extracted_with null while items exist
+  - extracted_with with a missing key
+  - erase_pad_pt -1
+  - a wrong source_sha256
+  - printed_page "1-5" on a figure
+  - rotate 90 with body_px reaching into caption_px
+- Control: the same overlap with rotate 0 is accepted.
+
+New figures-lib.test.ts: synthetic data only, so it runs on Windows. Pixel
+tests that place things by points use a full 2475 x 3225 white page buffer.
+
+- A1. Parsing, including entities and keeping Poppler's word order.
+- A2. Contents-page classification. Duplicate, missing, unexpected and
+two-caption pages. Contents cross-check: fig-55 is allowed; any other
+difference is an error.
+- A3. Page marks. These must pass, using the real extents from section 2:
+  - Left page: "Appendix" [36.0, 33.8, 73.0, 44.3] and "2" [74.1, 33.8, 79.1,
+44.3].
+  - Right page: "Appendix" [514.5, 33.8, 552.0, 44.7] and "1" [553.0, 33.8,
+558.0, 44.7] on a legend page.
+  - Page number "2-25" at [269.0, 728.0, 289.0, 740.3] (centre 279.0).
+  - Page number "2-77" at [305.0, 728.0, 325.0, 740.3] (centre 315.0).
+  - Both window corners exactly: a header word with yMin 32.8 and one with
+yMax 45.7.
+- A4. Page marks. Each of these fails with its own error:
+  - header yMin 32.7
+  - left digit xMax 80.2
+  - right "Appendix" xMax 559.1
+  - header at x 300
+  - header words on different sides
+  - page number xMin 267.9
+  - page number yMax 741.4
+  - page number at y 700
+  - wrong appendix digit
+  - missing page number
+  - two words inside the page-number window
+  - a content word overlapping the padded header box
+  - a gap in printed page numbers.
+- A5. Page marks, controls (fix 2). These are content, not errors:
+  - a word at [300, 38, 330, 44] (above y 48, clear of the marks)
+  - a word "2-14" at y 400
+  - a word "Appendix" at y 400.
+- A6. Erase:
+  - Header-glyph ink drawn inside the "Appendix" box is gone in the erased
+copy.
+  - An erase box with no ink is an error.
+  - Ink drawn 1.5 pt beyond the header's yMax (overhang) raises eraseTouch.
+  - fig-65 case: header box yMax 44.3, then a grey (128) line at rows 187-189
+from column 221 to 2000, a caption line near y 700 pt and a page number. This
+must give:
+    - no eraseTouch
+    - body_px top = 183
+    - in the composed upright image, the output row for source row 187 has ink
+    - no pixel from the header's erase rectangle inside U is non-white.
+  - The same with the line at row 186 raises eraseTouch.
+- A7. fig-19 case: a line at row 195 from column 0 to 2158 must give body_px
+left 0, top 191, and a touchesEdge "left" warning. inkOutside is 0.
+- A8. Detection, using the confirmed data points:
+  - 21 words at 100%: sideways.
+  - 40 words at 35%: upright.
+  - 53 words at 32%: upright.
+  - 10 words at 50%: upright.
+  - 4 words at 25%: undetermined.
+  - 4 words at 100%: undetermined.
+  - Exactly 0.65 with n = 20: sideways.
+  - 0.64 with n = 25: upright.
+  - Words under 3 characters are ignored.
+- A9. Direction:
+  - Bottom-to-top lines give 90. Top-to-bottom lines give 270.
+  - 2 votes: null. 0 votes: null.
+  - 8 up / 2 down (exactly 0.8): 90.
+  - 47 up / 5 down: 90.
+  - 7 up / 3 down: null.
+  - A pair separated by a 2-character word gives no vote.
+- A10. findCaptionSideways:
+  - Not flagged: "11." at width 10, height 10.9 (1.09); "Air" and "vs." at
+1.09; a 4-character word at width 50, height 50 (1.00); a 4-character word at
+width 50, height 51 (exactly 1.02).
+  - Flagged: width 50, height 51.5 (1.03); width 50, height 52 (1.04).
+- A11. compareRotations: K1 to K12, one test each. checkRotationsFile: words
+with 180, rotate 0, a duplicate key, an unknown key and a wrong sha each fail.
+- A12. Partition and crops:
+  - Upright page: the crop includes all ink plus the pad. inkOutside is 0, and
+one faint pixel outside is reported.
+  - Rotated page: ink beside the caption is an error, and the same ink on an
+upright page is accepted as body.
+  - A body word reaching the caption rows on a rotated page is an error.
+  - A sideways 4+ character word in the caption block on a rotated page is an
+error.
+  - A page with nothing above the caption is an error.
+  - Page-number ink below the caption on a rotated page is erased, so it does
+not trigger "ink beside the caption block".
+- A13. rotateRgb on an asymmetric 3 x 2 image with distinct pixel values: the
+exact expected output for 90, 180 and 270. This proves no mirroring. 270 after
+90 returns the original.
+- A14. composeItem:
+  - Upright: size U + 2M; U pasted at (M, M); the margin is white.
+  - Rotated 90: the size and both paste positions match the formula; the
+caption pixels are unturned; all other pixels are white.
+- A15. isGrayscale true and false. versionGuardDecision. Usage errors exit 2:
+  - --only without --out
+  - --save-words without --survey
+  - --save-words into figures/.
+
+New figures-check.test.ts: unchanged from v2.
+- Build a temp folder with two items generated by sharp and its index. The
+check passes.
+- Each of these must fail with a named error: a flipped byte, a missing WebP,
+a stray file, and a wrong size in the index.
+
+New figures-real.test.ts (left out of commit 1). It may import functions from
+figures.ts but never EXPECTED_*, SAVE_WORDS_CONTROLS or any other constant.
+Every expected value is a literal, with a comment saying why: a test sourced
+from the constant under test can't catch a member disappearing.
+
+Paths are the repo defaults. Three optional environment variables override
+them for mutation checks: FIGURES_REAL_DIR, FIGURES_REAL_ROTATIONS,
+FIGURES_REAL_WORDS.
+
+Index and files:
+- B1. The first assertion is that the index has 98 items, with message
+"expected 98 items, found N".
+- B2. Index keys equal a literal set of 98, with no duplicates.
+- B3. Each item's page and printed_page equal a literal key-to-page table (98
+entries written out from section 2's ranges, not computed).
+- B4. source_sha256 equals the literal 738a0cd5… value and equals
+references.json.
+- B5. extracted_with.dpi === 300, margin_px === 24 and erase_pad_pt === 0.25.
+- B6. Both files exist, and their on-disk sizes equal the index bytes. Only
+the two PNGs in B13 are decoded, to keep the suite fast.
+
+Rotations:
+- B7. Each item's rotate equals its data/figure-rotations.json entry, or 0 if
+it isn't listed.
+- B8. The rotations file lists exactly these 13 keys: legend-1, fig-3, fig-11,
+fig-18, fig-27, fig-35, fig-37, fig-38, fig-39, fig-40, fig-57, fig-72,
+fig-82.
+- B9. The entries with evidence "words" are exactly this literal set of 11,
+each with rotate 90: legend-1, fig-11, fig-18, fig-27, fig-35, fig-37, fig-38,
+fig-39, fig-40, fig-57, fig-72.
+- B10. The entries with evidence "visual" are exactly the literal set fig-3,
+fig-82, each with rotate 90 or 270.
+- B11. legend-1 has rotate 90 (literal; Legend 1 reads bottom-to-top).
+- B12. For every item with rotate not 0, body_px ends above caption_px.
+
+Content near the header (fix 2):
+- B13. For fig-65 (R = 187, i.e. 44.88 pt) and fig-19 (R = 195, i.e. 46.8 pt):
+  - rotate is 0 and body_px top <= R.
+  - For fig-19, body_px left === 0.
+  - Decode the PNG with sharp (1 or 3 channels). Compute U.left = min(body
+left, caption left) and U.top = min(body top, caption top) from the index.
+  - The output row R - U.top + 24 holds at least 100 ink pixels (any channel
+below 250).
+  - This proves the edge is inside the crop and was not erased.
+
+Words fixture (fix 3 and fix 4, real data):
+- B14. If figure-words.json is missing, fail with "missing
+scripts/qbank/test/fixtures/figure-words.json".
+- B15. Its source_sha256 is the literal value. Its keys are exactly the
+literal 16: the 13 in B8 plus fig-36, fig-43 and fig-48.
+- B16. For each of the 13: detectOrientation on the body words gives
+"sideways" with n >= 21.
+- B17. detectDirection gives 90 for each of the 11 in B9, and null for fig-3
+and fig-82.
+- B18. fig-36 and fig-43 give "upright". fig-48 gives anything but "sideways".
+- B19. findCaptionSideways is empty on every one of the 16 caption blocks.
+This is the no-false-alarm test.
+- B20. Negative control on real words: on each of the 13 pages,
+findCaptionSideways applied to the body words flags at least one word. Across
+all 16 pages, no word of 4+ characters has a height/width ratio above 1.00 and
+at or below 1.02.
+- If B16-B20 fail on a value (not on a crash), stop and report to the planner.
+Don't edit the literals or the constants.
+
+4.16 docs/QUESTION_FORMAT.md
+
+Section 1 table: replace the figures/ and figures/index.json rows, and add the
+third row after the data/acs-10b-knowledge.json row:
+
+| figures/ | Testing Supplement figures and legends as images, shared by all
+questions. Each item has two files: a PNG (fig-N.png, legend-N.png), the
+lossless copy, and a WebP (fig-N.webp, legend-N.webp), the copy the site
+serves. Both are committed. |
+| figures/index.json | Index of the images in figures/. Written by npm run 
+qbank:figures:extract; never edit it by hand. |
+| data/figure-rotations.json | The Testing Supplement items whose figure or
+legend is printed sideways or upside down, the clockwise turn that makes each
+read upright, and how each was found: words (from the direction of the printed
+text) or visual (by eye). Input to npm run qbank:figures:extract. |
+
+Section 1: replace the example and the "B-101 fills in the items" sentence
+with this example, introduced by "Values are shortened and illustrative:".
+
+{
+  "source_doc": "akts-2h",
+  "source_sha256":
+"738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+  "extracted_with": { "poppler": "…", "sharp": "…", "libvips": "…", "dpi":
+300, "ink_threshold": 250, "erase_pad_pt": 0.25, "margin_px": 24, "pad_px": 4,
+"png": { "compression_level": 9 }, "webp": { "quality": 90, "effort": 6,
+"smart_subsample": true, "lossless_for_grayscale": true } },
+  "items": [
+    { "key": "fig-26", "type": "figure", "number": 26, "page": 59,
+"printed_page": "2-25", "rotate": 0,
+      "body_px": [120, 300, 2240, 2600], "caption_px": [900, 2900, 680, 70],
+      "files": { "png":  { "name": "fig-26.png",  "width": 2288, "height":
+2718, "bytes": 6012345, "sha256": "…" },
+                 "webp": { "name": "fig-26.webp", "width": 2288, "height":
+2718, "bytes": 1104567, "sha256": "…", "lossless": false } } },
+    { "key": "legend-1", "type": "legend", "number": 1, "page": 13,
+"printed_page": "1-1", "rotate": 90,
+      "body_px": [210, 230, 2050, 2700], "caption_px": [960, 2950, 560, 60],
+      "files": { "png":  { "name": "legend-1.png",  "width": 2748, "height":
+2182, "bytes": 3456789, "sha256": "…" },
+                 "webp": { "name": "legend-1.webp", "width": 2748, "height":
+2182, "bytes": 1234567, "sha256": "…", "lossless": true } } }
+  ]
+}
+
+(Builder: these sizes match the formulas in 4.7. fig-26's U is 2240 x 2670, so
+the image is 2288 x 2718. legend-1's turned body is 2700 x 2050 and its
+caption 560 x 60, so the image is 2748 x 2182. Keep them consistent if
+anything changes.)
+
+The paragraph under the example becomes:
+
+key is fig-N for a figure and legend-N for a legend, where N is the number
+printed in the Testing Supplement. page is the PDF page the item was rendered
+from, and printed_page is the page number printed on it. body_px is the figure
+or legend itself. caption_px is its caption line plus any note printed
+beneath the caption. Each is given as left, top, width and height in pixels on
+the unrotated 300-dpi page render. rotate is the clockwise turn applied to
+the body only; captions are printed upright and are never turned. When rotate
+is 0, the image is the page area that covers both crops, as printed. Otherwise
+the image is the turned body with the caption block centred beneath it. The
+page's "Appendix" header and page number are never in the image. Either way,
+the image has a white margin of margin_px pixels. Each entry in files gives
+the file name (always the key plus .png or .webp), its width and height in
+pixels (the same for both files), its size in bytes, and its SHA-256. lossless
+says whether the WebP is lossless. source_sha256 must equal the akts-2h
+checksum in data/references.json. extracted_with records the tool versions and
+settings; it is null only while items is empty.
+
+Section 4, figures row: "must have its image file in figures/" becomes "must
+have both its image files (PNG and WebP) in figures/".
+
+Section 9 command table: add these rows after qbank:refs:check.
+
+| npm run qbank:figures:survey | Lists each Testing Supplement page's caption,
+printed page number, header position, caption block, body text orientation
+and reading direction, embedded image resolution, and fonts not embedded, then
+suggests rotations-file entries. Writes nothing. Needs Poppler. |
+| npm run qbank:figures:extract | Renders every figure and legend from
+references/sport_rec_private_akts.pdf at 300 dpi into figures/ (PNG and WebP),
+turning sideways bodies upright per data/figure-rotations.json, and writes
+figures/index.json. Needs Poppler (pdfinfo, pdftotext, pdftoppm, pdfimages,
+pdffonts); Xpdf is refused. |
+| npm run qbank:figures:check | Checks every file in figures/ against
+figures/index.json: present, same size in bytes, same SHA-256, same pixel
+size, decodes fully, no extra files. Prints the size report. Needs neither
+Poppler nor the PDF. |
+
+Section 9 checks table:
+
+- In the data row, the figures clause becomes: "or figures/index.json (wrong
+shape, a file name that isn't the key plus .png or .webp, PNG and WebP sizes
+that differ, a turned body that overlaps its caption, or a source_sha256 that
+differs from akts-2h)".
+- In the figure row, "keys whose image file is missing" becomes "keys whose
+PNG or WebP file is missing".
+
+4.17 CLAUDE.md
+
+Add three rows to the Commands table, after qbank:refs:check:
+
+| npm run qbank:figures:survey | Check the Testing Supplement's captions,
+headers and text orientation, and suggest rotations; writes nothing. Needs
+Poppler |
+| npm run qbank:figures:extract | Render every figure and legend into figures/
+(PNG and WebP) and write figures/index.json. Needs Poppler; Xpdf is refused |
+| npm run qbank:figures:check | Check every file in figures/ against
+figures/index.json. Needs neither Poppler nor the PDF |
+
+Not touched
+
+- references/ (read only).
+- extract-acs.ts (its Xpdf fallback stays; it is a different tool),
+check-references.ts, hash.ts, hash-cli.ts, parse.ts, schema.ts, body.ts,
+acs-extract.ts, validate.ts (the CLI), tsconfig.json.
+- Every existing fixture except fixtures/figures/index.json. fig-26.png and
+legend-1.png keep their bytes.
+- data/references.json, data/acs-10b-knowledge.json, .gitignore.
+- Everything in .claude/, including the agents' "open the image" lines.
+- PROJECT_VISION.md, DECISION_LOG.md, BACKLOG.md, PROGRESS.md,
+LESSONS_LEARNED.md, SESSION_STARTER.md. Architect-Claude updates these at the
+end of the session, including:
+  - vision line 115 ("one image each")
+  - the B-101 backlog row
+  - a decision row for Rick's "upright items keep the printed layout"
+  - new backlog items: the B-116 figure hash, and the zoom command for
+q-reviewer.
+
+5. Dependencies and licences
+
+Unchanged from v2. None of these is paid or usage-limited, and none ships to
+the site.
+
+- sharp 0.35.5 (devDependency): Apache-2.0.
+- Its prebuilt libvips (@img/sharp-libvips-*): LGPL-3.0-or-later, used only as
+a local tool and not redistributed.
+- libwebp, libpng and zlib inside libvips: BSD and zlib licences.
+- Poppler (external program): GPL-2.0-or-later. We run it and don't distribute
+it; its output images aren't covered by its licence.
+- No XML library: Poppler's bbox output is parsed with regular expressions.
+- Git LFS is not used.
+
+6. Product rules this touches
+
+- D-020 (the review shows media): these files are that media.
+  - File names are tied to the key, so re-extracting an item would change what
+past reviews show. The SHA-256 values make any change visible in git (R11).
+  - Turned items no longer match the printed page layout: the caption moves
+under the turned body. That is Rick's decision, and nothing printed is
+dropped. Upright items keep the printed layout (Rick, Session 3).
+- D-026 (no FAA PDFs for download): unchanged. Figures are the documented
+exception, and only the WebP is meant to be served. figure-words.json holds
+FAA text and coordinates, not a PDF, and is never served.
+- D-025 (phones): no user interface in this change. Turned items become wide,
+landscape-shaped images, which matters for B-106 (R9).
+- Untouched: D-003 (readiness), D-019 (timer), D-021 (option order), D-022
+(elapsed time), user-data scoping and account deletion.
+
+7. Risks
+
+- R1. Git history size. The PNGs are about 200 MB, and history keeps every
+version. Re-running with the same tools gives identical bytes (checked in
+section 9), but different tool versions rewrite every file. Mitigations: the
+eye check and the 300 MB gate both come before commit 2; the version guard;
+and figures:check, so nobody re-renders just to verify.
+- R2. Poppler version differences: anti-aliasing, JPEG 2000 decoding, fonts
+that aren't embedded, and small bbox shifts.
+  - The window assertions, the detection share and the caption ratio depend on
+bbox output.
+  - Versions are recorded, and the check mode doesn't use Poppler.
+  - A header or page number that moves out of its window fails loudly. It
+never changes what is erased, because erasing follows the actual word boxes.
+- R3. Xpdf passing as pdftotext on Windows. Handled by the refusal in 4.8.
+- R4. Page marks and erasing.
+  - Only the three mark words' boxes are erased (0.25 pt pad, pixel-centre
+rule). Content that runs into a mark box would be partly erased. The overlap
+error (words), eraseTouch (ink) and the eye check catch it.
+  - fig-65 has 1 pixel row of clearance (row 186). B13 and A6 guard it.
+  - If eraseTouch fires on most pages, the glyphs overhang their boxes. Stop
+and bring it to the planner. Never raise ERASE_PAD_PT, never widen the
+windows, and never turn an error into a warning.
+  - Ink anywhere else on the page, including above y 48 or near the bottom, is
+now content. On rotated pages, ink below the caption top outside the caption
+zones fails loudly. v2's strips hid such ink; architect-Claude's run found it
+only at the top, on fig-19 and fig-65.
+- R5. Very light tints (above 250 in every channel) outside the ink box are
+not copied, because margins are white canvas. Caught by the faintOutside
+warning and the eye check.
+- R6. Rotation.
+  - Detection and direction use Poppler's word boxes and word order, confirmed
+on the real data. Wrong word order would flip 90 and 270, which B9, B11 and
+the eye check catch.
+  - fig-3 and fig-82 rest on the eye check alone (K6). They are listed in the
+report and pinned in B10.
+  - Raster bodies and upside-down pages are found only by eye. Every
+undetermined item and every "visual" entry is listed in the report.
+  - The caption-block checks assume the caption sits below the body with
+nothing beside it on sideways pages. If not, the run fails loudly.
+  - A sideways word of 1-3 characters in the caption block isn't caught by
+findCaptionSideways. It is left to the ink-beside-caption check (when it isn't
+in a caption zone) and the eye check.
+- R7. Runtime: rendering 98 pages at 300 dpi with JPEG 2000 may take several
+minutes. Run it in the background, or batch with --only into a scratch folder.
+The 176 MB PDF must be in the workspace.
+- R8. Real-data test literals.
+  - B13's rows 187 and 195 are architect-Claude's 300-dpi measurements. If its
+threshold for "ink" differed from INK_THRESHOLD, B13 could fail on a correct
+image.
+  - B16's n >= 21 assumes the same character counting as architect-Claude's
+run.
+  - Either failure means stop and report, not edit.
+- R9. Downstream:
+  - B-115: deploy only figures/*.webp. Keep the PNGs out of the Workers static
+assets with a copy step or .assetsignore. Workers allows 25 MiB per file.
+  - B-106: a sectional chart WebP is about 1-1.5 MB on a phone, and small
+chart text needs pinch-zoom. Turned items are landscape-shaped and read best
+with the phone in landscape. Use the index's width and height to avoid layout
+shift.
+  - B-103: figure questions wait for commit 2.
+- R10. content_hash doesn't cover images. A changed figure after approval
+changes the approved question and past reviews without a new review.
+Architect-Claude is adding a backlog item for B-116: the loader stores each
+figure's SHA-256 and fails if a figure used by a loaded question changes.
+- R11. Agents reading images.
+  - A PNG of several MB may exceed the Read tool's image limit, which is why
+agents will open the WebP.
+  - Large images are scaled down when viewed, so q-reviewer may not be able to
+read small chart text. A zoom command is going to the backlog; it is out of
+scope here.
+- R12. The desktop link has silently kept old content before, and caches by
+source path.
+  - figures:check catches any image that doesn't match the index.
+  - The three reported SHA-256 values catch a stale index.json,
+figure-rotations.json or figure-words.json.
+  - Re-sends go from fresh paths.
+- R13. A crop or composition bug that drops content silently. Mitigations:
+  - inkOutside must be 0, and every content word must be inside a crop.
+  - rotateRgb is tested pixel-exact.
+  - B13 checks the two near-header edges on the real images.
+  - The architect checks all 98 items by eye.
+
+8. Test plan for the tester
+
+The tester runs on Windows and can't run the survey or the extraction (no
+Poppler). Report those steps as SKIPPED with the reason, never as VERIFIED.
+
+8A. After the builder, before extraction
+
+- T1. npm ci works. grep '@img/sharp' package-lock.json shows the win32-x64
+and linux-x64 packages. sharp is pinned at exactly 0.35.5 in package.json.
+- T2. npm run qbank:typecheck is clean.
+- T3. npm run qbank:test:
+  - Every test passes except those in figures-real.test.ts, which fail. The
+output contains "expected 98 items, found 0" and "missing
+scripts/qbank/test/fixtures/figure-words.json".
+  - Report the total and failed counts, and list every failing test's file.
+  - Both new bad fixtures fail only the figure check.
+- T4. npm run qbank:validate on the repo: 0 errors.
+- T5. Copy the fixtures to a temp folder and delete fig-26.webp. Run node
+scripts/qbank/validate.ts --questions (copy of good) --figures (copy of
+figures). It exits 1 with a figure error naming fig-26.webp.
+- T6. npm run qbank:figures:check on the empty index exits 0 and reports 0
+files for each format.
+- T7. Make a temp copy of figures/ with a stray file and pass it with
+--figures. The check exits 1 and names the file.
+- T8. Survey and usage errors:
+  - npm run qbank:figures:survey exits 1. One run lists an Xpdf message naming
+a path ending in mingw64\bin\pdftotext.exe, plus a "not found" line for each
+missing Poppler tool.
+  - Each of these exits 2 before any tool lookup:
+    - node scripts/qbank/extract-figures.ts --only fig-1
+    - node scripts/qbank/extract-figures.ts --save-words x.json
+    - node scripts/qbank/extract-figures.ts --survey --save-words
+figures/x.json
+- T9. Repo state:
+  - git status and git diff --stat show exactly the files in section 4, with
+nothing in references/ and no stray files.
+  - git check-attr binary diff text -- figures/x.webp shows binary.
+  - The QUESTION_FORMAT.md and CLAUDE.md edits match 4.16 and 4.17 word for
+word.
+  - The example's widths and heights agree with the formulas in 4.7.
+- T10. Spot-read figures.ts against 4.7:
+  - the five window literals
+  - ERASE_PAD_PT = 0.25 and the pixel-centre formulas
+  - SIDEWAYS_SHARE = 0.65, MIN_DETECT_WORDS = 8, MIN_WORD_CHARS = 3
+  - DIRECTION_AGREEMENT = 0.8, DIRECTION_MIN_VOTES = 3
+  - CAPTION_SIDEWAYS_MIN_CHARS = 4, CAPTION_SIDEWAYS_RATIO = 1.02
+  - compareRotations covers K1-K12
+  - the rotation formulas
+  - no "strip" constants or strip-based exclusions remain.
+
+8B. After the transfer
+
+- T11. The SHA-256 of figures/index.json, data/figure-rotations.json and
+scripts/qbank/test/fixtures/figure-words.json on the desktop equal the values
+the architect reported.
+- T12. npm run qbank:figures:check exits 0: 98 items, 98 PNG and 98 WebP, with
+totals equal to the architect's report.
+- T13. npm run qbank:test all passes, including every figures-real.test.ts
+test. npm run qbank:validate has 0 errors.
+- T14. Mutation checks on temp copies, each passed with the environment
+variables from 4.15. Each must make figures-real.test.ts fail, naming the
+right test:
+  - legend-1 rotate 270 in a rotations copy (B9/B11).
+  - fig-3's evidence changed to "words" in a rotations copy (B9/B10).
+  - In a words copy, one fig-38 caption-block word of 4+ characters with its
+box made 1.05 times as tall as it is wide (B19).
+  - In a figures copy, the fig-65.png output row for source row 187 painted
+white with sharp (B13).
+  - Also: flip one byte in a PNG and figures:check exits 1 naming the file;
+delete one WebP and it exits 1.
+  - Report any mutation that can't be built as SKIPPED with the reason.
+- T15. find figures -size +50M finds nothing. git status shows exactly 196
+images, index.json, figure-rotations.json, figure-words.json and
+figures-real.test.ts.
+- T16. Open on Windows, in both formats:
+  - legend-1 and fig-38 (turned; fig-38's NOTE turned with its body)
+  - fig-3 (turned by eye)
+  - fig-19 and fig-65 (top edge present, no "Appendix" fragments)
+  - fig-55, fig-12 (part-page) and fig-26 (sectional).
+  - Each displays, the body reads upright and isn't mirrored, and the caption
+is upright beneath it.
+
+9. Architect-Claude's run and checks by eye (Linux)
+
+Before running:
+- The PDF's SHA-256 matches.
+- Node is 22.22.0, and npm ci works.
+- sharp loads and reports 0.35.5 with libvips 8.18.7.
+- Poppler is 24.02.0.
+- The tree is the commit-1 tree.
+
+Survey:
+- 98 items on exactly the pages in section 2. fig-55 is the only difference
+from the contents pages.
+- Printed page numbers are in sequence.
+- Page marks pass on all 98 pages, with 48 left and 50 right headers. If not,
+stop and bring it to the planner.
+- Detection finds exactly the 13 sideways keys, each with n >= 21. fig-36 and
+fig-43 are upright at about 0.35 and 0.32. Report fig-48's n and share; this
+settles the v1/v2 data point.
+- Directions: the 11 give 90, with votes matching section 2 (report any
+difference). fig-3 and fig-82 are listed as direction unreadable.
+- The caption-block highest ratio (4+ characters) is at most 1.00 on all 13.
+- Report any ppi warnings and fonts that aren't embedded to Rick.
+- Write data/figure-rotations.json:
+  - the 11 suggested "words" entries
+  - fig-3 and fig-82 as "visual", with rotate set by looking at the rendered
+page: the altimeter's numerals and the "0" at the top read upright after the
+turn
+  - a "visual" entry for any undetermined item that is sideways or upside down
+when looked at. None is expected; any such item means stop and report,
+because B8 lists exactly 13.
+- Check every undetermined item by eye.
+- Re-run the survey with --save-words
+scripts/qbank/test/fixtures/figure-words.json. It exits 0 with no "to do"
+lines. Report the file size.
+- Run node --test scripts/qbank/test/figures-real.test.ts after extraction.
+Every test passes.
+
+Extraction: 0 errors. Read each warning and resolve it or explain it.
+Expected: touchesEdge "left" on fig-19. No eraseTouch is expected.
+
+Every one of the 98 PNGs, by eye:
+- The caption number matches the key.
+- The whole figure, caption and any note are present. Nothing is cut on any
+side, and the margin is sensible.
+- No "Appendix N", no fragment of it, and no page number.
+- The item reads upright and is not upside down. Part-page figures (for
+example 12-15) are cropped tightly.
+- fig-65: the grey panel's top border is present for its full length, with no
+"Appendix 2" fragment above it. Compare with the page render.
+- fig-19: the chart's top edge is present from its left end, and the chart
+reaches the left margin.
+
+Each turned item (the 13), against its page render:
+- The body is upright and not mirrored: text reads left to right with normal
+letterforms.
+- fig-3 and fig-82: the dial numerals are upright.
+- The caption and any caption-level note are upright and centred beneath it.
+- A note printed inside the sideways body (fig-38) is turned with the body.
+- Nothing is lost: every edge of the body is present.
+- Nothing is duplicated: no sideways copy of the caption inside the body.
+
+At full zoom, PNG and WebP side by side:
+- All 16 sectional chart excerpts (20-26, 59, 69-71, 74-76, 78, 80), the 6
+Chart Supplement figures (31, 52, 63, 77, 79, 81), and legends 1-19.
+- Check the smallest text: altitudes, frequencies, MEFs, obstruction heights,
+Chart Supplement fine print.
+- Magenta and blue stay clearly different in the WebP.
+- No blur or ringing on grayscale line art (it's lossless).
+
+Determinism: run again into a second folder. The two index.json files must be
+identical. Report any difference.
+
+Size gate: if the PNG total is over 300 MB, or figure-words.json is over 1 MB,
+stop and report to Rick before any transfer or commit. Otherwise send the
+size report.
+
+Then transfer as in section 3, step S5, and report the SHA-256 of index.json,
+figure-rotations.json and figure-words.json.
+
+10. Commit commands (Rick, Git Bash)
+
+Commit 1, after tester stage A reports that git status shows only the section
+4 files. It includes docs/plans/B-101-plan-v1.txt, v2 and v3, per D-059.
+
+cd /c/Projects/RemotePilotReady
+git add -A
+git restore --staged scripts/qbank/test/figures-real.test.ts
+git status
+git commit -m "B-101: figure extraction tools, two-file figure index, 
+validator and tests"
+git push
+
+Commit 2, after tester stage B passes:
+
+cd /c/Projects/RemotePilotReady
+git add figures data/figure-rotations.json 
+scripts/qbank/test/fixtures/figure-words.json 
+scripts/qbank/test/figures-real.test.ts
+git status
+git commit -m "B-101: Testing Supplement figures and legends (98 items, PNG 
+and WebP)"
+git push
+
+11. Changes from v2, and the rule cross-check
+
+Changes from v2:
+- Fix 1: the windows are set from the measured extents plus 1.0 pt. The
+page-number centre rule is gone. The real extents are in A3.
+- Fix 2: the full-width strips are gone. Only the three mark word boxes are
+erased (0.25 pt, pixel-centre rule), and everything else is content. B13 and
+A6/A7 cover fig-65 and fig-19.
+- Fix 3: the caption-block check is now 4+ characters with height > 1.02 x
+width. B19 and B20 cover it on the real data.
+- Fix 4:
+  - Direction null on a sideways page is accepted with evidence "visual"
+(K5-K8).
+  - DIRECTION_AGREEMENT is now 0.8.
+  - B9/B10 split the 11 "words" keys from fig-3 and fig-82.
+- Rick's answer: upright items keep the printed layout. This was already v2's
+design, and is now settled.
+- Also: section numbering fixed; commit commands on one line each.
+
+Conflicts found and how they were resolved:
+
+- C1. Erase-only (fix 2) vs. cropping from the original render. fig-65's crop
+starts at row 183, inside the header's rows, and U spans the header's x range.
+Cropping the original render would copy the bottom of "Appendix 2" into the
+image. Resolved: erase first, then crop, check and compose only from the
+erased copy (A6 and B13).
+- C2. Fix 2 vs. v2's "word in a strip is an error". With no strips, that rule
+would reject fig-19 and fig-65 and similar content. Resolved: replaced with "a
+content word overlapping a padded mark box is an error", the only case where
+erasing could hide a word.
+- C3. Fix 2 vs. checkStripInk. Ink outside the mark boxes is now content, so
+the check has no job. Resolved: removed, and replaced with "an erase box must
+contain ink" (error) and eraseTouch (warning).
+- C4. Fix 2 vs. "padded by no more than 0.25 pt". v2's outward rounding
+(floor/ceil) could erase up to 0.25 pt plus a full pixel (0.49 pt). Resolved:
+erasing uses the pixel-centre rule, so no erased pixel's centre is more than
+0.25 pt outside a word box. Crops and containment keep outward rounding, which
+only ever enlarges a crop.
+- C5. Fix 2 vs. clamping and touchesEdge. Both used strip boundaries.
+Resolved: both now use the page edges. fig-19's left-edge warning is expected
+and listed.
+- C6. Fix 2 vs. the bottom strip. v2's bottom strip hid the page number and
+anything else below y 725. Now only the page-number box is erased, so any
+other ink there is content (upright) or "ink beside the caption" (rotated, an
+error). That is the intended loud failure.
+- C7. Fix 1 windows vs. fix 2 erasing. The windows are now assertions only.
+Erasing follows the actual word boxes, so the 1.0 pt tolerance can't change
+any output pixel.
+- C8. Fix 1 vs. identifying the marks. v2 took "the" Appendix word and "the"
+page-number word anywhere in a strip. Now a mark is the word inside its
+window, and the same text elsewhere (a chart label "1-12", say) is content.
+With 0 or 2+ candidates, the error lists every look-alike, so a shift still
+fails loudly.
+- C9. v2's "strip boundaries and windows must nest" (v2 C9) no longer applies;
+there are no strips.
+- C10. Fix 3 vs. detection's rule. There are now two definitions of a sideways
+word: 3+ characters with h > w for page detection and voting, and 4+
+characters with h > 1.02 w for the single-word caption check. Kept separate on
+purpose and named differently. Detection stays as proven (Rick's
+instruction). R6 records the 1-3 character gap.
+- C11. Fix 4 vs. v2's "sideways with evidence visual is an error". Resolved by
+splitting on direction: determined (K4 error) or null (K6 accepted, K7 and K8
+errors).
+- C12. Fix 4 vs. the survey exit code. v2 made "direction undetermined" an
+error that set exit 1. It is now a compareRotations case: "to do" in the
+survey, an error in extraction only when the file is wrong.
+- C13. Fix 4 vs. checkRotationsFile. That function can't see detection, so
+"visual 180 on a sideways page" is rejected in compareRotations (K7). "words
+180" stays rejected in the file check.
+- C14. DIRECTION_AGREEMENT 0.8 vs. v2's test "8 up / 2 down is an error". That
+test now passes at the boundary (A9), and 7/3 is the failing case.
+- C15. v2's real-data test "the words set is the 13". Now 11 "words" plus 2
+"visual" (B8-B10). The 11 are pinned at 90, per the votes.
+- C16. v2's "figures-real.test.ts doesn't decode, to keep the suite fast" vs.
+a meaningful fix-2 check. A bounds check alone would pass even if the border's
+first row were erased, because the next rows would still start the crop above
+row 187. Resolved: decode exactly two PNGs (B13).
+- C17. v2's "--survey writes nothing" vs. the real-data words fixture.
+--save-words is the only exception, needs --survey, is refused inside
+references/ and figures/, and is written only on exit 0.
+- C18. erase_pad_pt changes output bytes, like the settings v2 already
+records. It is added to extracted_with, the validator, the fixture index and
+the QUESTION_FORMAT example. The version guard still compares tool versions
+only, because settings change only through a plan.
+- C19. v2's open question 2 (all 13 at n >= 8) is answered by n >= 21, which
+B16 asserts. v2's C5 conflict is gone.
+- C20. The fig-48 data point (v1/v2) vs. "nearest upright are fig-36 and
+fig-43". It changes no rule. Resolved by measurement: the survey reports
+fig-48, and B18 asserts it isn't sideways.
+- C21. Fix 3's real-data test needs Poppler output on Windows. Resolved by the
+committed words fixture, produced by the same partition code the extraction
+uses (4.12a).
+- C22. The mutation checks in v2 8B relied on "if the test can be pointed at a
+copy". Now the three environment variables make that possible, so they are no
+longer a judgment call.
+
+No remaining conflicts found.
+
+12. Open questions for Rick
+
+None that block the builder. One item to approve explicitly with this plan:
+committing scripts/qbank/test/fixtures/figure-words.json. It holds about 16
+pages' worth of FAA text and word coordinates, expected well under 1 MB, as
+test data. It is not a PDF and is never served.
+
+13. Summary to approve
+
+- Finds each item by its printed caption and fails loudly on any mapping
+problem.
+- Checks the "Appendix N" header and page number against windows taken from
+architect-Claude's measurements (plus 1.0 pt), then erases only those three
+word boxes (0.25 pt). Everything else, including fig-19's and fig-65's top
+edges, is kept. A real-data test checks both edges in the final images.
+- Upright items keep the printed layout. Sideways bodies are turned, with the
+upright caption centred beneath.
+- Detection (65% of 8+ words) is unchanged. Direction now needs 80% agreement.
+fig-3 and fig-82, whose direction can't be read from text, are accepted as
+"visual" and set by eye.
+- The caption-block sideways check counts only words of 4+ characters taller
+than 1.02 times their width. A committed real-data fixture shows it raises no
+alarm on the real caption blocks and still catches real sideways words.
+- Writes a lossless PNG and a WebP per item. A check mode that needs no
+Poppler proves the transfer byte for byte.
+- Nothing in figures/ is committed until all 98 items pass the eye check and
+the 300 MB gate.
+

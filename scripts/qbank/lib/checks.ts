@@ -12,7 +12,7 @@ import { computeContentHash, HashInputError } from './hash.ts';
 import { areaOfCode, FIGURE_KEY_RE } from './data.ts';
 import type { ParseResult } from './parse.ts';
 import type { SchemaResult } from './schema.ts';
-import { REVIEWERS, STATUSES } from './types.ts';
+import { FIGURE_FORMATS, REVIEWERS, STATUSES } from './types.ts';
 import type { AcsData, FigureIndex, Issue, Question, ReferenceDoc, Severity } from './types.ts';
 
 export interface BankContext {
@@ -227,8 +227,13 @@ export const CHECKS: CheckDef[] = [
         const item = index.items.find((it) => it.key === key);
         if (item === undefined) {
           out.push(issue(f.label, 'figure', `figure key "${key}" is not in figures/index.json`));
-        } else if (!existsSync(join(f.bank.figuresDir, item.file))) {
-          out.push(issue(f.label, 'figure', `figure key "${key}" points to ${item.file}, which is missing from figures/`));
+        } else {
+          for (const fmt of FIGURE_FORMATS) {
+            const name = item.files[fmt].name;
+            if (!existsSync(join(f.bank.figuresDir, name))) {
+              out.push(issue(f.label, 'figure', `figure key "${key}" points to ${name}, which is missing from figures/`));
+            }
+          }
         }
       }
       return out;

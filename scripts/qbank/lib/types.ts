@@ -66,14 +66,49 @@ export interface AcsData {
   elements: AcsElement[];
 }
 
+export const FIGURE_FORMATS = ['png', 'webp'] as const;
+export type FigureFormat = (typeof FIGURE_FORMATS)[number];
+
+// left, top, width, height in pixels on the unrotated 300-dpi page render
+export type PixelRect = [number, number, number, number];
+
+export interface FigureFile {
+  name: string;   // `${key}.png` or `${key}.webp`
+  width: number;  // pixels of the final image
+  height: number;
+  bytes: number;
+  sha256: string; // 64 lowercase hex
+}
+
 export interface FigureItem {
   key: string;
   type: 'figure' | 'legend';
   number: number;
-  file: string;
+  page: number;               // 1-based PDF page
+  printed_page: string;       // e.g. "2-25"
+  rotate: 0 | 90 | 180 | 270; // clockwise, applied to the body only
+  body_px: PixelRect;
+  caption_px: PixelRect;
+  files: { png: FigureFile; webp: FigureFile & { lossless: boolean } };
+}
+
+export interface FigureExtraction {
+  poppler: string; sharp: string; libvips: string; dpi: number;
+  ink_threshold: number; erase_pad_pt: number; margin_px: number; pad_px: number;
+  png: { compression_level: number };
+  webp: { quality: number; effort: number; smart_subsample: boolean;
+          lossless_for_grayscale: boolean };
 }
 
 export interface FigureIndex {
   source_doc: string;
+  source_sha256: string;
+  extracted_with: FigureExtraction | null;
   items: FigureItem[];
 }
+
+export type RotationEvidence = 'words' | 'visual';
+export interface RotationEntry { key: string; rotate: 90 | 180 | 270;
+                                 evidence: RotationEvidence; }
+export interface RotationsFile { source_doc: string; source_sha256: string;
+                                 rotations: RotationEntry[]; }

@@ -75,6 +75,9 @@ Run from the repo root in Git Bash (`cd /c/Projects/RemotePilotReady`). Needs No
 | `npm run qbank:typecheck` | Type-check the question bank tools |
 | `npm run qbank:acs:check` | Re-extract the ACS codes from `references/uas_acs.pdf` and compare with `data/acs-10b-knowledge.json` |
 | `npm run qbank:refs:check` | Compare each file in `references/` with its checksum in `data/references.json` |
+| `npm run qbank:figures:survey` | Check the Testing Supplement's captions, headers and text orientation, and suggest rotations; writes nothing. Needs Poppler |
+| `npm run qbank:figures:extract` | Render every figure and legend into `figures/` (PNG and WebP) and write `figures/index.json`. Needs Poppler; Xpdf is refused |
+| `npm run qbank:figures:check` | Check every file in `figures/` against `figures/index.json`. Needs neither Poppler nor the PDF |
 
 App commands (dev server, deploy preview) are added when the app is scaffolded (B-115).
 

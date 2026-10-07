@@ -3,7 +3,7 @@
 // These functions are pure apart from reading the named files, so tests can feed them bad data.
 
 import { readFileSync } from 'node:fs';
-import type { AcsData, FigureIndex, FigureItem, ReferenceDoc } from './types.ts';
+import type { AcsData, FigureIndex, PixelRect, ReferenceDoc } from './types.ts';
 
 // ACS knowledge element code, e.g. UA.I.B.K10 or UA.I.B.K14a.
 export const ACS_CODE_RE = /^UA\.(I|II|III|IV|V)\.([A-Z])\.K(\d+)([a-z]?)$/;
@@ -96,11 +96,102 @@ export function checkAcs(raw: unknown, docs: ReferenceDoc[] | null): { acs: AcsD
   return { acs: errors.length === 0 ? (raw as unknown as AcsData) : null, errors };
 }
 
-export function checkFigureIndex(raw: unknown): { index: FigureIndex | null; errors: string[] } {
+const HEX64_RE = /^[0-9a-f]{64}$/;
+
+// Exact key sets for figures/index.json, in the order the extractor writes them.
+const FIGURE_INDEX_KEYS = ['source_doc', 'source_sha256', 'extracted_with', 'items'];
+const FIGURE_ITEM_KEYS = ['key', 'type', 'number', 'page', 'printed_page', 'rotate', 'body_px', 'caption_px', 'files'];
+const FIGURE_EXTRACTION_KEYS = [
+  'poppler', 'sharp', 'libvips', 'dpi', 'ink_threshold', 'erase_pad_pt', 'margin_px', 'pad_px', 'png', 'webp',
+];
+const FIGURE_PNG_SETTING_KEYS = ['compression_level'];
+const FIGURE_WEBP_SETTING_KEYS = ['quality', 'effort', 'smart_subsample', 'lossless_for_grayscale'];
+
+function isPositiveInt(v: unknown): v is number {
+  return typeof v === 'number' && Number.isInteger(v) && v >= 1;
+}
+
+function isNonNegativeInt(v: unknown): v is number {
+  return typeof v === 'number' && Number.isInteger(v) && v >= 0;
+}
+
+function sameKeys(obj: Record<string, unknown>, keys: string[]): boolean {
+  const have = Object.keys(obj);
+  return have.length === keys.length && keys.every((k) => Object.hasOwn(obj, k));
+}
+
+function isPixelRect(v: unknown): v is PixelRect {
+  return Array.isArray(v) && v.length === 4 && v.every(isNonNegativeInt) && v[2] >= 1 && v[3] >= 1;
+}
+
+function checkFigureExtraction(ex: Record<string, unknown>, errors: string[]): void {
+  const where = 'figures/index.json extracted_with';
+  if (!sameKeys(ex, FIGURE_EXTRACTION_KEYS)) {
+    errors.push(`${where} must have exactly the keys ${FIGURE_EXTRACTION_KEYS.join(', ')}`);
+  }
+  for (const k of ['poppler', 'sharp', 'libvips']) {
+    if (!isNonEmptyString(ex[k])) errors.push(`${where}.${k} must be a non-empty string`);
+  }
+  if (!isPositiveInt(ex.dpi)) errors.push(`${where}.dpi must be a positive integer`);
+  for (const k of ['ink_threshold', 'margin_px', 'pad_px']) {
+    if (!isNonNegativeInt(ex[k])) errors.push(`${where}.${k} must be a non-negative integer`);
+  }
+  if (typeof ex.erase_pad_pt !== 'number' || !Number.isFinite(ex.erase_pad_pt) || ex.erase_pad_pt < 0) {
+    errors.push(`${where}.erase_pad_pt must be a finite number >= 0`);
+  }
+  if (!isObj(ex.png) || !sameKeys(ex.png, FIGURE_PNG_SETTING_KEYS)) {
+    errors.push(`${where}.png must have exactly the keys ${FIGURE_PNG_SETTING_KEYS.join(', ')}`);
+  } else if (typeof ex.png.compression_level !== 'number') {
+    errors.push(`${where}.png.compression_level must be a number`);
+  }
+  if (!isObj(ex.webp) || !sameKeys(ex.webp, FIGURE_WEBP_SETTING_KEYS)) {
+    errors.push(`${where}.webp must have exactly the keys ${FIGURE_WEBP_SETTING_KEYS.join(', ')}`);
+  } else {
+    for (const k of ['quality', 'effort']) {
+      if (typeof ex.webp[k] !== 'number') errors.push(`${where}.webp.${k} must be a number`);
+    }
+    for (const k of ['smart_subsample', 'lossless_for_grayscale']) {
+      if (typeof ex.webp[k] !== 'boolean') errors.push(`${where}.webp.${k} must be a boolean`);
+    }
+  }
+}
+
+function checkFigureFile(f: unknown, where: string, expectedName: string, isWebp: boolean, errors: string[]): void {
+  if (!isObj(f)) {
+    errors.push(`${where} must be an object`);
+    return;
+  }
+  if (f.name !== expectedName) errors.push(`${where}.name must be "${expectedName}"`);
+  for (const k of ['width', 'height', 'bytes']) {
+    if (!isPositiveInt(f[k])) errors.push(`${where}.${k} must be a positive integer`);
+  }
+  if (typeof f.sha256 !== 'string' || !HEX64_RE.test(f.sha256)) {
+    errors.push(`${where}.sha256 must be 64 lowercase hex characters`);
+  }
+  if (isWebp && typeof f.lossless !== 'boolean') errors.push(`${where}.lossless must be a boolean`);
+}
+
+export function checkFigureIndex(raw: unknown, docs: ReferenceDoc[] | null): { index: FigureIndex | null; errors: string[] } {
   const errors: string[] = [];
   if (!isObj(raw) || !isNonEmptyString(raw.source_doc) || !Array.isArray(raw.items)) {
     return { index: null, errors: ['figures/index.json must have "source_doc" and an "items" list'] };
   }
+  for (const k of Object.keys(raw)) {
+    if (!FIGURE_INDEX_KEYS.includes(k)) errors.push(`figures/index.json has unknown top-level key "${k}"`);
+  }
+  if (typeof raw.source_sha256 !== 'string' || !HEX64_RE.test(raw.source_sha256)) {
+    errors.push('figures/index.json source_sha256 must be 64 lowercase hex characters');
+  }
+  const ex = raw.extracted_with;
+  if (ex === null) {
+    if (raw.items.length > 0) errors.push('figures/index.json extracted_with must not be null while items is not empty');
+  } else if (isObj(ex)) {
+    if (raw.items.length === 0) errors.push('figures/index.json extracted_with must be null while items is empty');
+    checkFigureExtraction(ex, errors);
+  } else {
+    errors.push('figures/index.json extracted_with must be null or an object');
+  }
+
   const seen = new Set<string>();
   raw.items.forEach((it: unknown, i: number) => {
     const where = `figures/index.json items[${i}]`;
@@ -108,22 +199,55 @@ export function checkFigureIndex(raw: unknown): { index: FigureIndex | null; err
       errors.push(`${where} must be an object`);
       return;
     }
-    const { key, type, number, file } = it as Partial<FigureItem>;
-    if (type !== 'figure' && type !== 'legend') errors.push(`${where}.type must be "figure" or "legend"`);
-    if (typeof number !== 'number' || !Number.isInteger(number) || number < 1) {
-      errors.push(`${where}.number must be a positive integer`);
+    for (const k of Object.keys(it)) {
+      if (!FIGURE_ITEM_KEYS.includes(k)) errors.push(`${where} has unknown key "${k}"`);
     }
-    if (!isNonEmptyString(file) || /[\\/]/.test(file) || file.startsWith('.')) {
-      errors.push(`${where}.file must be a plain file name in figures/`);
+    const { key, type, number, page, printed_page, rotate, body_px, caption_px, files } = it as Record<string, unknown>;
+    if (type !== 'figure' && type !== 'legend') errors.push(`${where}.type must be "figure" or "legend"`);
+    if (!isPositiveInt(number)) errors.push(`${where}.number must be a positive integer`);
+    if (!isPositiveInt(page)) errors.push(`${where}.page must be a positive integer`);
+    if (typeof printed_page !== 'string' || !/^[12]-\d+$/.test(printed_page)) {
+      errors.push(`${where}.printed_page must look like 1-N or 2-N`);
+    } else if (type === 'figure' || type === 'legend') {
+      const digit = type === 'legend' ? '1' : '2';
+      if (printed_page[0] !== digit) {
+        errors.push(`${where}.printed_page "${printed_page}" must start with ${digit}- for a ${type}`);
+      }
+    }
+    if (rotate !== 0 && rotate !== 90 && rotate !== 180 && rotate !== 270) {
+      errors.push(`${where}.rotate must be 0, 90, 180 or 270`);
+    }
+    const bodyOk = isPixelRect(body_px);
+    const captionOk = isPixelRect(caption_px);
+    if (!bodyOk) errors.push(`${where}.body_px must be 4 non-negative integers with a width and height of at least 1`);
+    if (!captionOk) errors.push(`${where}.caption_px must be 4 non-negative integers with a width and height of at least 1`);
+    if (bodyOk && captionOk && rotate !== 0 && body_px[1] + body_px[3] > caption_px[1]) {
+      errors.push(`${where}: body_px must end above caption_px when rotate is not 0`);
     }
     if (!isNonEmptyString(key)) {
       errors.push(`${where}.key must be a non-empty string`);
       return;
+    }
+    if (!isObj(files) || !sameKeys(files, ['png', 'webp'])) {
+      errors.push(`${where}.files must have exactly the keys png and webp`);
+    } else {
+      checkFigureFile(files.png, `${where}.files.png`, `${key}.png`, false, errors);
+      checkFigureFile(files.webp, `${where}.files.webp`, `${key}.webp`, true, errors);
+      const p = files.png as Record<string, unknown> | undefined;
+      const w = files.webp as Record<string, unknown> | undefined;
+      if (isObj(p) && isObj(w) && (p.width !== w.width || p.height !== w.height)) {
+        errors.push(`${where}: the PNG and WebP sizes differ (${p.width}x${p.height} vs ${w.width}x${w.height})`);
+      }
     }
     const expectedKey = `${type === 'legend' ? 'legend' : 'fig'}-${number}`;
     if (key !== expectedKey) errors.push(`${where}.key "${key}" should be "${expectedKey}" for its type and number`);
     if (seen.has(key)) errors.push(`figures/index.json has duplicate key "${key}"`);
     seen.add(key);
   });
+
+  const ref = docs?.find((d) => d.key === raw.source_doc);
+  if (ref !== undefined && raw.source_sha256 !== ref.sha256) {
+    errors.push(`figures/index.json source_sha256 does not match the ${raw.source_doc} sha256 in references.json`);
+  }
   return { index: errors.length === 0 ? (raw as unknown as FigureIndex) : null, errors };
 }

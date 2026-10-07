@@ -63,7 +63,7 @@ export function validateBankDetailed(paths: BankPaths): BankResult {
 
   const indexPath = join(paths.figuresDir, 'index.json');
   const indexRaw = loadJson(indexPath, dataErrors);
-  const indexResult = indexRaw === undefined ? { index: null, errors: [] } : checkFigureIndex(indexRaw);
+  const indexResult = indexRaw === undefined ? { index: null, errors: [] } : checkFigureIndex(indexRaw, refsResult.docs);
   for (const m of indexResult.errors) dataErrors.push({ file: label(indexPath), message: m });
   if (indexResult.index !== null && refsResult.docs !== null && !refsResult.docs.some((d) => d.key === indexResult.index!.source_doc)) {
     dataErrors.push({ file: label(indexPath), message: `source_doc "${indexResult.index.source_doc}" is not a key in references.json` });

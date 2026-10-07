@@ -11,6 +11,9 @@
     "qbank:acs:extract": "node scripts/qbank/extract-acs.ts",
     "qbank:acs:check": "node scripts/qbank/extract-acs.ts --check",
     "qbank:refs:check": "node scripts/qbank/check-references.ts",
+    "qbank:figures:survey": "node scripts/qbank/extract-figures.ts --survey",
+    "qbank:figures:extract": "node scripts/qbank/extract-figures.ts",
+    "qbank:figures:check": "node scripts/qbank/check-figures.ts",
     "qbank:test": "node --test \"scripts/qbank/test/**/*.test.ts\"",
     "qbank:typecheck": "tsc -p scripts/qbank/tsconfig.json"
   },
@@ -19,6 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.19.1",
+    "sharp": "0.35.5",
     "typescript": "^7.0.2"
   }
 }

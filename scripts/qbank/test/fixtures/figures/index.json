@@ -1,8 +1,52 @@
 {
   "source_doc": "akts-2h",
+  "source_sha256": "738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+  "extracted_with": {
+    "poppler": "24.02.0", "sharp": "0.35.5", "libvips": "8.18.7", "dpi": 300,
+    "ink_threshold": 250, "erase_pad_pt": 0.25, "margin_px": 24, "pad_px": 4,
+    "png": { "compression_level": 9 },
+    "webp": { "quality": 90, "effort": 6, "smart_subsample": true, "lossless_for_grayscale": true }
+  },
   "items": [
-    { "key": "fig-26", "type": "figure", "number": 26, "file": "fig-26.png" },
-    { "key": "fig-27", "type": "figure", "number": 27, "file": "fig-27.png" },
-    { "key": "legend-1", "type": "legend", "number": 1, "file": "legend-1.png" }
+    {
+      "key": "fig-26", "type": "figure", "number": 26, "page": 59, "printed_page": "2-25", "rotate": 0,
+      "body_px": [0, 0, 1, 1], "caption_px": [0, 1, 1, 1],
+      "files": {
+        "png": { "name": "fig-26.png", "width": 1, "height": 1, "bytes": 70, "sha256": "c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77" },
+        "webp": { "name": "fig-26.webp", "width": 1, "height": 1, "bytes": 38, "sha256": "52dc24c0429ea6ccc5b579a6da8bb79bf41e471fe5108a62009f3c2e195551c0", "lossless": true }
+      }
+    },
+    {
+      "key": "fig-27", "type": "figure", "number": 27, "page": 60, "printed_page": "2-26", "rotate": 0,
+      "body_px": [0, 0, 1, 1], "caption_px": [0, 1, 1, 1],
+      "files": {
+        "png": { "name": "fig-27.png", "width": 1, "height": 1, "bytes": 1, "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
+        "webp": { "name": "fig-27.webp", "width": 1, "height": 1, "bytes": 1, "sha256": "0000000000000000000000000000000000000000000000000000000000000000", "lossless": true }
+      }
+    },
+    {
+      "key": "fig-28", "type": "figure", "number": 28, "page": 61, "printed_page": "2-27", "rotate": 0,
+      "body_px": [0, 0, 1, 1], "caption_px": [0, 1, 1, 1],
+      "files": {
+        "png": { "name": "fig-28.png", "width": 1, "height": 1, "bytes": 90, "sha256": "60b2c422dce4476bf942589534d1f3ec015011f45ccf49000b7cb321db9dc73d" },
+        "webp": { "name": "fig-28.webp", "width": 1, "height": 1, "bytes": 1, "sha256": "0000000000000000000000000000000000000000000000000000000000000000", "lossless": true }
+      }
+    },
+    {
+      "key": "fig-31", "type": "figure", "number": 31, "page": 62, "printed_page": "2-28", "rotate": 0,
+      "body_px": [0, 0, 1, 1], "caption_px": [0, 1, 1, 1],
+      "files": {
+        "png": { "name": "fig-31.png", "width": 1, "height": 1, "bytes": 1, "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
+        "webp": { "name": "fig-31.webp", "width": 1, "height": 1, "bytes": 38, "sha256": "52dc24c0429ea6ccc5b579a6da8bb79bf41e471fe5108a62009f3c2e195551c0", "lossless": true }
+      }
+    },
+    {
+      "key": "legend-1", "type": "legend", "number": 1, "page": 13, "printed_page": "1-1", "rotate": 90,
+      "body_px": [0, 0, 1, 1], "caption_px": [0, 1, 1, 1],
+      "files": {
+        "png": { "name": "legend-1.png", "width": 1, "height": 1, "bytes": 70, "sha256": "c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77" },
+        "webp": { "name": "legend-1.webp", "width": 1, "height": 1, "bytes": 38, "sha256": "52dc24c0429ea6ccc5b579a6da8bb79bf41e471fe5108a62009f3c2e195551c0", "lossless": true }
+      }
+    }
   ]
 }

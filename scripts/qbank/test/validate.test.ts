@@ -68,6 +68,8 @@ const BAD_CASES: { name: string; check: string; overrides?: Partial<BankPaths> }
   { name: 'figure-file-missing', check: 'figure' },
   { name: 'figure-malformed-key', check: 'figure' },
   { name: 'figure-duplicate-key', check: 'figure' },
+  { name: 'figure-webp-missing', check: 'figure' },
+  { name: 'figure-png-missing', check: 'figure' },
   { name: 'status-invalid', check: 'status' },
   { name: 'status-returned-no-notes', check: 'status' },
   { name: 'status-bad-reviewed-by', check: 'status' },

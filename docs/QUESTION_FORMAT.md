@@ -7,24 +7,33 @@ This is the format for every question in the Remote Pilot Ready question bank. q
 | Path | Contents |
 | --- | --- |
 | `questions/RPR-NNNN.md` | One file per question. Flat folder, no subfolders. |
-| `figures/` | Testing Supplement figures and legends as images (`fig-N.png`, `legend-N.png`), shared by all questions. |
-| `figures/index.json` | Index of the images in `figures/`. |
+| `figures/` | Testing Supplement figures and legends as images, shared by all questions. Each item has two files: a PNG (`fig-N.png`, `legend-N.png`), the lossless copy, and a WebP (`fig-N.webp`, `legend-N.webp`), the copy the site serves. Both are committed. |
+| `figures/index.json` | Index of the images in `figures/`. Written by `npm run qbank:figures:extract`; never edit it by hand. |
 | `data/references.json` | The FAA source documents: key, kind, title, document number, edition, official URL, local file name, SHA-256. |
 | `data/acs-10b-knowledge.json` | The 176 knowledge elements of FAA-S-ACS-10B, extracted from the PDF. Never edit by hand. |
+| `data/figure-rotations.json` | The Testing Supplement items whose figure or legend is printed sideways or upside down, the clockwise turn that makes each read upright, and how each was found: `words` (from the direction of the printed text) or `visual` (by eye). Input to `npm run qbank:figures:extract`. |
 
-`figures/index.json` looks like this:
+`figures/index.json` looks like this. Values are shortened and illustrative:
 
 ```json
 {
   "source_doc": "akts-2h",
+  "source_sha256": "738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+  "extracted_with": { "poppler": "…", "sharp": "…", "libvips": "…", "dpi": 300, "ink_threshold": 250, "erase_pad_pt": 0.25, "margin_px": 24, "pad_px": 4, "png": { "compression_level": 9 }, "webp": { "quality": 90, "effort": 6, "smart_subsample": true, "lossless_for_grayscale": true } },
   "items": [
-    { "key": "fig-26", "type": "figure", "number": 26, "file": "fig-26.png" },
-    { "key": "legend-1", "type": "legend", "number": 1, "file": "legend-1.png" }
+    { "key": "fig-26", "type": "figure", "number": 26, "page": 59, "printed_page": "2-25", "rotate": 0,
+      "body_px": [120, 300, 2240, 2600], "caption_px": [900, 2900, 680, 70],
+      "files": { "png":  { "name": "fig-26.png",  "width": 2288, "height": 2718, "bytes": 6012345, "sha256": "…" },
+                 "webp": { "name": "fig-26.webp", "width": 2288, "height": 2718, "bytes": 1104567, "sha256": "…", "lossless": false } } },
+    { "key": "legend-1", "type": "legend", "number": 1, "page": 13, "printed_page": "1-1", "rotate": 90,
+      "body_px": [210, 230, 2050, 2700], "caption_px": [960, 2950, 560, 60],
+      "files": { "png":  { "name": "legend-1.png",  "width": 2748, "height": 2182, "bytes": 3456789, "sha256": "…" },
+                 "webp": { "name": "legend-1.webp", "width": 2748, "height": 2182, "bytes": 1234567, "sha256": "…", "lossless": true } } }
   ]
 }
 ```
 
-`key` is `fig-N` for a figure and `legend-N` for a legend, where N is the number printed in the Testing Supplement. B-101 fills in the items.
+`key` is `fig-N` for a figure and `legend-N` for a legend, where N is the number printed in the Testing Supplement. `page` is the PDF page the item was rendered from, and `printed_page` is the page number printed on it. `body_px` is the figure or legend itself. `caption_px` is its caption line plus any note printed beneath the caption. Each is given as left, top, width and height in pixels on the unrotated 300-dpi page render. `rotate` is the clockwise turn applied to the body only; captions are printed upright and are never turned. When `rotate` is 0, the image is the page area that covers both crops, as printed. Otherwise the image is the turned body with the caption block centred beneath it. The page's "Appendix" header and page number are never in the image. Either way, the image has a white margin of `margin_px` pixels. Each entry in `files` gives the file name (always the key plus `.png` or `.webp`), its width and height in pixels (the same for both files), its size in bytes, and its SHA-256. `lossless` says whether the WebP is lossless. `source_sha256` must equal the `akts-2h` checksum in `data/references.json`. `extracted_with` records the tool versions and settings; it is `null` only while `items` is empty.
 
 ## 2. IDs
 
@@ -56,7 +65,7 @@ Files are UTF-8 without a byte order mark, with LF line endings (`.gitattributes
 | --- | --- | --- |
 | `id` | string | `RPR-NNNN`, equal to the file name. |
 | `acs_code` | string | A knowledge element code from `data/acs-10b-knowledge.json`, for example `UA.I.B.K10` or the lettered sub-element `UA.I.B.K14a`. The area is the Roman numeral in the code (`I` in `UA.I.B.K10`). |
-| `figures` | list of strings | `[]` when the question uses no figure. Otherwise each entry is `fig-N` or `legend-N`, must be in `figures/index.json`, must have its image file in `figures/`, and appears only once. |
+| `figures` | list of strings | `[]` when the question uses no figure. Otherwise each entry is `fig-N` or `legend-N`, must be in `figures/index.json`, must have both its image files (PNG and WebP) in `figures/`, and appears only once. |
 | `options` | mapping | Exactly the keys `A`, `B`, `C`, in that order. Each value is a non-empty double-quoted string. The three must differ, ignoring case and whitespace. |
 | `answer` | string | `A`, `B`, or `C`. Exactly one correct answer. |
 | `sources` | list | At least one entry. Each entry has exactly `doc`, `edition`, `location`, `passage`, all non-empty strings. `edition`, `location`, and `passage` are double-quoted. |
@@ -183,6 +192,9 @@ Run from the repository root:
 | `npm run qbank:acs:extract` | Re-extracts `data/acs-10b-knowledge.json` from `references/uas_acs.pdf` using `pdftotext -raw`. |
 | `npm run qbank:acs:check` | Re-extracts and compares with the committed file. |
 | `npm run qbank:refs:check` | Compares each file in `references/` with its SHA-256 in `data/references.json`. A missing file is reported but does not fail. |
+| `npm run qbank:figures:survey` | Lists each Testing Supplement page's caption, printed page number, header position, caption block, body text orientation and reading direction, embedded image resolution, and fonts not embedded, then suggests rotations-file entries. Writes nothing. Needs Poppler. |
+| `npm run qbank:figures:extract` | Renders every figure and legend from `references/sport_rec_private_akts.pdf` at 300 dpi into `figures/` (PNG and WebP), turning sideways bodies upright per `data/figure-rotations.json`, and writes `figures/index.json`. Needs Poppler (`pdfinfo`, `pdftotext`, `pdftoppm`, `pdfimages`, `pdffonts`); Xpdf is refused. |
+| `npm run qbank:figures:check` | Checks every file in `figures/` against `figures/index.json`: present, same size in bytes, same SHA-256, same pixel size, decodes fully, no extra files. Prints the size report. Needs neither Poppler nor the PDF. |
 | `npm run qbank:test` | Runs the validator's own tests and fixtures. |
 | `npm run qbank:typecheck` | Type-checks the scripts. |
 
@@ -190,7 +202,7 @@ Checks, by ID:
 
 | ID | Rejects |
 | --- | --- |
-| `data` | An invalid `data/references.json`, `data/acs-10b-knowledge.json` (not 176 unique valid codes, or a source checksum that differs from `acs-10b`), or `figures/index.json`. |
+| `data` | An invalid `data/references.json`, `data/acs-10b-knowledge.json` (not 176 unique valid codes, or a source checksum that differs from `acs-10b`), or `figures/index.json` (wrong shape, a file name that isn't the key plus `.png` or `.webp`, PNG and WebP sizes that differ, a turned body that overlaps its caption, or a `source_sha256` that differs from `akts-2h`). |
 | `file-name` | Anything in `questions/` that isn't `RPR-NNNN.md`, apart from `.gitkeep`. `RPR-0000.md` is rejected. |
 | `parse` | Missing or unclosed front matter, invalid YAML, duplicate keys, a BOM, invalid UTF-8, YAML comments, `<!--` anywhere in the front matter. |
 | `schema` | Missing, unknown, or out-of-order keys; wrong types; options not exactly A, B, C; duplicate, empty, or unquoted options; a source `edition`, `location`, or `passage` that isn't double-quoted; an answer that isn't A, B, or C; `figures` not a list; empty sources or an incomplete source entry; a review block that isn't last or is in `{ ... }` style. |
@@ -201,7 +213,7 @@ Checks, by ID:
 | `source-doc` | A `doc` that isn't a key in `data/references.json`. |
 | `source-edition` | An `edition` that doesn't match the references file exactly (error or warning, per section 6). |
 | `area-i-cfr` | An Area I question with no source of kind `cfr`. |
-| `figure` | Malformed figure keys, keys not in `figures/index.json`, keys listed twice, and keys whose image file is missing. |
+| `figure` | Malformed figure keys, keys not in `figures/index.json`, keys listed twice, and keys whose PNG or WebP file is missing. |
 | `status` | A status that isn't one of the five; `reviewed_by` other than `q-reviewer` or `rick`; `approved` with `reviewed_by` other than `q-reviewer`; a bad date; review fields missing for that status (section 6). |
 | `content-hash` | A hash rule from section 6 not met, or a hash that doesn't match the file. |
 | `option-text` | An option containing one of the phrases listed in section 4. |

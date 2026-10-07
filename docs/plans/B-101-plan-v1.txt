@@ -1,0 +1,775 @@
+B-101 plan v1 (planner output, Session 3, 2026-10-07). Superseded in part by B-101-plan-v2.txt; kept as the record of v1.
+
+B-101 plan v1: extract the Testing Supplement figures and legends (Session 3)
+
+1. Goal
+
+Add a script that renders all 79 figures and 19 legends from FAA-CT-8080-2H.
+Each item is cropped to the figure plus its printed caption and note, and
+turned upright when printed sideways. Each is written to figures/ as a
+lossless PNG and a WebP for the site, and figures/index.json records both
+files, the source PDF's SHA-256 and the tool versions. The builder writes the
+script. Architect-Claude runs it in the Linux workspace and checks every image
+by eye. Nothing in figures/ is committed until that check passes. Backlog
+item: B-101.
+
+2. Current state (checked this session)
+
+- Repo: main is clean and up to date with origin; last commit is f142503.
+figures/ holds only index.json ({"source_doc":"akts-2h","items":[]}).
+questions/ holds only .gitkeep.
+- PDF hash: references/sport_rec_private_akts.pdf is 176,480,343 bytes. Its
+SHA-256 is 738a0cd5…b502f4fd, which matches akts-2h in data/references.json.
+- Your PDF findings, confirmed with a second tool. I ran Xpdf pdftotext -raw
+page by page, independently of Poppler:
+  - Exactly one caption per item page. Legend N is on page 12+N (printed 1-N).
+  - Figures 1–15 are on page 34+N, 17–28 on 33+N, and 31–82 on 31+N. Figures
+are printed 2-(page−34).
+  - Figures 16, 29 and 30 are absent.
+  - Figure 55 is on page 86 and missing from the contents pages (pages 7–9).
+  - Pages 7, 8 and 9 hold 40, 50 and 6 caption-like lines. Pages 1–6, 10–12
+and 32–34 hold none.
+- New findings that affect the design:
+  - Wrong pdftotext on Windows. The pdftotext on Windows' PATH (/mingw64/bin,
+from Git for Windows) is Xpdf 4.00. It has no -bbox, and there is no pdftoppm,
+pdfinfo or pdfimages. The script must reject Xpdf by name, not just look for
+"pdftotext". extract-acs.ts falls back to that exact Xpdf path; the new script
+must not.
+  - JPEG 2000 images. The embedded images are JPEG 2000 (190 /JPXDecode
+streams), and many have soft masks (208 /SMask). How they render depends on
+Poppler's OpenJPEG build, which is a version-sensitivity risk.
+  - Header and page-number position is not confirmed. Xpdf's layout output
+puts the page number (e.g. 2-19) below the caption and note, so it is probably
+a footer. "Appendix N" is not always on the first line, so it may be a side
+tab. The page number on page 69 runs into the table text, which suggests it is
+sideways along with the table. So the header mask must not assume "top of
+page" (see 4.10, step 4).
+  - Rotation can't be detected on Windows. Page dictionaries sit in compressed
+object streams, so I couldn't read /Rotate with grep. Poppler's pdfinfo will
+report it.
+  - Validator code that changes:
+    - checkFigureIndex in lib/data.ts (lines 99–129) validates the single
+file.
+    - The figure check in lib/checks.ts (lines 208–236) does
+existsSync(join(figuresDir, item.file)).
+    - FigureItem is in lib/types.ts (lines 69–79).
+    - validate.ts (lines 64–70) loads the index and checks source_doc.
+    - The fixture index lists fig-26, fig-27 (file missing on purpose) and
+legend-1. There are four figure-* bad fixtures plus good fixture RPR-0004
+(figures: ["fig-26", "legend-1"]).
+  - Agents depend on these images. q_writer.md lines 62–66 and q_reviewer.md
+lines 51–54 tell the agents to "open its image". With two files per item,
+which one is undefined; see open question 5.
+
+3. Sequence and who does what
+
+0. Before the builder: you git pull on the desktop. Don't do any figures work
+on the laptop until commit 2 is pushed.
+1. Builder (Claude Code, desktop): everything in section 4. figures/index.json
+stays empty in its new shape, and data/figure-rotations.json has an empty
+list.
+2. Tester, stage A (desktop): section 8A. Every test passes except
+figures-real.test.ts, which must fail with "expected 98 items, found 0". That
+failure is the negative control showing the test can fail.
+3. Commit 1 (you): everything except scripts/qbank/test/figures-real.test.ts.
+That keeps a fresh clone green and gets the code into git before the long
+manual step.
+4. Architect (Linux workspace):
+   - Takes the commit-1 tree and the PDF.
+   - Runs qbank:figures:survey and fills data/figure-rotations.json.
+   - Runs qbank:figures:extract, then checks every image (section 9).
+   - Repeats until everything passes, with no commits in between.
+5. Transfer to the desktop: the 196 images, index.json and
+figure-rotations.json come back. A downloaded zip is better than the desktop
+link, which has dropped writes before. Then npm run qbank:figures:check proves
+every byte matches the index.
+6. Tester, stage B: section 8B.
+7. Commit 2 (you): figures, index, rotations file and figures-real.test.ts,
+with commands supplied by the architect.
+
+4. Changes, file by file
+
+4.1 package.json
+
+- npm install --save-dev --save-exact sharp. Use the latest 0.x at install
+time; record the exact version.
+- Add scripts:
+  - "qbank:figures:survey": "node scripts/qbank/extract-figures.ts --survey"
+  - "qbank:figures:extract": "node scripts/qbank/extract-figures.ts"
+  - "qbank:figures:check": "node scripts/qbank/check-figures.ts"
+- Don't change other scripts or dependencies.
+- Confirm package-lock.json lists @img/sharp-win32-x64 and
+@img/sharp-linux-x64 (plus the libvips package for each).
+
+4.2 .gitattributes
+
+Add the line *.webp binary. Change nothing else.
+
+4.3 scripts/qbank/lib/types.ts
+
+Replace FigureItem and FigureIndex (lines 69–79) with:
+
+export const FIGURE_FORMATS = ['png', 'webp'] as const;
+export type FigureFormat = (typeof FIGURE_FORMATS)[number];
+
+export interface FigureFile {
+  name: string;   // `${key}.png` or `${key}.webp`
+  width: number;  // pixels, after rotation
+  height: number;
+  bytes: number;
+  sha256: string; // 64 lowercase hex
+}
+
+export interface FigureItem {
+  key: string;
+  type: 'figure' | 'legend';
+  number: number;
+  page: number;                                // 1-based PDF page
+  printed_page: string;                        // e.g. "2-25"
+  rotate: 0 | 90 | 180 | 270;                  // clockwise, applied after 
+cropping
+  crop_px: [number, number, number, number];   // left, top, width, height on 
+the unrotated 300-dpi render
+  files: { png: FigureFile; webp: FigureFile & { lossless: boolean } };
+}
+
+export interface FigureExtraction {
+  poppler: string; sharp: string; libvips: string; dpi: number;
+  ink_threshold: number; margin_px: number;
+  png: { compression_level: number };
+  webp: { quality: number; effort: number; smart_subsample: boolean;
+lossless_for_grayscale: boolean };
+}
+
+export interface FigureIndex {
+  source_doc: string;
+  source_sha256: string;
+  extracted_with: FigureExtraction | null;
+  items: FigureItem[];
+}
+
+4.4 scripts/qbank/lib/data.ts
+
+checkFigureIndex(raw, docs: ReferenceDoc[] | null) follows the same pattern as
+checkAcs. It must reject:
+
+- Index level:
+  - source_doc or items is missing.
+  - source_sha256 is not 64 lowercase hex.
+  - extracted_with is not null while items is empty, or is null while items is
+non-empty.
+  - When extracted_with is an object, poppler, sharp and libvips must be
+non-empty strings and dpi a positive integer.
+- Item level:
+  - Unknown keys, which catches a stale file.
+  - All existing checks on key, type and number.
+  - page is not a positive integer.
+  - printed_page does not match ^\d+-\d+$.
+  - rotate is not 0, 90, 180 or 270.
+  - crop_px is not 4 non-negative integers, with width and height of at
+least 1.
+  - files does not have exactly png and webp.
+  - A file name is not exactly ${key}.png or ${key}.webp.
+  - width, height or bytes is not a positive integer.
+  - sha256 is not 64 lowercase hex.
+  - webp.lossless is not a boolean.
+  - The PNG and WebP sizes differ.
+- Cross-check: if docs is not null and the source_doc entry is found,
+source_sha256 must equal its sha256. Error text: figures/index.json 
+source_sha256 does not match the akts-2h sha256 in references.json.
+
+FIGURE_KEY_RE stays.
+
+4.5 scripts/qbank/lib/validate.ts
+
+Change line 66 to call checkFigureIndex(indexRaw, refsResult.docs). Keep lines
+68–70.
+
+4.6 scripts/qbank/lib/checks.ts, the figure check
+
+Replace lines 230–232. For each format in FIGURE_FORMATS, if
+figures/<item.files[fmt].name> is missing, report:
+
+figure key "${key}" points to ${name}, which is missing from figures/
+
+That is one issue per missing file. Nothing else in checks.ts changes.
+
+4.7 New scripts/qbank/lib/figures.ts (pure, no I/O, no Poppler)
+
+Constants (hardcoded literals):
+
+- RENDER_DPI = 300
+- EXPECTED_PAGE_COUNT = 113, PAGE_PT = {w: 594, h: 774}; the render is 2475 ×
+3225
+- INK_THRESHOLD = 250 (a pixel is ink if any channel is below 250)
+- MARGIN_PX = 24 (about 2 mm)
+- HEADER_PAD_PT = 3
+- PPI_WARN = 330
+- WEBP_PSNR_WARN_DB = 35
+- WEBP = {quality: 90, effort: 6, smartSubsample: true, losslessForGrayscale: 
+true}
+- PNG = {compressionLevel: 9, adaptiveFiltering: true, palette: false}
+- EXPECTED_FIGURES and EXPECTED_LEGENDS, written as explicit number arrays,
+not ranges with exclusions
+- KNOWN_NOT_IN_CONTENTS = ['fig-55']
+
+Functions:
+
+- parseBboxLayout(xhtml): reads Poppler pdftotext -bbox-layout output into
+pages → lines → words with xMin, yMin, xMax, yMax in points. It decodes the
+five XML entities and numeric entities.
+- classifyPages(pages): a caption line is one whose text matches
+^(Figure|Legend)\s+(\d+)\.(\s|$).
+  - 0 caption lines: no item on the page.
+  - 1: an item page.
+  - 2: an error.
+  - 3 or more: a contents page, whose entries are kept for the cross-check.
+- Mapping checks: collect every problem before failing.
+  - Duplicate key (name both pages).
+  - Key not in the expected set.
+  - Expected key not found.
+  - Contents entries vs found items: any difference other than
+KNOWN_NOT_IN_CONTENTS is an error, and fig-55 is reported as a note.
+- Header detection, per item page:
+  - The "Appendix N" group is the word Appendix plus the next word, which must
+be a digit: 1 for legends, 2 for figures.
+  - The page-number word matches ^[12]-\d{1,2}$, with the same appendix digit.
+  - Exactly one of each, or it's an error.
+  - Within an appendix, printed page numbers must rise by exactly 1 from one
+item page to the next.
+- headerBands(groups): works the same wherever the header sits.
+  - Pad each group's bounding box by HEADER_PAD_PT and find the nearest page
+edge.
+  - The band runs from that edge to the far side of the padded box, across the
+full page in the other direction.
+  - It is an error if any non-header word overlaps a band.
+- computeCrop(rgb, w, h, bands, words):
+  - Find the bounding box of the ink pixels outside the bands.
+  - Union it with every non-header word's box, converted to pixels with floor
+and ceil.
+  - Expand by MARGIN_PX, clamped to the page, and shrink only the margin where
+it would enter a band.
+  - Return the crop plus diagnostics:
+    - inkOutside: ink outside the crop and bands. Must be 0, otherwise it's an
+error and a bug.
+    - faintOutside: pixels with any channel below 255 outside the crop and
+bands. A warning, with count and box.
+    - inkInBands: ink inside a band but outside the padded header word boxes.
+A warning, with count and box.
+    - touchesEdge: the sides where the crop reaches the page edge. A warning.
+  - Also assert that the caption line and any line starting with NOTE: or
+Note: are inside the crop.
+- captionDirection(line): uses the vector from the centre of the word
+"Figure"/"Legend" to the centre of the number word, identified by text, not by
+Poppler's word order.
+  - Mostly horizontal and pointing right: 0. Pointing left: 180.
+  - Pointing down: rotate 270 clockwise. Pointing up: rotate 90 clockwise.
+- checkRotations(file, items): the rotations file is the authority.
+  - An entry with evidence: "caption" must match captionDirection.
+  - A caption that isn't upright and isn't in the file is an error, with the
+suggested angle given.
+  - Entries with evidence: "visual" are not checked against text and are
+listed in the report as "rotation confirmed by eye only".
+  - Keys must be unique and in the expected set, and source_sha256 must match.
+- isGrayscale(rgb): true only if every pixel has R = G = B.
+- psnr(a, b).
+- formatSizeReport(items).
+
+4.8 New scripts/qbank/lib/poppler.ts
+
+- Finding the tools: pdfinfo, pdftotext, pdftoppm, pdfimages and pdffonts are
+looked up in $POPPLER_BIN (a folder; .exe added on win32) first, then on PATH.
+No Git-for-Windows fallback.
+- Version check:
+  - Run each tool with -v, reading stdout and stderr, and catching a non-zero
+exit as extract-acs.ts does.
+  - Output that doesn't contain "Poppler" is an error. If it contains "Glyph &
+Cog" without "Poppler", say: found Xpdf <path>; this script needs Poppler 
+(pdftoppm, pdftotext -bbox-layout). Install Poppler and set POPPLER_BIN.
+  - All five tools must report the same version.
+- Calls: run everything with execFileSync and argument arrays (no shell), so
+paths with spaces work on Windows.
+
+4.9 New scripts/qbank/lib/figure-files.ts
+
+verifyFigureFiles(dir, index) uses sharp and crypto, needs no Poppler, and
+returns errors and a size report.
+
+- The folder may contain only index.json, .gitkeep and the listed files.
+- For each file:
+  - It exists, and its byte count and SHA-256 match the index.
+  - sharp reports the right format.
+  - Width and height match the index.
+  - It decodes fully (raw().toBuffer()), which catches truncated files.
+
+4.10 New scripts/qbank/extract-figures.ts
+
+Flags:
+
+- --survey: writes nothing.
+- --out DIR: default figures/ in the repo.
+- --only KEY,…: refused unless --out points somewhere other than the repo's
+figures/.
+- --allow-version-change.
+
+Usage errors are checked before the tools are looked up, and exit with code 2.
+
+The script reads references/ only and never writes there.
+
+Steps:
+
+1. Preflight:
+   - SHA-256 of the PDF must equal akts-2h.
+   - figure-rotations.json must be valid and carry the same SHA-256.
+   - pdfinfo -f 1 -l 113 -box: 113 pages, each 594 × 774 pt, rot 0, MediaBox =
+CropBox. Anything else is an error.
+   - pdffonts on each item page: any font that isn't embedded is a warning,
+because Poppler would substitute a font and the render would vary from machine
+to machine.
+   - pdfimages -list gives the effective ppi of each page's images. Above
+PPI_WARN is a warning.
+2. Text: one call, pdftotext -bbox-layout -enc UTF-8 -f 1 -l 113 into a temp
+folder, then parseBboxLayout.
+3. Mapping: all the checks in 4.7. Stop on any error, listing all of them.
+4. Header bands: as in 4.7. The survey prints which edge each header group
+sits on.
+5. Rotation: run checkRotations.
+   - --survey stops here. For every page it prints: page, printed page number,
+caption text, caption direction, header edges, highest image ppi, number of
+fonts not embedded, and the rotations-file entry. Then it exits 0, or 1 if the
+mapping failed.
+6. Version guard: if --out already holds an index with items and its Poppler,
+sharp or libvips version differs from the current tools, refuse without
+--allow-version-change. The message warns that every file would get new bytes,
+adding roughly 200 MB of new git history.
+7. Per item:
+   - Render with pdftoppm -r 300 -f P -l P -singlefile -png -aa yes -aaVector 
+yes into the temp folder.
+   - Decode with sharp to raw RGB and confirm the size is 2475 × 3225.
+   - computeCrop, then crop, then rotate clockwise by rotate.
+   - isGrayscale decides gray or RGB.
+   - PNG: sharp png(PNG); gray images are written as one-channel 8-bit gray.
+No metadata or ICC profile, and the output is treated as sRGB. Decode the
+written PNG and require it to match the source pixels exactly, so the copy is
+proven lossless.
+   - WebP: gray images use webp({lossless: true, effort: 6}); colour images
+use webp({quality: 90, effort: 6, smartSubsample: true}). Compute PSNR against
+the source and warn below 35 dB.
+   - All outputs go to the temp folder first.
+8. Finish:
+   - Only if every item succeeded, copy the files into --out, then write
+index.json last.
+   - Items are ordered figures by number, then legends by number. The JSON
+uses 2-space indents, a trailing LF and no timestamps, so two runs with the
+same tools give identical output.
+   - Run verifyFigureFiles on --out and print the report.
+   - Always delete the temp folder in a finally.
+9. Report:
+   - One line per item, for example: fig-26  p59  2-25  rot 0  crop 2240x2950 
+rgb  png 6,012,345  webp 1,104,567 (q90, 41.2 dB).
+   - Then every warning, grouped by item, then tool versions, then the size
+report:
+     - Items: 98 (79 figures, 19 legends); number rotated; number grayscale.
+     - PNG: N files, B bytes (MiB) and WebP: N files, B bytes (MiB).
+     - The five largest files of each format.
+   - Exit 1 on any error; warnings don't change the exit code.
+
+4.11 New scripts/qbank/check-figures.ts
+
+- Flag: --figures DIR.
+- Loads the index through checkFigureIndex(raw, refs), then runs
+verifyFigureFiles.
+- Prints errors and the size report. Exit 1 on any error.
+- Needs no Poppler and no PDF, so it runs on Windows. This is the check mode.
+
+4.12 New data/figure-rotations.json
+
+The builder writes:
+
+{ "source_doc": "akts-2h", "source_sha256":
+"738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+"rotations": [] }
+
+The architect fills it from the survey, with entries like { "key": "legend-1",
+"rotate": 270, "evidence": "caption" }, and you approve it with commit 2.
+
+4.13 figures/index.json (commit 1)
+
+{"source_doc":"akts-2h","source_sha256":"738a0cd5…","extracted_with":null,"ite
+ms":[]}, pretty-printed.
+
+4.14 Fixtures (scripts/qbank/test/fixtures/)
+
+- Rewrite figures/index.json in the new shape, using the real akts-2h SHA-256,
+a placeholder-but-valid extracted_with, and these items:
+  - fig-26: both files present.
+  - fig-27: neither file present.
+  - fig-28: PNG only.
+  - fig-31: WebP only.
+  - legend-1: both files present.
+- File values are real for files that exist and well-formed for files that
+don't.
+- Add figures/fig-26.webp, figures/legend-1.webp, figures/fig-28.png and
+figures/fig-31.webp: 1×1 images made once with sharp.
+- New bad fixtures:
+  - bad/figure-webp-missing/RPR-0001.md: uses fig-28.
+  - bad/figure-png-missing/RPR-0001.md: uses fig-31.
+  - Both are copies of figure-file-missing with only the key changed.
+
+4.15 Tests
+
+- validate.test.ts: add both new fixtures to BAD_CASES (check figure). Nothing
+else changes.
+- New figures-index.test.ts:
+  - The fixture index passes checkFigureIndex.
+  - Each rejection in 4.4 is shown with its own mutated copy, matching an
+error substring: missing webp, wrong extension, name not matching the key,
+slash in the name, differing sizes, uppercase SHA, zero bytes, rotate 45,
+stale file key, extracted_with null with items, wrong source_sha256.
+- New figures-lib.test.ts: synthetic data only, so it runs on Windows.
+  - Parsing, including entities.
+  - Contents-page classification.
+  - Duplicate, missing, unexpected and two-caption pages.
+  - Contents cross-check: fig-55 is allowed, any other difference is an error.
+  - Header errors: missing group, wrong appendix digit, a gap in printed page
+numbers.
+  - A band that would hide a word.
+  - Crop on a synthetic image: includes all ink plus margin, is clamped at a
+band, and reports one faint pixel outside the crop.
+  - All four caption directions.
+  - Rotations-file mismatch, and a sideways caption that isn't listed.
+  - isGrayscale true and false.
+  - Version-guard decision.
+  - Usage errors (--only without --out).
+- New figures-check.test.ts:
+  - Builds a temp folder with two generated items and its index; the check
+passes.
+  - Each of these must fail with a named error: flipped byte, missing WebP,
+stray file, wrong size in the index.
+- New figures-real.test.ts: left out of commit 1.
+  - Index keys equal the explicit literal set of 98, with no duplicates.
+  - Each item's page and printed page equal a literal key→page table written
+from section 2's ranges (98 explicit entries, not computed).
+  - source_sha256 equals the literal 738a0cd5… and equals references.json.
+  - extracted_with.dpi === 300.
+  - Both files exist and their on-disk sizes equal the index bytes (no
+decoding, to keep the suite fast).
+  - rotate equals the rotations-file entry, or 0 if the key isn't listed.
+
+4.16 docs/QUESTION_FORMAT.md
+
+Section 1, rows. Replace the figures/ and figures/index.json rows and add one
+row:
+
+Path: figures/
+Contents: Testing Supplement figures and legends as images, shared by all
+questions. Each item has two files: a PNG (fig-N.png, legend-N.png), the
+lossless copy, and a WebP (fig-N.webp, legend-N.webp), the copy the site
+serves. Both are committed.
+────────────────────────────────────────
+Path: figures/index.json
+Contents: Index of the images in figures/. Written by npm run 
+qbank:figures:extract; never edit it by hand.
+────────────────────────────────────────
+Path: data/figure-rotations.json
+Contents: The Testing Supplement items printed sideways, and the clockwise
+turn
+that makes each read upright. Input to npm run  qbank:figures:extract.
+
+Section 1, example. Replace the example and the "B-101 fills in the items"
+line with this one-item example, labelled "values shortened and illustrative":
+
+{
+  "source_doc": "akts-2h",
+  "source_sha256":
+"738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
+  "extracted_with": { "poppler": "…", "sharp": "…", "libvips": "…", "dpi":
+300, "ink_threshold": 250, "margin_px": 24, "png": { "compression_level": 9 },
+"webp": { "quality": 90, "effort": 6, "smart_subsample": true,
+"lossless_for_grayscale": true } },
+  "items": [
+    { "key": "fig-26", "type": "figure", "number": 26, "page": 59,
+"printed_page": "2-25", "rotate": 0, "crop_px": [120, 96, 2240, 2950],
+      "files": { "png":  { "name": "fig-26.png",  "width": 2240, "height":
+2950, "bytes": 6012345, "sha256": "…" },
+                 "webp": { "name": "fig-26.webp", "width": 2240, "height":
+2950, "bytes": 1104567, "sha256": "…", "lossless": false } } }
+  ]
+}
+
+Section 1, paragraph under the example:
+
+▎ key is fig-N for a figure and legend-N for a legend, where N is the number 
+▎ printed in the Testing Supplement. page is the PDF page the item was 
+▎ rendered from and printed_page the page number printed on it. rotate is the 
+▎ clockwise turn applied after cropping. crop_px is the crop on the unrotated 
+▎ page render: left, top, width, height in pixels. Each entry in files gives 
+▎ the file name (always the key plus .png or .webp), its width and height in 
+▎ pixels after rotation (the same for both files), its size in bytes, and its 
+▎ SHA-256; lossless says whether the WebP is lossless. source_sha256 must 
+▎ equal the akts-2h checksum in data/references.json. extracted_with records 
+▎ the tool versions and settings; it is null only while items is empty.
+
+Section 4, figures row. "must have its image file in figures/" becomes "must
+have both its image files (PNG and WebP) in figures/".
+
+Section 9, command table. Add after qbank:refs:check:
+
+Command: npm run qbank:figures:survey
+What it does: Lists each page's caption, printed page number, text direction,
+header position, embedded image resolution, and fonts not embedded. Writes
+nothing. Needs Poppler.
+────────────────────────────────────────
+Command: npm run qbank:figures:extract
+What it does: Renders every figure and legend from
+references/sport_rec_private_akts.pdf at 300 dpi into figures/ (PNG and WebP)
+ and writes figures/index.json. Needs Poppler (pdfinfo, pdftotext, pdftoppm,
+pdfimages, pdffonts); Xpdf is refused.
+────────────────────────────────────────
+Command: npm run qbank:figures:check
+What it does: Checks every file in figures/ against figures/index.json:
+present, same size, same SHA-256, same pixel size, decodes fully, no extra
+files. Prints the size report. Needs neither Poppler nor the PDF.
+
+Section 9, checks table:
+
+- The data row's figures clause becomes: "or figures/index.json (wrong shape,
+a file name that isn't the key plus .png or .webp, PNG and WebP sizes that
+differ, or a source_sha256 that differs from akts-2h)".
+- The figure row: "keys whose image file is missing" becomes "keys whose PNG
+or WebP file is missing".
+
+4.17 CLAUDE.md
+
+Add three rows to the Commands table, with the same descriptions as 4.16,
+shortened.
+
+Not touched
+
+- references/ (read only).
+- extract-acs.ts, check-references.ts, hash*.ts, parse.ts, schema.ts, body.ts,
+acs-extract.ts.
+- All existing fixtures except the figures index.
+- data/references.json, data/acs-10b-knowledge.json.
+- .gitignore.
+- Everything in .claude/, including the agents' "open its image" lines (open
+question 5).
+- PROJECT_VISION.md, DECISION_LOG.md, BACKLOG.md, PROGRESS.md. The architect
+updates these at the end of the session, including vision line 115 ("one image
+each") and the new decisions.
+
+5. Dependencies and licences
+
+None of these is paid or usage-limited, and none ships to the site.
+
+- sharp (devDependency): Apache-2.0, free.
+- Its prebuilt libvips (@img/sharp-libvips-*): LGPL-3.0-or-later, free. It is
+used only as a local tool and not redistributed.
+- libwebp, libpng, zlib, bundled inside libvips: BSD and zlib licences, free.
+- Poppler (external program, not an npm package): GPL-2.0-or-later, free. We
+run it and don't distribute it; the images it produces aren't covered by its
+licence.
+- No XML library is needed; Poppler's bbox output is parsed with regular
+expressions.
+
+Git LFS comes up in open question 3 only as an option. It has storage and
+bandwidth limits, and charges beyond them.
+
+6. Product rules this touches
+
+- D-020 (review shows media): these files are that media. File names are tied
+to the key, so re-extracting an item later would change what past reviews
+show. The SHA-256 values in the index make any such change visible in git
+(risk 9).
+- D-026 (no FAA PDFs for download): unchanged. Figures are the documented
+exception, and only the WebP is meant to be served.
+- D-025 (phones): no user interface in this change. The image sizes affect
+B-106 (risk 8).
+- Untouched: D-003 (readiness), D-019 (timer), D-021 (option order), D-022
+(elapsed time), user-data scoping and account deletion.
+
+7. Risks
+
+1. Git history size. The PNGs are about 200 MB (your estimate; the size report
+gives the real number), and history keeps every version. Re-running with the
+same tool versions should give identical bytes (verified in section 9), so it
+adds nothing. Different versions rewrite every file. Mitigations:
+   - The eye check happens before commit 2.
+   - The version guard (4.10, step 6) refuses to overwrite without
+--allow-version-change.
+   - figures:check means nobody ever needs to re-render just to verify the
+images.
+2. Poppler version differences: anti-aliasing, JPEG 2000 decoding (OpenJPEG),
+any fonts that aren't embedded, and small shifts in text bounding boxes.
+Mitigations:
+   - Versions are recorded in the index.
+   - pdffonts warnings.
+   - The check mode doesn't use Poppler.
+3. Xpdf passing as pdftotext on Windows. Handled by the refusal in 4.8.
+4. Header position is unknown. The band rule assumes headers and page numbers
+sit in edge strips.
+   - A figure reaching into such a strip triggers the inkInBands warning.
+   - A tab graphic behind "Appendix N" would show up the same way, or as a
+crop touching the edge.
+   - If the survey shows header graphics the rule doesn't handle, stop and
+come back to the planner; the builder should not improvise.
+5. Very light tints (above 250 in every channel) can sit outside the ink box.
+Caught by the faintOutside warning and the eye check.
+6. Rotation.
+   - Captions catch sideways text.
+   - A sideways raster with an upright caption can only be caught by eye, so
+evidence: "visual" entries are listed in the report.
+   - Upside-down output is caught by the eye check.
+7. Linux workspace limits:
+   - It needs Node 22.18 or later, because the scripts run as .ts directly;
+fallback is nvm.
+   - npm needs network access to install sharp's prebuilt Linux binaries;
+fallback is npm install --no-save --os=linux --cpu=x64 sharp.
+   - Rendering 98 pages at 300 dpi with JPEG 2000 images may take several
+minutes; run it in the background, or batch with --only into a scratch folder.
+   - The 176 MB PDF has to be in the workspace.
+8. Downstream:
+   - B-115: deploy only figures/*.webp. The PNGs must be kept out of the
+Workers static assets (copy step or .assetsignore). Workers allows 25 MiB per
+file, so the WebP files are fine.
+   - B-106:
+     - A sectional chart WebP is around 1–1.5 MB on a phone, and small chart
+text needs pinch-zoom.
+     - Smaller variants for phones could come later.
+     - The index's width and height can be used to avoid layout shift.
+   - B-103: questions that use a figure have to wait for commit 2.
+9. content_hash doesn't cover images. If a figure changes after approval, the
+approved question and past reviews change without a new review (D-051). It
+shows only in the index.json diff. A backlog item is proposed in open
+question 6.
+10. Agents reading images.
+    - A PNG of several MB may be over the image limit for Claude's Read tool.
+    - Large images are scaled down when viewed, so q-reviewer may not be able
+to read small sectional chart text even when users can at full zoom.
+    - See open question 5.
+11. Transfers through the desktop link have dropped writes before. Handled by
+the SHA-256 check in figures:check.
+
+8. Test plan for the tester
+
+The tester runs on Windows and can't run the extraction (no Poppler). Report
+those steps as SKIPPED, not VERIFIED.
+
+8A. After the builder, before extraction
+
+1. npm ci works; the lock includes the sharp packages for both win32-x64 and
+linux-x64 (grep '@img/sharp' package-lock.json).
+2. npm run qbank:typecheck is clean.
+3. npm run qbank:test:
+   - Every test passes except figures-real.test.ts, which fails with "expected
+98 … found 0". Report total and failed counts.
+   - Both new bad fixtures fail only the figure check.
+4. npm run qbank:validate on the repo: 0 errors.
+5. Copy the fixtures to a temp folder, delete fig-26.webp, and run the
+validator CLI with --questions <good copy> --figures <copy>. It exits 1 with a
+figure error naming fig-26.webp.
+6. npm run qbank:figures:check on the empty index exits 0 and reports 0 files
+for each format.
+7. Put a temp copy of figures/ with a stray file at --figures: exits 1 and
+names the file.
+8. npm run qbank:figures:survey exits 1 with the Xpdf message naming
+/mingw64/bin/pdftotext. --only fig-1 without --out exits 2 before any tool
+lookup.
+9. Repo state:
+   - git status and git diff --stat show exactly the files in section 4, with
+nothing in references/ and no stray files.
+   - git check-attr binary diff text -- figures/x.webp shows *.webp as binary.
+   - The QUESTION_FORMAT edits match 4.16 word for word.
+
+8B. After the images are transferred
+
+1. npm run qbank:figures:check exits 0: 98 items, 98 PNG and 98 WebP, and
+totals equal to the architect's report.
+2. npm run qbank:test all passes, including figures-real.test.ts. npm run 
+qbank:validate has 0 errors.
+3. On a temp copy: flip one byte in a PNG and the check exits 1 naming it.
+Delete one WebP and the check exits 1.
+4. File checks:
+   - find figures -size +50M finds nothing.
+   - git status shows exactly 196 images, index.json, figure-rotations.json
+and figures-real.test.ts.
+5. Open on Windows: legend-1, fig-55, one rotated figure, fig-12 (part-page)
+and fig-26 (sectional), in both formats. They display and read upright.
+
+9. Architect-Claude's run and checks by eye (Linux)
+
+- Before running:
+  - The PDF's SHA-256 matches.
+  - Node is 22.18 or later.
+  - npm ci works and sharp loads.
+  - Note the Poppler version.
+- Survey:
+  - 98 items on exactly the pages listed in section 2.
+  - Fig-55 is the only difference from the contents pages.
+  - Every printed page number is in sequence.
+  - Header edges are consistent; if not, stop (risk 4).
+  - Any ppi warnings or fonts that aren't embedded go to you.
+  - Write the rotations file from the caption directions, and add visual
+entries for sideways rasters.
+- Extraction: 0 errors. Read each warning and resolve it or explain it.
+- Every one of the 98 PNGs, checked by eye:
+  - The caption number matches the key.
+  - The whole figure, caption and any note are present.
+  - Nothing is cut on any side, and there's a sensible margin.
+  - No "Appendix N" and no page number.
+  - Upright, not upside down.
+  - Part-page figures (for example 12–15) are cropped tightly.
+- At full zoom, PNG and WebP side by side:
+  - All 16 sectional chart excerpts (20–26, 59, 69–71, 74–76, 78, 80), the 6
+Chart Supplement figures (31, 52, 63, 77, 79, 81), and legends 1–19.
+  - Check the smallest text: altitudes, frequencies, MEF figures, obstruction
+heights, Chart Supplement fine print.
+  - Magenta and blue must stay clearly different in the WebP.
+  - Look for blur or ringing on the grayscale line art; it should be none,
+since those are lossless.
+- Determinism: run again into a second folder and diff the two index.json
+files. They should be identical; if not, report it.
+- Size report: send it to you before the transfer.
+
+10. Open questions for Rick
+
+1. Two commits (code first and green, then figures) or one at the end? I
+recommend two.
+2. WebP settings: lossless for pure-grayscale items and quality 90 lossy for
+colour items. Is that OK? Line art stays sharp and is likely about the same
+size or smaller. The plan assumes yes.
+3. Size ceiling: if the PNG total comes out well above 200 MB (say over 300
+MB), stop and reconsider before commit 2? The alternatives are Git LFS (free
+quota, then paid) or not committing the PNGs. I recommend that ceiling.
+4. Index fields: the index stores where each image came from (page,
+printed_page, rotate, crop_px). Fine? Caption titles for alt text are not
+included; I'd add them with B-106 if wanted.
+5. Which file the agents open: I recommend the WebP, since it's what users see
+and avoids image read limits. This needs a .claude/agents edit that you
+apply; it's not part of this plan.
+6. Image changes after approval: add a backlog item for B-116 so the loader
+stores each figure's SHA-256 and fails if a figure used by a loaded question
+changes (mirrors D-051)? I recommend yes.
+7. Confirm the header position first: before the builder starts, should the
+architect render pages 13, 53 and 69 to confirm where "Appendix N" and the
+page number sit, and whether there's a tab graphic? It's cheap and could save
+a re-plan. I recommend yes.
+
+11. Summary to approve
+
+- A Poppler-based script finds each item by its printed caption and fails
+loudly on any mapping problem.
+- It crops to the ink plus every non-header word, with a 24 px margin, and
+shows by pixel counts that nothing printed was cut.
+- It turns sideways items upright from a committed rotations list,
+cross-checked against the caption direction.
+- It writes a lossless PNG and a WebP per item (lossless for gray, quality 90
+for colour), with SHA-256, size and tool versions in a new two-file index.
+- The validator now requires both files.
+- A check mode that needs no Poppler verifies every byte on Windows after the
+transfer.
+- Nothing in figures/ is committed until the architect has checked all 98
+items by eye and the size report has been seen.
+
+Decisions needed: open questions 1–7, especially 2 (WebP settings) and 7
+(confirm the header position before building).
