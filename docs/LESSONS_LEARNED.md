@@ -31,3 +31,14 @@ Each entry: date, what happened, and what to do differently.
 - An amendment list written in one pass contained a rule ("Rick clearing held sends it to draft") that contradicted another ("approved content is never edited"). The builder caught it. Before handing off amendments, check each new rule against the others.
 - Each Claude Code agent starts fresh and does not see the previous agent's output. Save the approved plan to a file in the repo (`docs/plans/`) and point the next agent to it.
 - The tester could not render PDF pages on Windows (no pdftoppm). A Claude app session can render pages in its own workspace and check them visually; use that for "compare against the printed page" steps.
+
+## 2026-10-07
+
+- Claude Code 2.1.283 and later start interactive sessions in auto mode, where a classifier approves routine commands. A permission allow rule tested in auto mode proves nothing, because nothing prompts. Test allow rules with `claude --permission-mode manual`, and include a command that should prompt as the control.
+- An agent that refuses a command because its instructions say so has not tested the permission rules. The instruction limit and the Claude Code enforcement are separate layers; test each on its own.
+- Architect-Claude gave the planner a header position measured from the word "Appendix" alone. The full header group ("Appendix" plus its digit) is wider, and the plan's windows would have failed every page. Measure the whole thing a rule will assert on, across every page, before handing numbers to a planner.
+- Running a plan's rules against the real PDF in the app workspace before the builder starts caught eight problems across plans v2 and v3: wrong header and page-number windows, header strips that cut real figure content (Figures 19 and 65), caption-check false alarms on short words, two items whose reading direction can't be read from text, a direction margin of 0.4%, and an unescaped regex dot. Each check took minutes; each would have cost a builder round.
+- sharp 0.35.5 writes a one-channel raw buffer as an RGB PNG unless `.toColourspace('b-w')` is set, and decoding with b-w turns a three-channel file into one channel. A check that only decodes can't tell a correct gray PNG from a wrong one; read the stored channel count from the file's metadata too.
+- In Node, `process.exit()` inside a `try` skips its `finally`, so cleanup in the `finally` never runs. Return an exit code from the main function instead.
+- A Claude Code transcript exported into the repo root gets picked up by `git add -A`. Save exports outside the repo, in `/c/Projects/session-exports/`.
+- The planner can't write files, so its plan reaches the repo only when architect-Claude saves it. Save each version under its own name (`B-101-plan-v1.txt`, `-v2`, `-v3`), note corrections as an erratum at the top rather than editing the planner's text, and compare the copy on the device after each write.

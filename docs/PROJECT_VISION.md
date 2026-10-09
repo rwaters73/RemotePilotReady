@@ -1,6 +1,6 @@
 # Remote Pilot Ready: Project Vision
 
-Status: Draft v0.11 (2026-10-06)
+Status: Draft v0.12 (2026-10-07)
 Owner: Rick, Wisecrum Associates LLC
 Domains: remotepilotready.com, remotepilotready.space (Cloudflare Registrar)
 
@@ -112,8 +112,8 @@ Pending decisions (see `BACKLOG.md`): whether to show each missed question's exp
 | Domains | Cloudflare Registrar | At-cost renewals; DNS, hosting, and registration in one account |
 | Database | Neon Postgres, Free plan | Scales to zero and wakes automatically on the next query; no manual reactivation as with Supabase Free |
 | Auth | Neon Auth (managed Better Auth) | Included in Neon Free up to 60,000 MAU; avoids building auth |
-| Testing Supplement figures | Figures and legends rasterized from the PDF at ~300 dpi, one image each, stored in `figures/` with an index | Lets questions display the actual figure and legend |
-| Question bank tools | TypeScript scripts run by Node 22.18+ (`npm run qbank:*`): validator, hash, ACS extraction, reference checksum check | Usable before the app exists (D-058) |
+| Testing Supplement figures | All 79 figures and 19 legends rendered from the PDF at 300 dpi, cropped to the figure and its caption, with sideways bodies turned upright (D-062 to D-064). Each item is a lossless PNG plus a WebP the site serves, in `figures/` with an index (D-065) | Lets questions display the actual figure and legend |
+| Question bank tools | TypeScript scripts run by Node 22.18+ (`npm run qbank:*`): validator, hash, ACS extraction, reference checksum check, figure survey, extraction and check | Usable before the app exists (D-058) |
 | Exam answers | Radio buttons; no free-text answers | D-060 |
 
 Testing Supplement: FAA-CT-8080-2H (2018, effective June 11, 2018, 113 pages), stored at `references/sport_rec_private_akts.pdf`. As of 2026-10-01, the FAA's testing supplements page lists it as the current edition for Remote Pilot (UAG). Its front matter carries no copyright notice, and as a work of the U.S. government it is not subject to copyright (17 U.S.C. 105), so its figures can be published. Recheck the FAA page for a newer edition before launch.

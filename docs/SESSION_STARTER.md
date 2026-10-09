@@ -1,61 +1,51 @@
 # Session Starter
 
-Last updated: 2026-10-06, end of Session 2. The next chat is Session 3.
+Last updated: 2026-10-07, end of Session 3. The next chat is Session 4.
 
 ## Reading order
 
 1. This file.
-2. `docs/Communication_Preferences.md` and the universal lessons file (`C:\Users\rickw\Lessons_Learned_Universal.md`, imported by `CLAUDE.md`).
+2. `docs/Communication_Preferences.md` and the universal lessons file (`C:\Users\rickw\Lessons_Learned_Universal.md`, imported by `CLAUDE.md`). App sessions can't reach that folder yet and have been reading the claude.ai Project copy instead (B-021).
 3. `docs/PROJECT_VISION.md`.
 4. `docs/BACKLOG.md`, then `docs/PROGRESS.md`.
-5. `docs/QUESTION_FORMAT.md` before any question work.
+5. `docs/plans/B-101-plan-v3.txt`, including the erratum and architect notes at the top, before any figure work. Sections 3, 9 and 10 cover the steps below.
 6. `docs/DECISION_LOG.md` and `docs/LESSONS_LEARNED.md` as needed.
 
 ## Where things stand
 
-The repo is on GitHub (private, `rwaters73/RemotePilotReady`, branch `main`). Both domains are registered with DNSSEC and auto-renew on. The question bank format (B-102) is built, tested, and committed: `docs/QUESTION_FORMAT.md`, `data/references.json` (nine FAA documents), `data/acs-10b-knowledge.json` (176 ACS codes), an empty `figures/index.json`, and the validator in `scripts/qbank/` (62 tests passing). There are no questions yet and no app code. Decisions run D-001 to D-060.
+- Repo: private GitHub `rwaters73/RemotePilotReady`, branch `main`, last commit 06b6e22 (B-101 commit 1). On the desktop, `scripts/qbank/test/figures-real.test.ts` is untracked on purpose; it goes in with commit 2.
+- Question bank format, validator and tools are built. q-writer and q-reviewer are ready (B-022). No questions yet.
+- B-101: the extraction tools are committed. `figures/` holds only an empty index, and `data/figure-rotations.json` has an empty list. Test suite: 179 tests, 161 pass; the 18 failures are all in `figures-real.test.ts` and are expected until the images exist.
+- Decisions run D-001 to D-070.
 
-## Pick up here
+## Pick up here: B-101, in this order (plan v3, section 9)
 
-In this order:
+1. Architect-Claude, in the Linux workspace: stage the commit-1 tree and the PDF; confirm Node 22.22.0, `npm ci`, sharp 0.35.5 / libvips 8.18.7, Poppler 24.02.0, and the PDF's SHA-256.
+2. Run `npm run qbank:figures:survey` (with `--save-words` to produce `scripts/qbank/test/fixtures/figure-words.json`). Expect 98 items, fig-55 as the only contents difference, 11 sideways items with direction from their words, and fig-3 and fig-82 sideways with direction set by eye. Fill `data/figure-rotations.json`, checking every undetermined item by eye.
+3. Run `npm run qbank:figures:extract`. Check all 98 images by eye, with full-zoom PNG/WebP comparisons of the sectional charts, the Chart Supplement figures and the legends (plan 9). Confirm fig-19's top edge and fig-65's top border are kept. Run it a second time into another folder and confirm both index.json files are identical. Apply the 300 MB PNG gate.
+4. Transfer through the desktop link: images first, then `figure-rotations.json` and `figure-words.json`, then `figures/index.json` last. Report the SHA-256 of both JSON files; Rick compares them and runs `npm run qbank:figures:check`.
+5. Tester stage B (plan 8B), then commit 2 with the commands in plan section 10.
 
-1. B-022: Claude drafts the exact edits for `.claude/agents/q_writer.md` and `q_reviewer.md` (plan section 3.9 in `docs/plans/B-102-plan-v1.txt`, as amended by D-044, D-047, D-049 to D-055), the stale "media alongside (D-023)" lines in `planner.md`, `builder.md`, and `tester.md`, adding Bash to q-reviewer's tools, and the `.claude/settings.json` allow rules. Rick applies them, because app sessions can't write into `.claude/`. The allow rules the builder proposed:
+Viewing 98 images uses a lot of a chat's context. If the context gets tight partway through, say so and close the session after a clean checkpoint.
 
-   ```json
-   {
-     "permissions": {
-       "allow": [
-         "Bash(npm run qbank:hash)",
-         "Bash(npm run qbank:hash:*)",
-         "Bash(npm run qbank:validate)",
-         "Bash(npm run qbank:validate:*)"
-       ]
-     }
-   }
-   ```
+## Other open items
 
-   These apply to every agent in the project, not only q-reviewer. Test them in Claude Code before relying on them.
-2. B-101: extract the Testing Supplement figures (1-82) and legends (1-19) into `figures/` and fill `figures/index.json`. Talk it through, then planner.
-3. B-103 and B-104: a first small batch of questions with q-writer, reviewed by q-reviewer, for Rick's own study. Needs B-022, and B-101 for any figure question.
-
-Rick's setup items:
-
-- B-009: create the Neon project and turn on Neon Auth. Blocks B-115.
-- B-023: on the laptop, `git pull`, check `node --version` is 22.18 or later, `npm ci`, `npm run qbank:test`.
-- B-017: confirm the external-import prompt for the universal lessons file was approved in Claude Code.
-- B-021: decide how Claude app sessions read the universal lessons file. Session 2 read the second copy in the claude.ai Project, which is exactly the drift risk.
-
-Open decisions for Rick: B-005 (explanations and citations in the review), B-011 (shuffle answer order between attempts), B-012 (per-question time), B-024 (a missing file for an ID the database knows fails the load; Claude recommends yes).
+- Rick's decisions: B-030 (run q-writer and q-reviewer in manual permission mode), B-005, B-011, B-012, B-024 (Claude recommends yes), B-021.
+- Claude drafts for Rick to apply in `.claude/`: B-027 (stale repo-layout line), B-029 (agents open the WebP).
+- Before the first chart question: B-028 (zoom command for q-reviewer).
+- Rick's setup items: B-009 (Neon and Neon Auth), B-023 (laptop: `git pull`, `npm ci`, `npm run qbank:test`), B-017.
+- Questions without figures (B-103/B-104) can start any time; figure questions wait for B-101 commit 2.
 
 ## Watch out for
 
 - Rick uses Git Bash: paths as `/c/Projects/RemotePilotReady`, and no `<placeholders>` in commands.
-- Claude Code agents start fresh. Save approved plans to `docs/plans/` and point the builder at the file.
-- No parallel work in the Claude app while a Claude Code agent is running.
-- Writes to the project folder through the desktop link can silently keep old content. Write each update from a fresh path and compare the file on the device after every write. Writes into `.claude/` are blocked from app sessions.
+- Claude Code starts in auto mode. To test permission rules, or to have them enforced, start with `--permission-mode manual`.
+- Save Claude Code transcript exports outside the repo (`/c/Projects/session-exports/`); `git add -A` picks them up otherwise.
+- Writes through the desktop link can keep old content. Write each update from a fresh path and compare the file on the device after every write. App sessions can't write into `.claude/`.
+- The planner can't write files: architect-Claude saves each plan version to `docs/plans/` and verifies the copy.
+- Measure the whole object a rule will check, on every page, before giving numbers to a planner (LESSONS_LEARNED 2026-10-07).
 - The AIM's next basic edition takes effect December 24, 2026 (B-026).
-- TypeScript 7 is installed; B-115 must confirm the React Router and Workers tooling accept it.
-- Possible universal lessons for Rick's file: check each new rule in an amendment list against the others before handing it off; save an agent's output to a file before the next fresh agent needs it.
+- Possible universal lessons for Rick's file: measure the complete thing a rule asserts on before handing it off; a runtime check written for a specific defect must be shown to fail on that defect itself, not only in a unit test; check each new rule in an amendment list against the others.
 
 ## End-of-session routine
 

@@ -2,17 +2,24 @@
 
 ## Current state
 
-Phase: question bank format built and committed. No app code yet.
+Phase: question bank tools in place; Testing Supplement figures being extracted. No questions and no app code yet.
 
-- Vision at v0.11. Decisions D-001 to D-060 logged.
-- Repo on GitHub (private, rwaters73/RemotePilotReady); domains registered with DNSSEC and auto-renew.
-- Question bank format: `docs/QUESTION_FORMAT.md`, `data/references.json` (nine FAA documents), `data/acs-10b-knowledge.json` (176 ACS codes), `figures/index.json` (empty until B-101), validator and tools in `scripts/qbank/` (62 tests passing).
-- No questions yet. q-writer and q-reviewer need the B-022 edits before they start.
-- Not yet done: Neon and Neon Auth (B-009), figure extraction (B-101), app scaffold (B-115), loader (B-116).
+- Vision at v0.12. Decisions D-001 to D-070 logged.
+- q-writer and q-reviewer match the question format (B-022). q-reviewer can run `npm run qbank:hash` and `npm run qbank:validate` without a prompt; other commands prompt in manual mode.
+- B-101 commit 1 is in (06b6e22): figure survey, extraction and check scripts, the two-file figure index, validator changes, tests (179: 161 pass, 18 expected failures in the untracked `figures-real.test.ts`). `figures/` still holds only an empty index.
+- Not yet done: B-101 extraction and commit 2, Neon and Neon Auth (B-009), app scaffold (B-115), loader (B-116).
 
 ## Session log
 
 Newest first. A session is one chat between Rick and architect-Claude, however many days it spans. Each entry: what was done, what was decided, what is next.
+
+### Session 3 (2026-10-06 to 2026-10-07), Claude app: agent edits and figure extraction tools
+
+- B-022: drafted the q-writer, q-reviewer, planner, builder and tester edits and `.claude/settings.json`; Rick applied them (f142503). Found that Claude Code now starts in auto mode, then verified the allow rules in manual mode with a control command.
+- B-101: surveyed the Testing Supplement (79 figures, 19 legends, one per page; 13 printed sideways with upright captions). Planner produced v1 to v3. Before each hand-off, architect-Claude ran the plan's rules on the real PDF and found the problems that drove v2 and v3 (see LESSONS_LEARNED). Plans saved in `docs/plans/`; v3 carries an erratum for the caption regex.
+- Builder built v3; tester stage A found two defects (grayscale PNGs written as RGB, temp folder not cleaned up on early exit); builder fixed both; a re-check found the PNG check could not catch the first defect, which was fixed and verified. Commit 1: 06b6e22.
+- Decisions D-061 to D-070. New backlog items B-027 to B-030.
+- Next: see `SESSION_STARTER.md`.
 
 ### Session 2 (2026-10-06), Claude app: git setup and question bank format
 
