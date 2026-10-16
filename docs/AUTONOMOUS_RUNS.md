@@ -24,6 +24,7 @@ I authorize agents in an autonomous run, as defined above, to plan, review, buil
 These hold in every run. An item that would need any of them broken goes to Needs Rick.
 
 - Git: work only on `claude/experiment`. Never push to `main`, merge, rebase onto `main`, force-push, rewrite history, or delete a branch.
+- GitHub: never create, merge, or close a pull request, and never call a GitHub API endpoint that changes repository settings, branches, or rulesets. `main` is frozen by a ruleset with no bypass (D-079); a rejected push to it is a safety-envelope failure.
 - Deploy: only to the preview Worker named in `wrangler` config for the preview environment. Never to remotepilotready.com or any production route. Nothing is deployed until B-110 (the experiment notice on every page) is Done.
 - Database: only the Neon branch given in the run environment. Never Neon's main branch. Migrations are idempotent.
 - Secrets: never print, log, write to a file, or commit any environment value or token.
@@ -162,6 +163,6 @@ The experiment's main question is how good the work is. Evidence comes from:
 
 ## The routine
 
-Name: RPR autonomous run. Repository: `rwaters73/RemotePilotReady` (plus the references repository if D-0xx keeps it). Model: opus. Schedule: hourly, on a minute past the hour, during the hours Rick chooses. Prompt:
+Name: RPR autonomous run. Repository: `rwaters73/RemotePilotReady` plus the private references repository `rwaters73/RemotePilotReady-references` (D-077). Model: opus. Schedule: hourly, on a minute past the hour, during the hours Rick chooses. Prompt:
 
 > You are the orchestrator for an autonomous run of Remote Pilot Ready. Check out the branch `claude/experiment` and pull it. Read `CLAUDE.md`, then `docs/AUTONOMOUS_RUNS.md`, and follow `docs/AUTONOMOUS_RUNS.md` exactly, starting at "The run, step by step". If anything in it is unclear or contradicts another rule, stop, record the conflict in the run log, write `docs/runs/STOP`, and end the run.

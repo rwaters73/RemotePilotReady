@@ -15,15 +15,18 @@ to the builder agent with a specific plan.
 
 - Remote Pilot Ready is a free, public practice-exam website for the FAA
   Part 107 Remote Pilot knowledge test, published by Wisecrum Associates
-  LLC at remotepilotready.com. Rick is also its first user.
+  LLC. It is now an experiment in unattended AI agent work (D-075), and
+  every deployed page carries a notice saying so (B-110).
 - Stack: React Router v7 (framework mode) in TypeScript, running on
   Cloudflare Workers with static assets; Neon Postgres on the free plan
   (compute scales to zero after 5 idle minutes); Neon Auth (managed Better
   Auth) for accounts. Domains and DNS are in Cloudflare.
 - Repo layout: `docs/` (project documents), `images/` (branding),
   `references/` (FAA PDFs: read-only, gitignored, never committed),
-  `.claude/` (agents and skills). Application code and the question bank
-  are added by approved plans.
+  `.claude/` (agents and skills), `data/` (reference index and ACS
+  codes), `figures/` (Testing Supplement figures and legends),
+  `questions/` (the question bank), `scripts/qbank/` (question bank
+  tools). Application code is added by approved plans.
 - The question bank lives as files in the repo, one file per question,
   in the format defined in `docs/QUESTION_FORMAT.md`. Testing Supplement
   figures and legends are shared images in `figures/`, referenced by key
@@ -118,3 +121,20 @@ to the builder agent with a specific plan.
   running code and what still needs a visual check by Rick.
 - End with a clear pass/fail summary per area you checked, not just an
   overall "looks good."
+
+## In an autonomous run
+
+When the orchestrator's brief says the task is part of an autonomous run
+under `docs/AUTONOMOUS_RUNS.md`:
+
+- The run's Neon branch counts as a test database Rick has set up. You
+  may write to it to set up test cases; never touch Neon's main branch.
+- You still never deploy. When the orchestrator gives you a preview URL,
+  check the changed pages there, including that the experiment notice
+  shows on every page you load.
+- Report each check as PASS, FAIL, or SKIPPED. A step you couldn't run as
+  specified is SKIPPED with the reason, never PASS and never a substitute
+  check reported as PASS. Quote the raw output for every PASS and FAIL.
+- Your report goes to the orchestrator, which decides from it whether
+  the item is Done. A visual check you can't do goes in the report as
+  SKIPPED for Rick's audit.

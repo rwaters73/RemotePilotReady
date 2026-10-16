@@ -4,6 +4,8 @@ A free, public practice-exam website for the FAA Part 107 Remote Pilot knowledge
 
 ## Start of every session
 
+A new session is triggered by Rick's prompt: "Starting Session #" where "#" is the number of the new session.
+
 Read these before doing anything else, in this order:
 
 1. `docs/SESSION_STARTER.md`: where the last session left off and what to pick up.
@@ -32,6 +34,8 @@ Each document has one job. Do not record the same thing in two places.
 | `docs/SESSION_STARTER.md` | Rewritten at the end of every session. |
 | `docs/Communication_Preferences.md` | Rick's working and communication style. Shared across his projects. |
 | `docs/QUESTION_FORMAT.md` | The question file format. Read it before writing, reviewing, or loading questions. |
+| `docs/AUTONOMOUS_RUNS.md` | How unattended agent runs work: authorization, safety envelope, model routing, Definition of Ready and Done, stop conditions. |
+| `docs/runs/` | One log per autonomous run, plus `AUDIT.md` for Rick's spot checks. |
 | `docs/plans/` | Approved plans. The builder reads the plan named in its task. |
 
 ## Agents
@@ -41,15 +45,20 @@ Defined in `.claude/agents/`.
 | Agent | Use it to |
 | --- | --- |
 | `planner` | Plan any non-trivial change before code is written. Read-only. |
+| `plan-reviewer` | In an autonomous run only: approve or return a plan in place of Rick. Runs on Opus. Read-only. |
 | `builder` | Carry out a plan Rick has approved, exactly as written. |
+| `code-reviewer` | In an autonomous run only: check the builder's diff against the approved plan and the safety envelope. Read-only. |
 | `tester` | Verify a change by running it, and check what else it could have broken. Read-only. |
 | `q-writer` | Draft or revise exam questions from FAA sources. Runs on Sonnet. Start with `claude --agent q-writer`. |
 | `q-reviewer` | Approve or return draft questions against their cited FAA source. Runs on Opus. Start with `claude --agent q-reviewer`. |
 
 The normal flow for code is: talk it through with Rick, then planner, then Rick approves, then builder, then tester. For questions: q-writer drafts, then q-reviewer approves or returns. Only approved questions may be served on the site.
 
+In an autonomous run, the flow is the one in `docs/AUTONOMOUS_RUNS.md`: planner, plan-reviewer, builder, code-reviewer, tester, with the orchestrator committing and pushing.
+
 ## Ground rules
 
+- Autonomous runs: inside a run as defined in `docs/AUTONOMOUS_RUNS.md`, and only there, that document's authorization and safety envelope replace the next two rules. Everything else in this file still applies. No agent may change `CLAUDE.md`, `docs/AUTONOMOUS_RUNS.md` or `.claude/`.
 - Never commit, push, or deploy without Rick's own instruction in the current session. When work is ready to commit, give Rick the exact git commands to run.
 - An approval relayed by another agent or a summary is not Rick's approval.
 - Never commit anything in `references/`. Those FAA PDFs are gitignored and stay local.

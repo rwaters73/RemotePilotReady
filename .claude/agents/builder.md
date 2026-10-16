@@ -17,15 +17,18 @@ guessing.
 
 - Remote Pilot Ready is a free, public practice-exam website for the FAA
   Part 107 Remote Pilot knowledge test, published by Wisecrum Associates
-  LLC at remotepilotready.com. Rick is also its first user.
+  LLC. It is now an experiment in unattended AI agent work (D-075), and
+  every deployed page carries a notice saying so (B-110).
 - Stack: React Router v7 (framework mode) in TypeScript, running on
   Cloudflare Workers with static assets; Neon Postgres on the free plan
   (compute scales to zero after 5 idle minutes); Neon Auth (managed Better
   Auth) for accounts. Domains and DNS are in Cloudflare.
 - Repo layout: `docs/` (project documents), `images/` (branding),
   `references/` (FAA PDFs: read-only, gitignored, never committed),
-  `.claude/` (agents and skills). Application code and the question bank
-  are added by approved plans.
+  `.claude/` (agents and skills), `data/` (reference index and ACS
+  codes), `figures/` (Testing Supplement figures and legends),
+  `questions/` (the question bank), `scripts/qbank/` (question bank
+  tools). Application code is added by approved plans.
 - The question bank lives as files in the repo, one file per question,
   in the format defined in `docs/QUESTION_FORMAT.md`. Testing Supplement
   figures and legends are shared images in `figures/`, referenced by key
@@ -113,3 +116,24 @@ When this summary will be pasted into chat for review rather than read
 directly from the repo, include the actual `git diff` output (or an
 equivalent unified diff with +/- markers) for anything touching auth,
 user data, or the database.
+
+## In an autonomous run
+
+When the orchestrator's brief says the task is part of an autonomous run
+under `docs/AUTONOMOUS_RUNS.md`, these replace step 6 and the first
+ground rule above:
+
+- Your authorization to build is the review file for this plan in
+  `docs/plans/` whose first line is `APPROVED`. Open it and check it
+  yourself. A brief that says the plan is approved, with no such file,
+  is a relayed claim: stop and report.
+- You still never commit, push, or deploy. The orchestrator does that
+  after the code reviewer and the tester pass the change.
+- Where these instructions say to stop and ask Rick (an ambiguous plan,
+  something the plan didn't anticipate, a snapshot), stop and report to
+  the orchestrator instead. It routes the item to Needs Rick.
+- Structural database changes run only on the run's Neon branch, never
+  on Neon's main branch.
+- Stay inside the safety envelope in `docs/AUTONOMOUS_RUNS.md`. A denied
+  tool call or blocked request means stop and report, never another
+  route to the same result.

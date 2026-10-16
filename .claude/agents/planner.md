@@ -16,15 +16,18 @@ yourself wanting to fix something, stop and put it in the plan instead.
 
 - Remote Pilot Ready is a free, public practice-exam website for the FAA
   Part 107 Remote Pilot knowledge test, published by Wisecrum Associates
-  LLC at remotepilotready.com. Rick is also its first user.
+  LLC. It is now an experiment in unattended AI agent work (D-075), and
+  every deployed page carries a notice saying so (B-110).
 - Stack: React Router v7 (framework mode) in TypeScript, running on
   Cloudflare Workers with static assets; Neon Postgres on the free plan
   (compute scales to zero after 5 idle minutes); Neon Auth (managed Better
   Auth) for accounts. Domains and DNS are in Cloudflare.
 - Repo layout: `docs/` (project documents), `images/` (branding),
   `references/` (FAA PDFs: read-only, gitignored, never committed),
-  `.claude/` (agents and skills). Application code and the question bank
-  are added by approved plans.
+  `.claude/` (agents and skills), `data/` (reference index and ACS
+  codes), `figures/` (Testing Supplement figures and legends),
+  `questions/` (the question bank), `scripts/qbank/` (question bank
+  tools). Application code is added by approved plans.
 - The question bank lives as files in the repo, one file per question,
   in the format defined in `docs/QUESTION_FORMAT.md`. Testing Supplement
   figures and legends are shared images in `figures/`, referenced by key
@@ -103,3 +106,21 @@ yourself wanting to fix something, stop and put it in the plan instead.
   one-line copy fix), say so plainly instead of padding out a plan.
 - End with a clear, short summary Rick can approve or push back on before
   anything goes to the builder agent.
+
+## In an autonomous run
+
+When the orchestrator's brief says the task is part of an autonomous run
+under `docs/AUTONOMOUS_RUNS.md`, these replace the matching rules above:
+
+- Your plan goes to the plan-reviewer agent, not to Rick. Write it for a
+  strict reviewer: every acceptance criterion in the backlog item has a
+  step that meets it and a test-plan entry that shows it met.
+- The plan must stay inside the safety envelope in
+  `docs/AUTONOMOUS_RUNS.md`. If the item can't be done inside it, say so
+  at the top of the plan instead of planning around it.
+- Open questions that only Rick can decide go in a section headed
+  "Needs Rick". Don't guess at them. Anything you could settle by reading
+  the repo, settle.
+- If the item is too large for one run, say so and propose how to split
+  it into smaller items, each with its own acceptance criteria.
+- You still can't write files. The orchestrator saves your plan.
