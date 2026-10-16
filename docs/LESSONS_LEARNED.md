@@ -42,3 +42,22 @@ Each entry: date, what happened, and what to do differently.
 - In Node, `process.exit()` inside a `try` skips its `finally`, so cleanup in the `finally` never runs. Return an exit code from the main function instead.
 - A Claude Code transcript exported into the repo root gets picked up by `git add -A`. Save exports outside the repo, in `/c/Projects/session-exports/`.
 - The planner can't write files, so its plan reaches the repo only when architect-Claude saves it. Save each version under its own name (`B-101-plan-v1.txt`, `-v2`, `-v3`), note corrections as an erratum at the top rather than editing the planner's text, and compare the copy on the device after each write.
+
+## 2026-10-09
+
+- Architect-Claude found a defect in committed code and wrote a builder task for Rick to run, skipping the planner, on the reasoning that the approved plan already required the behaviour. It also said it had "sent it straight to the builder", which made it sound as if something had run. The flow is talk it through with Rick, then planner, then Rick approves, then builder, then tester, for every code change. A belief that a step is redundant is a question for Rick, not a reason to skip it. Describe exactly what was done: "I wrote a task for you to run", not "I sent it".
+- When the version check failed, architect-Claude ran the survey and an extraction with a scratch workaround before asking Rick. Nothing reached the desktop and the results were useful, but the decision to run them was Rick's. Ask before running anything that works around a failure, even in the workspace.
+- `findPoppler()` assumed the tools exit non-zero on `-v`. Poppler 24.02.0 exits 0 and writes `-v` to stderr, and `execFileSync` returns only stdout on a zero exit, so real Poppler was refused. Tester stage A ran where only Xpdf (exit 99) exists, so the zero-exit path never ran. Tests on a machine without the real dependency can't cover the paths that dependency takes; run new tooling against the real tool before trusting its tests.
+- In the architect workspace, a long run started in the background from a command that later timed out was killed with it. Start long runs fully detached (`setsid nohup …`) and poll for completion.
+
+## 2026-10-15
+
+- Image files written to the desktop through the desktop link arrive with a signed Anthropic C2PA Content Credentials manifest added: a `caBX` chunk in PNGs (5,770 bytes more) and a `C2PA` chunk in WebPs (5,768 bytes more). The image data is unchanged, but the SHA-256 is not, so `qbank:figures:check` fails. JSON and text files arrived unchanged. Compare size and hash after every binary transfer, and make binary deliverables on the desktop instead (D-074).
+- Git Bash puts its own `/mingw64/bin` ahead of the Windows PATH, so Git's Xpdf `pdftotext` is found before an installed Poppler even when the Windows PATH lists Poppler. Point `POPPLER_BIN` at Poppler's `Library/bin` for the figure scripts.
+- A command built on a guessed install path (`/c/poppler-24.02.0/…`) failed because Poppler was installed under `C:\Program Files\poppler\…`. When a command depends on where Rick installed something, ask for the path first.
+- Transcript exports now go in `exports/` in the repo, which git ignores (D-073). This replaces the 2026-10-07 advice to save them outside the repo.
+- The B-101 version guard did its job: it refused to overwrite figures made with Poppler 24.02.0 when Poppler 26.09.0 was on the PATH.
+
+## 2026-10-16
+
+- Poppler 24.02.0 for Windows (oschwartz10612 release 24.02.0-0) and Ubuntu's Poppler 24.02.0, each with sharp 0.35.5 and libvips 8.18.7, produced byte-identical figures, index and words fixture for this PDF. Matching the index hash is enough to carry an eye check across machines; keep the exact Poppler version when re-running.

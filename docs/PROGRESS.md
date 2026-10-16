@@ -2,16 +2,26 @@
 
 ## Current state
 
-Phase: question bank tools in place; Testing Supplement figures being extracted. No questions and no app code yet.
+Phase: question bank tools and Testing Supplement figures in place. No questions and no app code yet.
 
-- Vision at v0.12. Decisions D-001 to D-070 logged.
-- q-writer and q-reviewer match the question format (B-022). q-reviewer can run `npm run qbank:hash` and `npm run qbank:validate` without a prompt; other commands prompt in manual mode.
-- B-101 commit 1 is in (06b6e22): figure survey, extraction and check scripts, the two-file figure index, validator changes, tests (179: 161 pass, 18 expected failures in the untracked `figures-real.test.ts`). `figures/` still holds only an empty index.
-- Not yet done: B-101 extraction and commit 2, Neon and Neon Auth (B-009), app scaffold (B-115), loader (B-116).
+- Vision at v0.12. Decisions D-001 to D-074 logged.
+- B-101 is done: 79 figures and 19 legends in `figures/` as PNG and WebP, with `figures/index.json` (49ad786). Test suite: 188 tests, all passing on the desktop.
+- The desktop has Poppler 24.02.0 for Windows; the figure scripts find it through `POPPLER_BIN`.
+- q-writer and q-reviewer match the question format (B-022). Question drafting (B-103) can start; chart questions wait for B-028.
+- Not yet done: Neon and Neon Auth (B-009), app scaffold (B-115), loader (B-116).
 
 ## Session log
 
 Newest first. A session is one chat between Rick and architect-Claude, however many days it spans. Each entry: what was done, what was decided, what is next.
+
+### Session 4 (2026-10-09 to 2026-10-16), Claude app: B-101 finished
+
+- The survey failed on real Poppler: the version check read only stdout, and Poppler writes `-v` to stderr with exit 0. Architect-Claude found and confirmed the cause, then skipped the planner and wrote a builder task; Rick caught it and the fix went through planner, approval, builder and tester (plan `docs/plans/B-101-poppler-fix-plan-v1.txt`, commit 301858f). The tester's mutation check showed the new defect test fails on the old code.
+- Architect-Claude ran the extraction in the Linux workspace and checked all 98 images by eye: the 13 turned items side by side with their pages, the tops of fig-19 and fig-65 against 300 dpi page renders, and PNG against WebP at full size for the 41 sectional chart, Chart Supplement and legend items. Two runs were byte-identical; PNG total 171.3 MiB, under the 300 MB gate.
+- Images written to the desktop through the desktop link arrived with an added C2PA manifest, so they didn't match the index. Rick installed Poppler 24.02.0 for Windows and ran the extraction himself; his index matched the checked run byte for byte (D-074). Tester stage B passed; commit 2 is 49ad786.
+- Rick committed the `.gitignore` change for `exports/` (6d38b3f).
+- Decisions D-071 to D-074. New backlog items B-031 (`extract-acs.ts` has the same version-check gap) and B-032 (`figures:check` totals).
+- Next: see `SESSION_STARTER.md`.
 
 ### Session 3 (2026-10-06 to 2026-10-07), Claude app: agent edits and figure extraction tools
 
