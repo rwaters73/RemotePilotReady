@@ -1,52 +1,40 @@
 # Session Starter
 
-Last updated: 2026-10-16, end of Session 4. The next chat is Session 5.
+Last updated: 2026-10-16, end of Session 5. The next chat is Session 6. Rick gives the number in his "Starting Session #" prompt.
 
-## Reading order
+## The project is paused
+
+Remote Pilot Ready is now an experiment in unattended AI agent runs (D-075). Session 5 set the runs up but never ran one. Rick paused the project to try a separate project first, which takes remotepilotready.space (D-081). If that experiment fails, he comes back here to run this one. Don't start work here unless Rick says he's resuming.
+
+## Reading order when resuming
 
 1. This file.
-2. `docs/Communication_Preferences.md` and the universal lessons file (`C:\Users\rickw\Lessons_Learned_Universal.md`, imported by `CLAUDE.md`). App sessions can't reach that folder and read the copy Rick adds to the claude.ai Project's files (B-021).
-3. `docs/PROJECT_VISION.md`.
-4. `docs/BACKLOG.md`, then `docs/PROGRESS.md`.
-5. `docs/QUESTION_FORMAT.md` before any question work.
-6. `docs/DECISION_LOG.md` and `docs/LESSONS_LEARNED.md` as needed. Read the 2026-10-09 lessons before handing any code work to an agent.
+2. `docs/Communication_Preferences.md` and the universal lessons file (read the copy in the claude.ai Project's files; B-021).
+3. `docs/AUTONOMOUS_RUNS.md`: how runs work. In force (D-076).
+4. `docs/BACKLOG.md`, starting with the "Autonomous-run setup" section, then `docs/PROGRESS.md`.
+5. `docs/DECISION_LOG.md` D-075 to D-081 and the 2026-10-16 lessons in `docs/LESSONS_LEARNED.md`.
+6. `docs/PROJECT_VISION.md`. It is still v0.12 and doesn't reflect the experiment yet (B-036).
 
 ## Where things stand
 
-- Repo: private GitHub `rwaters73/RemotePilotReady`, branch `main`, last commit 49ad786 (B-101 commit 2). Rick's two-line "Starting Session #" edit in `CLAUDE.md` is uncommitted and has a typo ("neumber").
-- B-101 is done. `figures/` holds 79 figures and 19 legends as PNG and WebP with `figures/index.json` (SHA-256 c514126d…). Test suite: 188 tests, all passing on the desktop.
-- The question bank format, validator and tools are built. q-writer and q-reviewer are ready (B-022). No questions yet.
-- Decisions run D-001 to D-074.
+- Repo: public GitHub `rwaters73/RemotePilotReady`. `main` is frozen at 8526977 by the ruleset `freeze-main`, which has no bypass (D-079). All work is on `claude/experiment`; Rick's desktop is on that branch.
+- `claude/experiment` commit 8b874b2 holds `docs/AUTONOMOUS_RUNS.md` and the plan-reviewer and code-reviewer agents. At session end, the restored `CLAUDE.md`, the envelope edit (GitHub rule, line 27) and the restored planner, builder and tester files were on disk but not confirmed committed (B-033).
+- Decisions run D-001 to D-081.
 
-## Pick up here
+## Pick up here when resuming
 
-Question drafting (B-103) is the next real work. Before the first q-writer run:
-
-1. Rick decides B-030: run q-writer and q-reviewer in manual permission mode. Claude recommends manual mode for q-reviewer at least.
-2. Claude drafts B-029 (q-writer and q-reviewer open the WebP, D-068) and B-027 (stale repo-layout line in planner.md, builder.md and tester.md). Rick applies them in `.claude/`, which app sessions can't write.
-3. Talk through the first q-writer batch with Rick: which ACS area, how many questions, and whether to start with questions that need no figure.
-4. Chart questions (sectional charts, Chart Supplement) also wait for B-028, a zoom command for q-reviewer. That needs a planner pass.
-
-## Other open items
-
-- Rick's decisions: B-005, B-011, B-012, B-024 (Claude recommends yes), B-021, B-030.
-- Rick's setup items: B-009 (Neon and Neon Auth), B-023 (laptop: `git pull`, `npm ci`, `npm run qbank:test`; the pull is about 213 MB), B-017.
-- Small tooling items for later plans: B-031 (`extract-acs.ts` version check), B-032 (`figures:check` totals), B-025, B-026.
+Work the setup items in order: B-033 (confirm the commit), B-034 (references repo), B-035 (universal lessons in the cloud), B-036 (vision changes), B-037 (backlog refill to the Definition of Ready, B-110 first, including the experiment notice wording), B-038 (preview deploy and Neon branch, only when an item needs them), B-039 (environment and routine), then B-040 (the test run). Only after the test run passes does the routine go on a schedule.
 
 ## Watch out for
 
-- Every code change goes: talk it through with Rick, planner, Rick approves, builder, tester. If a step looks redundant, raise it with Rick; never skip it. Describe exactly what was done ("I wrote a task for you to run", not "I sent it").
-- Ask Rick before running any workaround, even in the workspace.
-- Image and other binary files written to the desktop through the desktop link get an Anthropic C2PA manifest added, so their hashes change. Make binary deliverables on the desktop; check every transfer by hash. Text and JSON arrive unchanged.
-- Poppler on the desktop: Git Bash finds Git's Xpdf `pdftotext` first, so set `POPPLER_BIN="C:/Program Files/poppler/poppler-24.02.0/Library/bin"` for the figure scripts. Poppler 26.09.0 is also installed; the figures were made with 24.02.0.
-- When a command depends on where Rick installed something, ask for the path first.
+- Before giving Rick any command that rewrites the working tree (`git reset --hard` and the like), check for uncommitted changes. A `reset --hard` in Session 5 discarded four files.
+- Check Claude Code capability claims against the current docs (code.claude.com/docs) before stating them.
+- Writes through the desktop link can keep old content. Write each update from a fresh path and compare the device copy. App sessions can't write into `.claude/`; Rick saves those files.
+- The routine pushes as Rick. The ruleset is the only hard guard on `main`; everything else in the envelope is enforced by instructions.
+- Never set `CLAUDE_CODE_EFFORT_LEVEL` on the cloud environment; it overrides every per-agent effort.
 - Rick uses Git Bash: paths as `/c/Projects/RemotePilotReady`, and no `<placeholders>` in commands.
-- Claude Code starts in auto mode. To test permission rules, or to have them enforced, start with `--permission-mode manual`.
 - Claude Code transcript exports go in `exports/`, which git ignores (D-073).
-- Writes through the desktop link can keep old content. Write each update from a fresh path and compare the file on the device after every write. App sessions can't write into `.claude/`.
-- The planner can't write files: architect-Claude saves each plan to `docs/plans/` and verifies the copy.
-- The AIM's next basic edition takes effect December 24, 2026 (B-026).
-- Possible universal lessons for Rick's file: raise a process step you think is redundant instead of skipping it; tests run where the real dependency is missing can't cover that dependency's paths; check binary transfers by hash, since a tool in between can change the bytes.
+- Possible universal lessons for Rick's file: check for uncommitted changes before any working-tree reset; a branch rule the owner can bypass doesn't stop automation that acts as the owner; raise a process step you think is redundant instead of skipping it; check binary transfers by hash.
 
 ## End-of-session routine
 

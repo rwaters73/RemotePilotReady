@@ -61,3 +61,8 @@ Each entry: date, what happened, and what to do differently.
 ## 2026-10-16
 
 - Poppler 24.02.0 for Windows (oschwartz10612 release 24.02.0-0) and Ubuntu's Poppler 24.02.0, each with sharp 0.35.5 and libvips 8.18.7, produced byte-identical figures, index and words fixture for this PDF. Matching the index hash is enough to carry an eye check across machines; keep the exact Poppler version when re-running.
+- Architect-Claude gave Rick `git reset --hard HEAD~1` to undo a test commit while four files had uncommitted edits. The reset discarded them, along with Rick's own uncommitted `CLAUDE.md` edit. They were restored from the session's draft copies. Before giving any command that rewrites the working tree (`reset --hard`, `checkout -- .`, `restore`), check `git status` for uncommitted changes and use `git reset --soft` or `git stash` instead. Possible universal lesson.
+- Architect-Claude told Rick that Claude Code subagents can't spawn subagents. The current docs say they can, up to three levels deep. Check claims about Claude Code's capabilities against its current docs before stating them, even ones that feel settled.
+- The desktop link's stale write happened again: a file sent from a path used earlier in the session arrived with old content. Writing from a fresh path and comparing the device copy fixed it.
+- Routines push with Rick's own GitHub identity, so a branch rule Rick can bypass doesn't stop a run. Rulesets aren't enforced on private repositories without a paid GitHub plan.
+- A cloud session with several repositories starts above the clones and reads only the plugin keys from each `.claude/settings.json`: no permission rules, hooks or `env`. Plan for that before attaching a second repository.

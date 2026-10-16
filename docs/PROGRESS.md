@@ -2,17 +2,27 @@
 
 ## Current state
 
-Phase: question bank tools and Testing Supplement figures in place. No questions and no app code yet.
+Phase: paused (D-081). Remote Pilot Ready is now an experiment in unattended AI agent runs (D-075). The run setup is designed but has never run. Rick is trying a separate project first, which takes remotepilotready.space.
 
-- Vision at v0.12. Decisions D-001 to D-074 logged.
-- B-101 is done: 79 figures and 19 legends in `figures/` as PNG and WebP, with `figures/index.json` (49ad786). Test suite: 188 tests, all passing on the desktop.
-- The desktop has Poppler 24.02.0 for Windows; the figure scripts find it through `POPPLER_BIN`.
-- q-writer and q-reviewer match the question format (B-022). Question drafting (B-103) can start; chart questions wait for B-028.
-- Not yet done: Neon and Neon Auth (B-009), app scaffold (B-115), loader (B-116).
+- Vision at v0.12 (doesn't yet reflect the experiment; B-036). Decisions D-001 to D-081 logged.
+- The repository is public. `main` is frozen by the `freeze-main` ruleset (D-079). All work is on `claude/experiment`.
+- `docs/AUTONOMOUS_RUNS.md` is in force (D-076). New agents: plan-reviewer and code-reviewer. Planner, builder and tester have run-mode sections.
+- B-101 is done: 79 figures and 19 legends in `figures/` (49ad786). Test suite: 188 tests, all passing on the desktop at the end of Session 4.
+- Not yet done: the run setup items B-033 to B-040, Neon and Neon Auth (B-009), app scaffold (B-115), loader (B-116). No questions yet.
 
 ## Session log
 
 Newest first. A session is one chat between Rick and architect-Claude, however many days it spans. Each entry: what was done, what was decided, what is next.
+
+### Session 5 (2026-10-15 to 2026-10-16), Claude app: autonomous-run setup, then paused
+
+- Rick turned the abandoned project into an experiment in unattended agent work (D-075). Talked through what had to change, then checked the current Claude Code docs. Corrected an earlier claim from architect-Claude: subagents can nest up to three levels.
+- Wrote `docs/AUTONOMOUS_RUNS.md`: when it applies, Rick's authorization, the safety envelope, model routing and the escalation ladder, Definition of Ready and Done, the pipelines, the run steps with lock and STOP files, stop conditions, the run log and the routine prompt (D-076 to D-078, D-080). Wrote the plan-reviewer and code-reviewer agents, added run-mode sections to planner, builder and tester (closing B-027), and updated `CLAUDE.md`.
+- Rick made the repo public and added the `freeze-main` ruleset; a test push to `main` was rejected (D-079). The new work went to `claude/experiment` (8b874b2).
+- The cleanup command for the test commit (`git reset --hard`) discarded four uncommitted files. Architect-Claude restored `CLAUDE.md` and the envelope edit through the desktop link (re-sent from a fresh path after a stale write); Rick restored the three agent files, and their hashes match. Whether they are committed is B-033.
+- Rick paused the project to try a separate project on remotepilotready.space first (D-081).
+- Decisions D-075 to D-081. New backlog items B-033 to B-040.
+- Next: see `SESSION_STARTER.md`.
 
 ### Session 4 (2026-10-09 to 2026-10-16), Claude app: B-101 finished
 
