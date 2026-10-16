@@ -2,7 +2,7 @@
 // first, then on PATH. Xpdf (which Git for Windows ships as pdftotext) is refused: this code needs
 // Poppler's pdftoppm and pdftotext -bbox-layout. All calls use argument arrays, never a shell.
 
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { delimiter, join } from 'node:path';
 
@@ -32,19 +32,31 @@ export function locateTool(tool: string, env: NodeJS.ProcessEnv = process.env): 
   return null;
 }
 
-// Runs `tool -v` and returns stdout plus stderr. The tools print their version on stderr and
-// some exit non-zero, so a non-zero exit is caught and its output kept.
-function versionOutput(path: string): string {
-  try {
-    return execFileSync(path, ['-v'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  } catch (e) {
-    const err = e as { stderr?: string; stdout?: string; message?: string };
-    const out = `${err.stdout ?? ''}${err.stderr ?? ''}`;
-    return out === '' ? (err.message ?? '') : out;
-  }
+// Runs a program with an argument array (never a shell) and returns its
+// stdout followed by its stderr, whatever the exit code. Poppler prints its
+// -v text on stderr and exits 0; Xpdf prints it on stderr and exits 99.
+// Both streams are read in every case. If the program could not be started
+// and printed nothing, the spawn error's message is returned.
+export function readVersionText(command: string, args: readonly string[]): string {
+  const r = spawnSync(command, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  const out = `${r.stdout ?? ''}${r.stderr ?? ''}`;
+  if (out === '' && r.error !== undefined) return r.error.message;
+  return out;
 }
 
-export function findPoppler(env: NodeJS.ProcessEnv = process.env): { tools: PopplerTools | null; errors: string[] } {
+export type VersionReader = (path: string) => string;
+
+// Runs `tool -v`.
+function versionOutput(path: string): string {
+  return readVersionText(path, ['-v']);
+}
+
+// readVersion can be replaced so tests can run a stand-in program;
+// the scripts always use the default.
+export function findPoppler(
+  env: NodeJS.ProcessEnv = process.env,
+  readVersion: VersionReader = versionOutput,
+): { tools: PopplerTools | null; errors: string[] } {
   const errors: string[] = [];
   const paths: Partial<Record<PopplerTool, string>> = {};
   const versions: { tool: PopplerTool; version: string }[] = [];
@@ -54,7 +66,7 @@ export function findPoppler(env: NodeJS.ProcessEnv = process.env): { tools: Popp
       errors.push(`${tool} not found in POPPLER_BIN or PATH`);
       continue;
     }
-    const out = versionOutput(path);
+    const out = readVersion(path);
     if (!/poppler/i.test(out)) {
       if (/Glyph & Cog/.test(out)) {
         errors.push(

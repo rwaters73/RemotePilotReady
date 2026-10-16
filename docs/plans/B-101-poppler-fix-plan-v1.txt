@@ -1,0 +1,417 @@
+Saved by architect-Claude, Session 4 (2026-10-15). Rick approved this plan in his own message on 2026-10-15. The builder starts only from this file.
+
+Source: the planner's output in Claude Code, Session 4, 2026-10-09, copied from Rick's transcript export. The text below is the planner's, unchanged except that the export's two-space indent is removed. Line breaks are where the terminal wrapped: every wrap fell on a space, so a wrapped line joins the next with one space. That applies inside code and string literals too: each literal in section 4 is a single line.
+
+ARCHITECT NOTES (Session 4):
+- Rick's decisions on the open questions (2026-10-15):
+  - Q1: extract-acs.ts stays out of this change. Backlog item B-031 covers it.
+  - Q2: Rick's uncommitted CLAUDE.md edit stays out of this commit.
+  - Q3: settled, see the next note.
+- Q3 / R2: architect-Claude ran `pdfinfo -v` from Poppler 24.02.0 in the Linux workspace. Its output, all on stderr with exit 0, is exactly POPPLER('pdfinfo', '24.02.0') from section 4.2, byte for byte, including the final newline:
+    pdfinfo version 24.02.0
+    Copyright 2005-2024 The Poppler Developers - http://poppler.freedesktop.org
+    Copyright 1996-2011, 2022 Glyph & Cog, LLC
+- Mechanics checked by architect-Claude on Linux (Node 22.22.0), 2026-10-09: a `node -e` child that writes with process.stdout.write / process.stderr.write and sets process.exitCode returns its stderr with status 0, 99 and 1 as P1, P3 and P6c expect; the P9 argument check returns ["a b","&","\"q\"","%PATH%","$HOME"]; importing a .ts module from `node -e`, as T8 does, works. Behaviour on Windows is the tester's to confirm.
+- G3 confirmed on Linux: `npm run qbank:acs:check` fails with "pdftotext not found" against real Poppler. The same function has a second issue: it tests for "Glyph & Cog" before "poppler", and real Poppler prints both, so it would label Poppler as Xpdf. Both are for B-031, not this plan.
+
+B-101 Poppler fix plan v1 (planner output, Session 4, 2026-10-09).
+The builder reads only this file.
+
+B-101 follow-up: the Poppler version check reads stdout and stderr on any exit
+code
+
+1. Goal
+
+Fix findPoppler() in scripts/qbank/lib/poppler.ts so that a tool's -v text is
+read from stdout and stderr whatever the exit code. Plan v3 section 4.8
+already requires this. Real Poppler 24.02.0 prints its -v text on stderr and
+exits 0. The current code reads only stdout when the exit is 0, so it rejects
+real Poppler. Add a test that runs on Windows without Poppler and fails on the
+current code. Backlog item: B-101 (follow-up to commit 1, 06b6e22).
+
+2. Current state
+
+Checked by the planner on the desktop, 2026-10-09:
+
+- main and origin/main are both at 2be410b (git ls-remote), so no pull was
+needed. The working tree has CLAUDE.md modified (Rick's two-line "Starting
+Session #" edit, not part of this change).
+scripts/qbank/test/figures-real.test.ts
+is untracked on purpose.
+- scripts/qbank/lib/poppler.ts:
+  - line 5 imports execFileSync only.
+  - lines 35-36: the comment says "The tools print their version on stderr and
+some exit non-zero". That is true of Xpdf, not of Poppler.
+  - lines 37-45, versionOutput(path): on a zero exit it returns
+execFileSync's return value, which is stdout only. stderr is read only in the
+catch, meaning only on a non-zero exit. With no output on a non-zero exit it
+returns err.message.
+  - lines 47-82, findPoppler(env): line 57 calls versionOutput(path). Lines
+58-72 classify the text: no "poppler" -> Xpdf message (if "Glyph & Cog") or
+"is not Poppler"; then /version\s+(\S+)/i -> "cannot read a version". Lines
+76-79 enforce the same version across all five tools.
+  - lines 84-90, runTool: returns stdout, throws on a non-zero exit.
+- scripts/qbank/extract-figures.ts line 206: const found = findPoppler(); with
+no arguments. Lines 207-210 print each error and return 1. Not touched.
+- Xpdf on the desktop, checked in Git Bash: /mingw64/bin/pdftotext -v prints
+"pdftotext version 4.00" and "Copyright 1996-2017 Glyph & Cog, LLC", both on
+stderr (nothing on stdout), and exits 99. This confirms why tester stage A
+(T8) never reached the zero-exit path. No pdfinfo, pdftoppm, pdfimages or
+pdffonts is on PATH. Node here is v24.15.0.
+- No test covers findPoppler today. The only Poppler-related test is the
+versionGuardDecision test in figures-lib.test.ts (around line 795).
+- Test count: 179 tests, 161 pass, 18 fail, all in the untracked
+figures-real.test.ts. The planner checked this by counting declarations, not
+by
+running the suite. figures-real.test.ts has 17 test() calls, one of which
+(B13) loops over 2 keys, which gives 18. The tester sets the real baseline
+(T3).
+- package.json has "type": "module" and engines node >= 22.18.0. qbank:test
+runs "scripts/qbank/test/**/*.test.ts", so a new test file is picked up
+automatically. tsconfig includes ./**/*.ts, so the new test is type-checked.
+
+3. Sequence
+
+- S1. Builder (desktop): section 4. No commit.
+- S2. Tester (desktop): section 7.
+- S3. Rick commits (section 8).
+- S4. Out of this plan: architect-Claude reruns the survey and extraction
+with the fixed code in the Linux workspace. figures/index.json must be
+byte-identical to the checked one (SHA-256 c514126d…99c2a).
+
+4. Changes, file by file
+
+Touched: scripts/qbank/lib/poppler.ts (modified) and
+scripts/qbank/test/poppler.test.ts (new). Architect-Claude saves this plan as
+docs/plans/B-101-poppler-fix-plan-v1.txt (D-059).
+
+Explicitly NOT touched: extract-figures.ts (its findPoppler() call works
+unchanged through the default arguments), figures.ts, figure-files.ts,
+check-figures.ts, extract-acs.ts, data/, figures/, package.json,
+package-lock.json, every existing test file, figures-real.test.ts, CLAUDE.md,
+docs/QUESTION_FORMAT.md. No new dependencies.
+
+4.1 scripts/qbank/lib/poppler.ts
+
+F1. Line 5: import { execFileSync, spawnSync } from 'node:child_process';
+(runTool still uses execFileSync.)
+
+F2. Replace lines 35-45 (the comment and versionOutput) with:
+
+  // Runs a program with an argument array (never a shell) and returns its
+  // stdout followed by its stderr, whatever the exit code. Poppler prints its
+  // -v text on stderr and exits 0; Xpdf prints it on stderr and exits 99.
+  // Both streams are read in every case. If the program could not be started
+  // and printed nothing, the spawn error's message is returned.
+  export function readVersionText(command: string, args: readonly string[]):
+string {
+    const r = spawnSync(command, args, { encoding: 'utf8', stdio: ['ignore',
+'pipe', 'pipe'] });
+    const out = `${r.stdout ?? ''}${r.stderr ?? ''}`;
+    if (out === '' && r.error !== undefined) return r.error.message;
+    return out;
+  }
+
+  export type VersionReader = (path: string) => string;
+
+  // Runs `tool -v`.
+  function versionOutput(path: string): string {
+    return readVersionText(path, ['-v']);
+  }
+
+  - Don't pass a shell option or an env option, and don't add a timeout. Keep
+the same stdio as before.
+  - Order stays stdout then stderr, as the old catch did.
+
+F3. findPoppler's signature becomes:
+
+  // readVersion can be replaced so tests can run a stand-in program;
+  // the scripts always use the default.
+  export function findPoppler(
+    env: NodeJS.ProcessEnv = process.env,
+    readVersion: VersionReader = versionOutput,
+  ): { tools: PopplerTools | null; errors: string[] } {
+
+and line 57 becomes: const out = readVersion(path);
+
+F4. Change nothing else. Every message string, the Xpdf branch, the
+"poppler" test before the "Glyph & Cog" test, the version regex, the
+same-version rule, locateTool, exeName, POPPLER_TOOLS and runTool stay
+byte-for-byte the same.
+
+One behaviour change, on purpose: a tool that exits non-zero and prints
+nothing used to return execFileSync's err.message ("Command failed: <path>
+-v"), which includes the path. That text was then checked for "poppler". The
+new code returns "" in that case, so the error is "<tool> at <path> is not
+Poppler …". It's an error both ways. The new way stops a folder name like
+C:\tools\poppler-24.08.0\ from passing the "poppler" test. A spawn error with
+no output still returns the error message, as before.
+
+4.2 New: scripts/qbank/test/poppler.test.ts
+
+Imports only node built-ins (node:test, node:assert/strict,
+node:child_process is not needed, node:fs, node:os, node:path) and
+'../lib/poppler.ts'. Nothing else, so the tester can copy the file and the lib
+file into a temp folder for the mutation check.
+
+Helpers:
+- TOOLS: a literal ['pdfinfo', 'pdftotext', 'pdftoppm', 'pdfimages',
+'pdffonts'], with a comment saying it is deliberately not POPPLER_TOOLS: a
+test sourced from the constant under test can't catch a member disappearing.
+- exe(t): process.platform === 'win32' ? `${t}.exe` : t.
+- withBin(fn): mkdtempSync(join(tmpdir(), 'qbank poppler-')). The space is on
+purpose, so the messages carry a path with a space. Write an empty
+placeholder file for each tool, call fn(dir, env) with env = { POPPLER_BIN:
+dir, PATH: '' }, and rmSync the folder in finally. The placeholders only
+satisfy locateTool's existsSync; they are never run.
+- program(stdout, stderr, exitCode): returns ['-e', code], where code is
+  `process.stdout.write(${JSON.stringify(stdout)});
+process.stderr.write(${JSON.stringify(stderr)}); process.exitCode =
+${exitCode};`
+  Use process.exitCode, not process.exit(), so the pipes drain before the
+child exits. On Windows, a write to a pipe can be asynchronous.
+- reader(spec): returns a VersionReader. For a path it takes the tool name
+(basename without .exe), looks up {out, err, code} in spec, and returns
+readVersionText(process.execPath, program(out, err, code)). Each call starts
+a real child process; nothing is mocked.
+- POPPLER(t, v): the literal
+  `${t} version ${v}\nCopyright 2005-2024 The Poppler Developers -
+http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC\n`
+  This is the shape of Poppler 24.02.0's -v text. The Glyph & Cog line is
+included on purpose: real Poppler prints it too, so this also proves Poppler
+is recognised before the Xpdf branch.
+- XPDF(t): `${t} version 4.00\nCopyright 1996-2017 Glyph & Cog, LLC\n` (the
+text checked on the desktop, exit 99).
+- msgs(dir, template): builds the five expected error strings with join(dir,
+exe(t)), in TOOLS order.
+
+Tests (names begin with the label so the tester can find them in the output):
+
+- P1 "P1 readVersionText reads stderr when the exit code is 0":
+readVersionText(process.execPath, program('', POPPLER('pdfinfo','24.02.0'),
+0))
+equals POPPLER('pdfinfo','24.02.0') exactly.
+- P2 "P2 defect: findPoppler accepts Poppler whose -v text is on stderr with
+exit 0" (THE named defect test): every tool gives {out: '', err:
+POPPLER(t,'24.02.0'), code: 0}. Assert that errors deepEquals [], with the
+joined errors as the assertion message so a failure shows them. Also assert
+that tools is not null, tools.version === '24.02.0', and tools.paths
+deepEquals
+{each t: join(dir, exe(t))}.
+- P3 "P3 findPoppler accepts Poppler -v text on stderr with a non-zero exit":
+the same with code 99. Same assertions as P2.
+- P4 "P4 findPoppler accepts Poppler -v text on stdout with exit 0": out =
+POPPLER(...), err = '', code 0. Same assertions as P2.
+- P5 "P5 findPoppler refuses Xpdf": every tool gives {out: '', err:
+XPDF(t), code: 99}. tools === null. errors deepEquals the five strings
+`found Xpdf at ${join(dir, exe(t))}; this script needs Poppler (pdftoppm,
+pdftotext -bbox-layout). Install Poppler and set POPPLER_BIN.`
+- P6 "P6 negative controls are not accepted as Poppler". Three runs, each
+with tools === null and errors deepEquals the five strings
+`${t} at ${join(dir, exe(t))} is not Poppler (its -v output does not
+mention Poppler)`:
+  - a) stderr `${t} version 24.02.0\nCopyright 2024 Example Software\n`,
+exit 0 (version-shaped, no Poppler)
+  - b) no output, exit 0
+  - c) no output, exit 1.
+- P7 "P7 findPoppler refuses tools reporting different versions": as P2,
+but pdftoppm reports 24.08.0. tools === null, and errors deepEquals
+['the Poppler tools report different versions: pdfinfo 24.02.0, pdftotext
+24.02.0, pdftoppm 24.08.0, pdfimages 24.02.0, pdffonts 24.02.0'].
+- P8 "P8 findPoppler reports Poppler text with no version": stderr
+'Copyright 2005-2024 The Poppler Developers\n', exit 0. tools === null, and
+errors deepEquals the five `${t} at ${join(dir, exe(t))}: cannot read a
+version from its -v output`.
+- P9 "P9 readVersionText passes arguments unchanged, with no shell":
+readVersionText(process.execPath, ['-e',
+'process.stdout.write(JSON.stringify(process.argv.slice(1)))', 'a b', '&',
+'"q"', '%PATH%', '$HOME']) equals JSON.stringify(['a b', '&', '"q"',
+'%PATH%', '$HOME']). This writes to stdout on purpose, so it doesn't depend
+on the stderr fix.
+
+The expected messages are written as literals in the test. Don't build them
+from poppler.ts.
+
+5. Other places that read tool output (what the planner checked)
+
+Grep for child_process|execSync|spawnSync|execFileSync across the repo,
+excluding node_modules. Hits outside docs/plans:
+
+- G1. lib/poppler.ts versionOutput: the defect. Fixed by this plan.
+- G2. lib/poppler.ts runTool: reads stdout, where Poppler writes the data for
+pdfinfo -box, pdfimages -list and pdffonts. pdftotext -bbox-layout and
+pdftoppm write to files. A non-zero exit throws, so nothing is silently
+lost. Not the same gap.
+- G3. extract-acs.ts toolVersion, lines 47-57: THE SAME GAP. A zero exit
+returns stdout only. Its comment at line 49 ("capture both streams") claims
+behaviour the code doesn't have. Effect: a Poppler pdftotext (stderr, exit 0)
+gives "", doesn't match /pdftotext version/, and is skipped silently. On Linux
+with only Poppler, npm run qbank:acs:check fails with "pdftotext not found".
+On Windows with $PDFTOTEXT pointing at Poppler, it silently falls back to
+Git's
+Xpdf. Not fixed here; see open question Q1.
+- G4. extract-acs.ts line 75: the text extraction reads stdout ('-' output)
+and ignores stderr on purpose. Not the same gap.
+- G5. validate.test.ts:162 (status only), figures-lib.test.ts:809 and
+figures-check.test.ts:78 use spawnSync and read stdout plus stderr. Not the
+same gap.
+- check-references.ts, check-figures.ts, validate.ts, hash-cli.ts and
+figure-files.ts start no child processes.
+
+6. Product rules and risks
+
+Product rules: none touched. This is local tooling. D-019, D-020, D-021,
+D-022, D-003, D-025, D-026, user-data scoping and account deletion are
+unaffected.
+
+- R1. The intended behaviour change in 4.1 (a non-zero exit with no output no
+longer classifies err.message). Still an error, and covered by P6c.
+- R2. The POPPLER() literal is the planner's rendering of Poppler 24.02.0's
+text. It wasn't run here: there's no Poppler on the desktop. The test is
+synthetic, so it reproduces the defect whatever the exact copyright years.
+Architect-Claude can paste the real `pdfinfo -v 2>&1` output before the
+builder starts, if Rick wants the literal to match exactly.
+- R3. Child node processes inherit the test runner's environment. The -e
+programs don't use node:test, and existing tests already start node this way.
+- R4. The defect test goes through the injected reader, not through
+versionOutput's ['-v'] wiring. That wiring is exercised on Windows by T7 and
+T8 (real Xpdf) and on Linux by architect-Claude's rerun.
+- R5. Effect on the figures rerun: the version is still taken by the same
+regex from the first "version" match ("pdfinfo version 24.02.0" ->
+"24.02.0"). The index records versions, not tool paths. So the fix shouldn't
+change any byte of figures/index.json. Architect-Claude's SHA-256 comparison
+is the check.
+- R6. Laptop: no new dependency, so no npm ci. git pull before the next work
+there.
+
+7. Test plan for the tester (Windows desktop)
+
+Report anything you can't run as SKIPPED with the reason, never as VERIFIED.
+
+- T1. git status shows: poppler.ts modified, poppler.test.ts new, plus the
+pre-existing CLAUDE.md modification, the untracked figures-real.test.ts, and
+the plan file if saved. Nothing else. git diff scripts/qbank/lib/poppler.ts
+shows only the edits in F1-F3. Every message string is unchanged.
+- T2. npm run qbank:typecheck is clean.
+- T3. npm run qbank:test: expect 188 tests, 170 pass, 18 fail, every failure
+in figures-real.test.ts, with output still containing "expected 98 items,
+found 0" and "missing scripts/qbank/test/fixtures/figure-words.json". Report
+the actual counts and the file of every failing test.
+- T4. node --test scripts/qbank/test/poppler.test.ts: 9 pass. List the names.
+- T5. Mutation M1, the defect. Record sha256sum scripts/qbank/lib/poppler.ts
+first. In a temp folder outside the repo (for example the scratchpad), create
+lib/ and test/, copy poppler.ts and poppler.test.ts into them, and write
+package.json containing {"type":"module"}.
+  - Control: node --test <tmp>/test/poppler.test.ts gives 9 pass.
+  - In the COPY only, replace readVersionText's body with the old pattern:
+      try {
+        return execFileSync(command, [...args], { encoding: 'utf8', stdio:
+['ignore', 'pipe', 'pipe'] });
+      } catch (e) {
+        const err = e as { stderr?: string; stdout?: string; message?: string
+};
+        const out = `${err.stdout ?? ''}${err.stderr ?? ''}`;
+        return out === '' ? (err.message ?? '') : out;
+      }
+  - Run it again. "P2 defect: …" must be among the failures, and its
+message must list the five "is not Poppler" errors. Expected failures: P1,
+P2, P7, P8. P3 and P5 must still pass, which shows the non-zero path was
+already fine. Another test failing does not count in place of P2.
+  - Copy the fixed poppler.ts back into the temp folder, rerun, and get 9
+pass.
+- T6. Mutation M2, stdout still read. In the copy, make readVersionText
+return only r.stderr ?? ''. P4 and P9 must fail. Restore and get 9 pass.
+- Then sha256sum scripts/qbank/lib/poppler.ts must equal the value recorded
+before T5, which shows the repo file was never touched. Delete the temp
+folder.
+- T7. Regression against real Xpdf: npm run qbank:figures:survey exits 1.
+Output has "found Xpdf at" a path ending in mingw64\bin\pdftotext.exe and a
+"not found in POPPLER_BIN or PATH" line for each of pdfinfo, pdftoppm,
+pdfimages and pdffonts, and no "is not Poppler" line.
+- T8. Real Xpdf through the new reader, with a path that has a space:
+  node -e "import('./scripts/qbank/lib/poppler.ts').then(m =>
+console.log(JSON.stringify(m.readVersionText('C:/Program
+Files/Git/mingw64/bin/pdftotext.exe', ['-v']))))"
+  The output contains "pdftotext version 4.00" and "Glyph & Cog".
+- T9. npm run qbank:validate gives 0 errors. npm run qbank:figures:check
+exits 0 (empty index, unchanged).
+- T10. Acceptance of real Poppler: SKIPPED on Windows (no Poppler). This is
+covered by architect-Claude's Linux rerun, which is outside this plan.
+
+8. Commit commands (Rick, Git Bash)
+
+Don't use git add -A: CLAUDE.md has an unrelated edit, and
+figures-real.test.ts must stay out until B-101 commit 2.
+
+cd /c/Projects/RemotePilotReady
+git status
+git add scripts/qbank/lib/poppler.ts scripts/qbank/test/poppler.test.ts
+docs/plans/B-101-poppler-fix-plan-v1.txt
+git status
+git commit -m "B-101: Poppler version check reads stdout and stderr on any
+exit code"
+git push
+
+9. Rule cross-check
+
+- "Keep the existing messages": F4 keeps them, and P5-P8 pin them as
+literals.
+- "Argument arrays, no shell": spawnSync with an array and no shell option.
+P9 checks it.
+- "Same-version rule": unchanged and pinned by P7.
+- "No changes to extract-figures.ts": its findPoppler() call works through
+the defaults.
+- The test must not source its expected values from the constant under test:
+TOOLS is a literal.
+No conflicts found.
+
+10. Open questions for Rick
+
+- Q1. extract-acs.ts has the same zero-exit gap (G3), and its comment claims
+otherwise. Fixing it isn't neutral: with Poppler present it would switch
+tools, and qbank:acs:check would then fail against the committed "Xpdf 4.00"
+extraction. Suggest a backlog item and a separate small plan. Left alone for
+now?
+- Q2. Your uncommitted CLAUDE.md edit (the "Starting Session #" line, which
+has the typo "neumber") is left out of this commit. Commit it separately
+when you're ready.
+- Q3 (not blocking). Do you want architect-Claude to paste the real Poppler
+24.02.0 `pdfinfo -v 2>&1` text so P2's literal matches it exactly? (R2)
+
+11. Summary to approve
+
+- poppler.ts: version text is read with spawnSync, stdout plus stderr, on any
+exit code. findPoppler takes an optional reader so tests can run a stand-in
+program. Messages, the Xpdf refusal, the same-version rule and the no-shell
+calls are unchanged.
+- New poppler.test.ts: 9 tests with real child processes. P2 reproduces the
+defect (Poppler text on stderr, exit 0) and fails on the current code. There
+is also an Xpdf case, negative controls, and checks for the version rule and
+for no shell.
+- Tests go from 179 (161 pass) to 188 (170 pass). The 18 expected
+figures-real failures don't change.
+- The tester runs two mutation checks on a temp copy (repo file
+hash-checked), plus regressions against real Xpdf.
+- extract-acs.ts has the same gap; it's left for your decision (Q1).
+
+Summary for Rick:
+
+1. The fix: two changes in scripts/qbank/lib/poppler.ts. The tool's version
+   text is now always read from both output streams, whatever exit code the
+   tool returns. Nothing else changes: same messages, same Xpdf refusal, same
+   same-version rule, no shell. extract-figures.ts isn't touched.
+2. The new test: poppler.test.ts adds 9 tests that work on Windows without
+   Poppler. Test P2 copies Poppler's behaviour (text on the error stream, exit
+   code 0) and fails on the current code. Tests go from 179 to 188; the 18
+   expected failures in figures-real.test.ts stay the same.
+3. Xpdf confirmed: in Git Bash, /mingw64/bin/pdftotext -v writes only to the
+   error stream and exits with code 99. That's why the Windows test run never
+   reached the broken path.
+4. Same bug elsewhere: extract-acs.ts has the same problem. Fixing it would
+   change which tool it picks when Poppler is installed, and the ACS check
+   against the committed data would then fail. So I've left it as Q1 for you
+   to decide rather than fixing it here.
+5. Your CLAUDE.md edit: it's uncommitted, so the commit commands add files by
+   name and leave it out. The new line has a typo ("neumber").
+
+Approve as written, or push back on Q1–Q3.
