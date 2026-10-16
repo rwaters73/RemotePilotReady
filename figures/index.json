@@ -1,6 +1,3651 @@
 {
   "source_doc": "akts-2h",
   "source_sha256": "738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
-  "extracted_with": null,
-  "items": []
+  "extracted_with": {
+    "poppler": "24.02.0",
+    "sharp": "0.35.5",
+    "libvips": "8.18.7",
+    "dpi": 300,
+    "ink_threshold": 250,
+    "erase_pad_pt": 0.25,
+    "margin_px": 24,
+    "pad_px": 4,
+    "png": {
+      "compression_level": 9
+    },
+    "webp": {
+      "quality": 90,
+      "effort": 6,
+      "smart_subsample": true,
+      "lossless_for_grayscale": true
+    }
+  },
+  "items": [
+    {
+      "key": "fig-1",
+      "type": "figure",
+      "number": 1,
+      "page": 35,
+      "printed_page": "2-1",
+      "rotate": 0,
+      "body_px": [
+        290,
+        219,
+        2045,
+        1332
+      ],
+      "caption_px": [
+        1094,
+        1566,
+        440,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-1.png",
+          "width": 2093,
+          "height": 1468,
+          "bytes": 155338,
+          "sha256": "337773b1371335bab73d7ee6606a6b59d9f7a3113d940d2bd729e54b25fe6946"
+        },
+        "webp": {
+          "name": "fig-1.webp",
+          "width": 2093,
+          "height": 1468,
+          "bytes": 79648,
+          "sha256": "952d4f82aa990e494e87a9c7930c27dea76a9408adfe1b24aa2e7c91c0cce000",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-2",
+      "type": "figure",
+      "number": 2,
+      "page": 36,
+      "printed_page": "2-2",
+      "rotate": 0,
+      "body_px": [
+        139,
+        217,
+        2045,
+        1495
+      ],
+      "caption_px": [
+        859,
+        1727,
+        608,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-2.png",
+          "width": 2093,
+          "height": 1631,
+          "bytes": 166827,
+          "sha256": "49833aafa9116e3dc8c7358546279a68e69f1011b208c2d1a89600d859f99c3f"
+        },
+        "webp": {
+          "name": "fig-2.webp",
+          "width": 2093,
+          "height": 1631,
+          "bytes": 122526,
+          "sha256": "ccc721cecf289d264ffdd5498b8cb4394115040dab3c5baf89d47ab023616f28",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-3",
+      "type": "figure",
+      "number": 3,
+      "page": 37,
+      "printed_page": "2-3",
+      "rotate": 90,
+      "body_px": [
+        826,
+        223,
+        976,
+        2664
+      ],
+      "caption_px": [
+        1103,
+        2903,
+        417,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-3.png",
+          "width": 2712,
+          "height": 1121,
+          "bytes": 460454,
+          "sha256": "6a47ff5c822ec6507375208a9fad9b8f05176e4a758e0f564bfd5da59dc4cc46"
+        },
+        "webp": {
+          "name": "fig-3.webp",
+          "width": 2712,
+          "height": 1121,
+          "bytes": 163658,
+          "sha256": "cb4b861387241006ecf91361cf8186a57f9be7104d1aff80b1cfe43738995b45",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-4",
+      "type": "figure",
+      "number": 4,
+      "page": 38,
+      "printed_page": "2-4",
+      "rotate": 0,
+      "body_px": [
+        132,
+        219,
+        2054,
+        1530
+      ],
+      "caption_px": [
+        863,
+        1771,
+        605,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-4.png",
+          "width": 2102,
+          "height": 1673,
+          "bytes": 354678,
+          "sha256": "c82f145053348cbdec7d306b030e61242d04f57d80a04c70a90a1908f5f4db9c"
+        },
+        "webp": {
+          "name": "fig-4.webp",
+          "width": 2102,
+          "height": 1673,
+          "bytes": 114572,
+          "sha256": "95c4ac25db170fb9cd2e58099413383efd1dfa6124585be45e670c5857fe5731",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-5",
+      "type": "figure",
+      "number": 5,
+      "page": 39,
+      "printed_page": "2-5",
+      "rotate": 0,
+      "body_px": [
+        286,
+        219,
+        2054,
+        1530
+      ],
+      "caption_px": [
+        1024,
+        1764,
+        580,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-5.png",
+          "width": 2102,
+          "height": 1666,
+          "bytes": 277391,
+          "sha256": "29a73f78fdd1a9c3eddac410e5217e5ce3feb173cc401ef23ed070b64cb47f3e"
+        },
+        "webp": {
+          "name": "fig-5.webp",
+          "width": 2102,
+          "height": 1666,
+          "bytes": 70794,
+          "sha256": "fcdba4f7c8fdc0fabc4e05144e9f36e416b602d1971321f5efec9ce2ff02431f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-6",
+      "type": "figure",
+      "number": 6,
+      "page": 40,
+      "printed_page": "2-6",
+      "rotate": 0,
+      "body_px": [
+        132,
+        219,
+        2054,
+        1530
+      ],
+      "caption_px": [
+        866,
+        1764,
+        595,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-6.png",
+          "width": 2102,
+          "height": 1666,
+          "bytes": 315436,
+          "sha256": "a939bdb6f664b0a8603507833ef4dda8d8af1c87ad4263e26b3f511407bef933"
+        },
+        "webp": {
+          "name": "fig-6.webp",
+          "width": 2102,
+          "height": 1666,
+          "bytes": 120096,
+          "sha256": "3ad23b7a72751653cac9cc309e9e9aae16f8a9ae44361f3dd0fca2343199624e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-7",
+      "type": "figure",
+      "number": 7,
+      "page": 41,
+      "printed_page": "2-7",
+      "rotate": 0,
+      "body_px": [
+        286,
+        220,
+        2054,
+        1746
+      ],
+      "caption_px": [
+        1023,
+        2030,
+        579,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-7.png",
+          "width": 2102,
+          "height": 1931,
+          "bytes": 426984,
+          "sha256": "ab716d1c587621cc9e59ab8c98fb2d6bf63962b19dee3b2b948b18d9b76591f9"
+        },
+        "webp": {
+          "name": "fig-7.webp",
+          "width": 2102,
+          "height": 1931,
+          "bytes": 121032,
+          "sha256": "86aad3b688ddd03d8fc5feb6b5a821ef22d45730fd62325c4fccd80dcfa79a8b",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-8",
+      "type": "figure",
+      "number": 8,
+      "page": 42,
+      "printed_page": "2-8",
+      "rotate": 0,
+      "body_px": [
+        144,
+        219,
+        2037,
+        1999
+      ],
+      "caption_px": [
+        824,
+        2234,
+        679,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-8.png",
+          "width": 2085,
+          "height": 2135,
+          "bytes": 567938,
+          "sha256": "3f5bb432bfe22bbd0647fc824b6d36735d5cc0f31a31562449ad17d88afd4fcb"
+        },
+        "webp": {
+          "name": "fig-8.webp",
+          "width": 2085,
+          "height": 2135,
+          "bytes": 378888,
+          "sha256": "5b575fde9d5751c5e93cedee0d7735647a1bf318e6202e9b3b913fc409f1ec84",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-9",
+      "type": "figure",
+      "number": 9,
+      "page": 43,
+      "printed_page": "2-9",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        1860
+      ],
+      "caption_px": [
+        953,
+        2094,
+        721,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-9.png",
+          "width": 2085,
+          "height": 1996,
+          "bytes": 219806,
+          "sha256": "37c65fb92784bf2df6faa4a844cf84f93d77456f80452b2e114a2637c081bfda"
+        },
+        "webp": {
+          "name": "fig-9.webp",
+          "width": 2085,
+          "height": 1996,
+          "bytes": 103838,
+          "sha256": "1a8ba22313ef056acd4ff20ed135914604bba2ee6a2e4694e87c68fc74341de2",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-10",
+      "type": "figure",
+      "number": 10,
+      "page": 44,
+      "printed_page": "2-10",
+      "rotate": 0,
+      "body_px": [
+        136,
+        219,
+        2055,
+        1851
+      ],
+      "caption_px": [
+        710,
+        2085,
+        906,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-10.png",
+          "width": 2103,
+          "height": 1987,
+          "bytes": 660325,
+          "sha256": "3931ff0c4d85720631ab2e2f288c85a8a6d0f9bee8489a95cf17e5b5aff003d2"
+        },
+        "webp": {
+          "name": "fig-10.webp",
+          "width": 2103,
+          "height": 1987,
+          "bytes": 141926,
+          "sha256": "257562c142173d6b1abe8cbda983339f17fd1aa18357431a5849f931e639c4e9",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-11",
+      "type": "figure",
+      "number": 11,
+      "page": 45,
+      "printed_page": "2-11",
+      "rotate": 90,
+      "body_px": [
+        520,
+        232,
+        1586,
+        2637
+      ],
+      "caption_px": [
+        999,
+        2899,
+        613,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-11.png",
+          "width": 2685,
+          "height": 1730,
+          "bytes": 674680,
+          "sha256": "428a2ad263e900b32b2c58f6f3f8e98d4f522c75d7a075e6bb035e159cf12696"
+        },
+        "webp": {
+          "name": "fig-11.webp",
+          "width": 2685,
+          "height": 1730,
+          "bytes": 224590,
+          "sha256": "a9ccddbdfd6245d768598f1f3cb24bca596738b773fe254c4373dc9f2f26debb",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-12",
+      "type": "figure",
+      "number": 12,
+      "page": 46,
+      "printed_page": "2-12",
+      "rotate": 0,
+      "body_px": [
+        144,
+        219,
+        2037,
+        450
+      ],
+      "caption_px": [
+        586,
+        686,
+        1155,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-12.png",
+          "width": 2085,
+          "height": 588,
+          "bytes": 115116,
+          "sha256": "311ca021465124414e5c649558ebdd7c0fd7d33d210ea64581c88c3cd779c205"
+        },
+        "webp": {
+          "name": "fig-12.webp",
+          "width": 2085,
+          "height": 588,
+          "bytes": 66618,
+          "sha256": "c27ea45e1b6b8a613fdf070d569f92b953f7b1eb9012330103cc13c98acc1b16",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-13",
+      "type": "figure",
+      "number": 13,
+      "page": 47,
+      "printed_page": "2-13",
+      "rotate": 0,
+      "body_px": [
+        294,
+        220,
+        2037,
+        887
+      ],
+      "caption_px": [
+        899,
+        1123,
+        828,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-13.png",
+          "width": 2085,
+          "height": 1024,
+          "bytes": 414386,
+          "sha256": "341f7ba4c310609b0f3fccaeb945d0a58200d1de8d18f80a9b76a7d71e694555"
+        },
+        "webp": {
+          "name": "fig-13.webp",
+          "width": 2085,
+          "height": 1024,
+          "bytes": 213586,
+          "sha256": "2013501305bd9f7b0856b3f482d633fceaf890bdada28d42d13c6f0a1933d3a7",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-14",
+      "type": "figure",
+      "number": 14,
+      "page": 48,
+      "printed_page": "2-14",
+      "rotate": 0,
+      "body_px": [
+        132,
+        219,
+        2062,
+        237
+      ],
+      "caption_px": [
+        820,
+        471,
+        688,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-14.png",
+          "width": 2110,
+          "height": 373,
+          "bytes": 53330,
+          "sha256": "528fc6fae0b17b61e94e2fb4a4e319efd8f3f5e58572acd5f3a0ebdd8865a033"
+        },
+        "webp": {
+          "name": "fig-14.webp",
+          "width": 2110,
+          "height": 373,
+          "bytes": 47864,
+          "sha256": "0a53fde5f0e28a2b72db8d57143a1435f24c006ccb6cdb4b520ea7070b2ae23a",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-15",
+      "type": "figure",
+      "number": 15,
+      "page": 49,
+      "printed_page": "2-15",
+      "rotate": 0,
+      "body_px": [
+        290,
+        220,
+        2051,
+        741
+      ],
+      "caption_px": [
+        807,
+        987,
+        1014,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-15.png",
+          "width": 2099,
+          "height": 887,
+          "bytes": 145341,
+          "sha256": "70a573bed1d1d58a41a835beb4bb092c3be93986c4ab77fd7f8065982560e719"
+        },
+        "webp": {
+          "name": "fig-15.webp",
+          "width": 2099,
+          "height": 887,
+          "bytes": 143030,
+          "sha256": "04e3f9b7defc49bde0cd7e79193710b62578e4cd3cc0c06d1816afc8455c773b",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-17",
+      "type": "figure",
+      "number": 17,
+      "page": 50,
+      "printed_page": "2-16",
+      "rotate": 0,
+      "body_px": [
+        144,
+        219,
+        2037,
+        518
+      ],
+      "caption_px": [
+        630,
+        752,
+        1065,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-17.png",
+          "width": 2085,
+          "height": 654,
+          "bytes": 156211,
+          "sha256": "9f20cebac9708dc0e2b09bef2cd8bcfa5fd7880b5c317435f66e0825d40b4622"
+        },
+        "webp": {
+          "name": "fig-17.webp",
+          "width": 2085,
+          "height": 654,
+          "bytes": 114974,
+          "sha256": "7ce2a05f0fc520dcb0ff46b3081384544e4ac4245465a846e82f08ce31a51c5c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-18",
+      "type": "figure",
+      "number": 18,
+      "page": 51,
+      "printed_page": "2-17",
+      "rotate": 90,
+      "body_px": [
+        426,
+        218,
+        1771,
+        2649
+      ],
+      "caption_px": [
+        931,
+        2904,
+        764,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-18.png",
+          "width": 2697,
+          "height": 1916,
+          "bytes": 1366376,
+          "sha256": "107d208027fd751a3fb493eed19fa1cf7b7e3a932218918021e133e02befce1f"
+        },
+        "webp": {
+          "name": "fig-18.webp",
+          "width": 2697,
+          "height": 1916,
+          "bytes": 667504,
+          "sha256": "395d8922f908f047efd7f382853852b3a0371fd8df0940a9d1998b03a44401f2",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-19",
+      "type": "figure",
+      "number": 19,
+      "page": 52,
+      "printed_page": "2-18",
+      "rotate": 0,
+      "body_px": [
+        0,
+        191,
+        2173,
+        2670
+      ],
+      "caption_px": [
+        435,
+        2904,
+        1455,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-19.png",
+          "width": 2221,
+          "height": 2833,
+          "bytes": 1390133,
+          "sha256": "499abd5139094bbdb83998d7703fa808e6c0ccbc9eec017b944c894180e71db1"
+        },
+        "webp": {
+          "name": "fig-19.webp",
+          "width": 2221,
+          "height": 2833,
+          "bytes": 623828,
+          "sha256": "0e27934a5859c9fde65c32155edf681b677653fc1909445519177902388dcce1",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-20",
+      "type": "figure",
+      "number": 20,
+      "page": 53,
+      "printed_page": "2-19",
+      "rotate": 0,
+      "body_px": [
+        333,
+        221,
+        1955,
+        2739
+      ],
+      "caption_px": [
+        488,
+        2845,
+        1649,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-20.png",
+          "width": 2003,
+          "height": 2789,
+          "bytes": 6527323,
+          "sha256": "b4ca412446d5772cd67ee39a0c9cbb65aa139c009bb0f33bbdcf59143f150fb2"
+        },
+        "webp": {
+          "name": "fig-20.webp",
+          "width": 2003,
+          "height": 2789,
+          "bytes": 1332586,
+          "sha256": "122b26b50fffd572e74cff52e8ed3b1cfce852a7ef9242bc9efbb04c453b497f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-21",
+      "type": "figure",
+      "number": 21,
+      "page": 54,
+      "printed_page": "2-20",
+      "rotate": 0,
+      "body_px": [
+        184,
+        222,
+        1955,
+        2738
+      ],
+      "caption_px": [
+        331,
+        2845,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-21.png",
+          "width": 2003,
+          "height": 2788,
+          "bytes": 5599334,
+          "sha256": "c4ab98447cecae7d6b20b6cdce51ee2a641b07dcb908597c034021fa5e9dc401"
+        },
+        "webp": {
+          "name": "fig-21.webp",
+          "width": 2003,
+          "height": 2788,
+          "bytes": 1087298,
+          "sha256": "77e4fc695fde3b33029de32cd4cbca61359e2eb1e596186a2da906c0055444a8",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-22",
+      "type": "figure",
+      "number": 22,
+      "page": 55,
+      "printed_page": "2-21",
+      "rotate": 0,
+      "body_px": [
+        336,
+        221,
+        1955,
+        2748
+      ],
+      "caption_px": [
+        490,
+        2855,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-22.png",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 8582653,
+          "sha256": "6b64effa1e087452e76d836aa8baafe1bd32f3ec016a77d77af89a21d2c35c3c"
+        },
+        "webp": {
+          "name": "fig-22.webp",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 1551602,
+          "sha256": "a5c4a583481f27128853d1bbd5435d0135e632979340ec26ceef6bfc2a0e4511",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-23",
+      "type": "figure",
+      "number": 23,
+      "page": 56,
+      "printed_page": "2-22",
+      "rotate": 0,
+      "body_px": [
+        173,
+        221,
+        1955,
+        2750
+      ],
+      "caption_px": [
+        338,
+        2856,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-23.png",
+          "width": 2003,
+          "height": 2800,
+          "bytes": 8243035,
+          "sha256": "f374c6f3bdcc6d29f0eb54baebddb3f6d3587d0ddca73240e5fd2937d0566fa7"
+        },
+        "webp": {
+          "name": "fig-23.webp",
+          "width": 2003,
+          "height": 2800,
+          "bytes": 1761204,
+          "sha256": "4105990b4a9c2d3b71e223e0d656301728d35aced311b3c21d2473579ee976e1",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-24",
+      "type": "figure",
+      "number": 24,
+      "page": 57,
+      "printed_page": "2-23",
+      "rotate": 0,
+      "body_px": [
+        336,
+        220,
+        1955,
+        2749
+      ],
+      "caption_px": [
+        496,
+        2855,
+        1649,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-24.png",
+          "width": 2003,
+          "height": 2800,
+          "bytes": 6849389,
+          "sha256": "1706ffa03723eb0ee873f57999a76720f14f1eecfa3d8e20b46ff2749289f074"
+        },
+        "webp": {
+          "name": "fig-24.webp",
+          "width": 2003,
+          "height": 2800,
+          "bytes": 1350948,
+          "sha256": "77b19f0bb684d4e806e6bbcf2b4dce59f68870e6d72de0fffaf4c3b6646a9212",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-25",
+      "type": "figure",
+      "number": 25,
+      "page": 58,
+      "printed_page": "2-24",
+      "rotate": 0,
+      "body_px": [
+        184,
+        220,
+        1955,
+        2745
+      ],
+      "caption_px": [
+        338,
+        2850,
+        1648,
+        118
+      ],
+      "files": {
+        "png": {
+          "name": "fig-25.png",
+          "width": 2003,
+          "height": 2796,
+          "bytes": 7619169,
+          "sha256": "98d74a622a413da71b5c32b5492d8d1d30602486e9227dd94130c20bc1dd5270"
+        },
+        "webp": {
+          "name": "fig-25.webp",
+          "width": 2003,
+          "height": 2796,
+          "bytes": 1749390,
+          "sha256": "d5b6be72f5407e779630cac81a7066c21f1d1ed5f2a13568c795ae398d96e0d3",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-26",
+      "type": "figure",
+      "number": 26,
+      "page": 59,
+      "printed_page": "2-25",
+      "rotate": 0,
+      "body_px": [
+        335,
+        219,
+        1955,
+        2749
+      ],
+      "caption_px": [
+        489,
+        2853,
+        1649,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-26.png",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 6563127,
+          "sha256": "5194d70ba68a67be4609efa2e9118aec6a34a5675ee2815137c0801d1140cb80"
+        },
+        "webp": {
+          "name": "fig-26.webp",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 1220672,
+          "sha256": "fde5ea6e309337e4521a06d84456cc5600ced381a96a25466971ab179da72d27",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-27",
+      "type": "figure",
+      "number": 27,
+      "page": 60,
+      "printed_page": "2-26",
+      "rotate": 90,
+      "body_px": [
+        296,
+        220,
+        1726,
+        2652
+      ],
+      "caption_px": [
+        798,
+        2902,
+        729,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-27.png",
+          "width": 2700,
+          "height": 1871,
+          "bytes": 1633026,
+          "sha256": "4dd8c24c77cdbeda42c393244a7859cc3b7ec6b55059025c1844a1d51f0869ce"
+        },
+        "webp": {
+          "name": "fig-27.webp",
+          "width": 2700,
+          "height": 1871,
+          "bytes": 562006,
+          "sha256": "e17f0996c8783333612a55741e7ffb76dab141ed14b9ac63d3a3d839d4cf79a4",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-28",
+      "type": "figure",
+      "number": 28,
+      "page": 61,
+      "printed_page": "2-27",
+      "rotate": 0,
+      "body_px": [
+        317,
+        227,
+        1991,
+        1811
+      ],
+      "caption_px": [
+        1133,
+        2069,
+        363,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-28.png",
+          "width": 2039,
+          "height": 1963,
+          "bytes": 783620,
+          "sha256": "0f8749bfafc255d7e652dcfd4d7dbbddbe547944fd713dc32a34333b663149ce"
+        },
+        "webp": {
+          "name": "fig-28.webp",
+          "width": 2039,
+          "height": 1963,
+          "bytes": 330224,
+          "sha256": "38e7152f6acafa93d4ae914c5855dcbbb4cea2bafe77402ee95c44fe7cb0d1b6",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-31",
+      "type": "figure",
+      "number": 31,
+      "page": 62,
+      "printed_page": "2-28",
+      "rotate": 0,
+      "body_px": [
+        298,
+        221,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        848,
+        2882,
+        633,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-31.png",
+          "width": 1782,
+          "height": 2782,
+          "bytes": 899966,
+          "sha256": "cc723c6f81873d36fa2974bd217db8888a547daf67ab9b94452e66dce33eb444"
+        },
+        "webp": {
+          "name": "fig-31.webp",
+          "width": 1782,
+          "height": 2782,
+          "bytes": 228806,
+          "sha256": "2107449d88223c94ae47afa087f2492e7840110a60d018e2195bb5e6207e9b18",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-32",
+      "type": "figure",
+      "number": 32,
+      "page": 63,
+      "printed_page": "2-29",
+      "rotate": 0,
+      "body_px": [
+        695,
+        219,
+        1235,
+        2644
+      ],
+      "caption_px": [
+        815,
+        2902,
+        1000,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-32.png",
+          "width": 1283,
+          "height": 2804,
+          "bytes": 406326,
+          "sha256": "a6d478d2b27b8ed3182cb4bf91dd2249a3484e3d16f690c7edc314d93cb7fa67"
+        },
+        "webp": {
+          "name": "fig-32.webp",
+          "width": 1283,
+          "height": 2804,
+          "bytes": 220332,
+          "sha256": "3bd11e8ff3b463c071b1a5f4178113c696e4229beec68b9394ba7ddf6f4a479b",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-33",
+      "type": "figure",
+      "number": 33,
+      "page": 64,
+      "printed_page": "2-30",
+      "rotate": 0,
+      "body_px": [
+        586,
+        219,
+        1153,
+        2644
+      ],
+      "caption_px": [
+        662,
+        2899,
+        999,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-33.png",
+          "width": 1201,
+          "height": 2800,
+          "bytes": 498667,
+          "sha256": "ecc40a65c7908234c9c3b913d12b76680ef512d9e26428aa560f22fb0c2b8a77"
+        },
+        "webp": {
+          "name": "fig-33.webp",
+          "width": 1201,
+          "height": 2800,
+          "bytes": 279862,
+          "sha256": "f35291d05dd5ca9e252889d46b37256aea7e5f93336595002cefb5e47c166e7c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-34",
+      "type": "figure",
+      "number": 34,
+      "page": 65,
+      "printed_page": "2-31",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        2625
+      ],
+      "caption_px": [
+        805,
+        2859,
+        1017,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-34.png",
+          "width": 2085,
+          "height": 2761,
+          "bytes": 493695,
+          "sha256": "7b4dca682164710c5d7c8c158fa6dbdc8251be7b1a6d54d93b6b5191978d0d6c"
+        },
+        "webp": {
+          "name": "fig-34.webp",
+          "width": 2085,
+          "height": 2761,
+          "bytes": 308436,
+          "sha256": "579cfdeac16f6c9884d854a95e6bce233fcd1e9ddb18329f3dfcba917d48fd37",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-35",
+      "type": "figure",
+      "number": 35,
+      "page": 66,
+      "printed_page": "2-32",
+      "rotate": 90,
+      "body_px": [
+        617,
+        219,
+        1086,
+        2655
+      ],
+      "caption_px": [
+        737,
+        2901,
+        851,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-35.png",
+          "width": 2703,
+          "height": 1231,
+          "bytes": 265526,
+          "sha256": "c7e5dccbf0461a927cbdb8c102eb19c5f90efaf81871376bfc0e1d104e2ff62d"
+        },
+        "webp": {
+          "name": "fig-35.webp",
+          "width": 2703,
+          "height": 1231,
+          "bytes": 257344,
+          "sha256": "1fe2a2243b0f693db2b2d442f3bd24b9b99322e2859d5da3f8add7958751bce4",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-36",
+      "type": "figure",
+      "number": 36,
+      "page": 67,
+      "printed_page": "2-33",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        1696
+      ],
+      "caption_px": [
+        879,
+        1931,
+        868,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-36.png",
+          "width": 2085,
+          "height": 1832,
+          "bytes": 442688,
+          "sha256": "a0426cfce02e473c9632284732854225b45796450f6b77972caa574caddcec2f"
+        },
+        "webp": {
+          "name": "fig-36.webp",
+          "width": 2085,
+          "height": 1832,
+          "bytes": 325930,
+          "sha256": "cc3fdb1c311938d1b587cf8d757859e1064adc0877087b62fe34ce0773be895f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-37",
+      "type": "figure",
+      "number": 37,
+      "page": 68,
+      "printed_page": "2-34",
+      "rotate": 90,
+      "body_px": [
+        327,
+        219,
+        1663,
+        2663
+      ],
+      "caption_px": [
+        693,
+        2903,
+        939,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-37.png",
+          "width": 2711,
+          "height": 1808,
+          "bytes": 489650,
+          "sha256": "70676e581cd7d22a8dcfdacb919a44a63f5d6d1dc6d0f785c2982d84adf71cd9"
+        },
+        "webp": {
+          "name": "fig-37.webp",
+          "width": 2711,
+          "height": 1808,
+          "bytes": 398784,
+          "sha256": "7a01c37f0690e3699127ff4ff2074604098a40253893148e9551f87bc13e6b8f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-38",
+      "type": "figure",
+      "number": 38,
+      "page": 69,
+      "printed_page": "2-35",
+      "rotate": 90,
+      "body_px": [
+        1025,
+        222,
+        575,
+        2664
+      ],
+      "caption_px": [
+        852,
+        2903,
+        921,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-38.png",
+          "width": 2712,
+          "height": 720,
+          "bytes": 139726,
+          "sha256": "c9de5c7eb2509c0456cef5fb30f44cd7d9f13050e050fb58df0a2f8850cf4f2b"
+        },
+        "webp": {
+          "name": "fig-38.webp",
+          "width": 2712,
+          "height": 720,
+          "bytes": 142250,
+          "sha256": "ecb8b4f1b68b6a7b3d1cb907684dc1b808ea109acd3fd57f7a03ebaf0ecc6b35",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-39",
+      "type": "figure",
+      "number": 39,
+      "page": 70,
+      "printed_page": "2-36",
+      "rotate": 90,
+      "body_px": [
+        472,
+        219,
+        1375,
+        2664
+      ],
+      "caption_px": [
+        631,
+        2903,
+        1063,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-39.png",
+          "width": 2712,
+          "height": 1520,
+          "bytes": 412439,
+          "sha256": "c0b5c165c32133a012aafcf70d67b625a5ca61cf31fdbb8fe8d701b6194b9897"
+        },
+        "webp": {
+          "name": "fig-39.webp",
+          "width": 2712,
+          "height": 1520,
+          "bytes": 358528,
+          "sha256": "dcb5fedafd7da6529112ed737d5bfdcf4b57ea93b8bef0c8584036772d04b0dd",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-40",
+      "type": "figure",
+      "number": 40,
+      "page": 71,
+      "printed_page": "2-37",
+      "rotate": 90,
+      "body_px": [
+        520,
+        220,
+        1585,
+        2660
+      ],
+      "caption_px": [
+        852,
+        2904,
+        921,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-40.png",
+          "width": 2708,
+          "height": 1730,
+          "bytes": 522000,
+          "sha256": "b853f577c78a4cbc57491a89a4c4bb19b3a1a2def11b623bce39ce7daa690f94"
+        },
+        "webp": {
+          "name": "fig-40.webp",
+          "width": 2708,
+          "height": 1730,
+          "bytes": 412858,
+          "sha256": "af8031ac119f8b304823adda530c83ffad07c511e3a85389470764a7dcd0201e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-41",
+      "type": "figure",
+      "number": 41,
+      "page": 72,
+      "printed_page": "2-38",
+      "rotate": 0,
+      "body_px": [
+        138,
+        219,
+        2045,
+        1984
+      ],
+      "caption_px": [
+        647,
+        2218,
+        1033,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-41.png",
+          "width": 2093,
+          "height": 2120,
+          "bytes": 232639,
+          "sha256": "511c80465ef9a95b3da6baf37bc6a866bac847625c91b554486aeab23dc7b46b"
+        },
+        "webp": {
+          "name": "fig-41.webp",
+          "width": 2093,
+          "height": 2120,
+          "bytes": 161622,
+          "sha256": "9cdeabd102b976e104956ef26fd1d73181f4cc2691ffd1535f94488fcb7122ec",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-42",
+      "type": "figure",
+      "number": 42,
+      "page": 73,
+      "printed_page": "2-39",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        1988
+      ],
+      "caption_px": [
+        786,
+        2222,
+        1055,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-42.png",
+          "width": 2085,
+          "height": 2124,
+          "bytes": 480600,
+          "sha256": "14b8e655efafed62dac7a8011619a41a0d1f5f3f5ae9cbda3deca8f16f9970ff"
+        },
+        "webp": {
+          "name": "fig-42.webp",
+          "width": 2085,
+          "height": 2124,
+          "bytes": 335264,
+          "sha256": "48620bc81d48efd706437df2b90d6f0089510254726d82adb8e765adb100de74",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-43",
+      "type": "figure",
+      "number": 43,
+      "page": 74,
+      "printed_page": "2-40",
+      "rotate": 0,
+      "body_px": [
+        329,
+        219,
+        1660,
+        2662
+      ],
+      "caption_px": [
+        773,
+        2899,
+        779,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-43.png",
+          "width": 1708,
+          "height": 2801,
+          "bytes": 196756,
+          "sha256": "97f4ca3c5877082ceec613b9e0a4ef0784d46e38ee5146cc64ebb523d77ec2c6"
+        },
+        "webp": {
+          "name": "fig-43.webp",
+          "width": 1708,
+          "height": 2801,
+          "bytes": 158460,
+          "sha256": "385378dbeaf1e0fddefae4df73c3dddf294232b60264a992e7b27471a413f243",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-44",
+      "type": "figure",
+      "number": 44,
+      "page": 75,
+      "printed_page": "2-41",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2036,
+        1925
+      ],
+      "caption_px": [
+        796,
+        2160,
+        1037,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-44.png",
+          "width": 2084,
+          "height": 2062,
+          "bytes": 288103,
+          "sha256": "4e9a4971ed925ef522a2b6ebcfc12900eb3740d20629a816efc512ffcb8b97be"
+        },
+        "webp": {
+          "name": "fig-44.webp",
+          "width": 2084,
+          "height": 2062,
+          "bytes": 227110,
+          "sha256": "fb56471082cb8ace9c50a77ae5c3abd1cf9e4db8176b6643c7b26ecc2ffae19e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-45",
+      "type": "figure",
+      "number": 45,
+      "page": 76,
+      "printed_page": "2-42",
+      "rotate": 0,
+      "body_px": [
+        146,
+        219,
+        2035,
+        2202
+      ],
+      "caption_px": [
+        644,
+        2436,
+        1037,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-45.png",
+          "width": 2083,
+          "height": 2338,
+          "bytes": 293274,
+          "sha256": "c5f38c447551b4c9cb21e1f24b3c7537af628d45b8039bf857c4570b7ef7dcda"
+        },
+        "webp": {
+          "name": "fig-45.webp",
+          "width": 2083,
+          "height": 2338,
+          "bytes": 220958,
+          "sha256": "8a2d995223ead0276aa3a57afaa37b249ec49ebe85104a9b076ad4c5b6ca51fd",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-46",
+      "type": "figure",
+      "number": 46,
+      "page": 77,
+      "printed_page": "2-43",
+      "rotate": 0,
+      "body_px": [
+        328,
+        219,
+        1964,
+        2558
+      ],
+      "caption_px": [
+        827,
+        2794,
+        971,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-46.png",
+          "width": 2012,
+          "height": 2696,
+          "bytes": 243481,
+          "sha256": "ab82cad73eab2d92643997bc540235872b7caad16ff5d769c2ac3395bd2c7cf8"
+        },
+        "webp": {
+          "name": "fig-46.webp",
+          "width": 2012,
+          "height": 2696,
+          "bytes": 200286,
+          "sha256": "15c249787ef27d1c4c02227fd8475765475eb067ee50bd58f0c312ee3ecf691c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-47",
+      "type": "figure",
+      "number": 47,
+      "page": 78,
+      "printed_page": "2-44",
+      "rotate": 0,
+      "body_px": [
+        146,
+        219,
+        2036,
+        2194
+      ],
+      "caption_px": [
+        858,
+        2432,
+        609,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-47.png",
+          "width": 2084,
+          "height": 2334,
+          "bytes": 221144,
+          "sha256": "79513f8ea07b71f0a66594d73ced1a971932c717b1701e9cd46f86ef05637a1c"
+        },
+        "webp": {
+          "name": "fig-47.webp",
+          "width": 2084,
+          "height": 2334,
+          "bytes": 124108,
+          "sha256": "f2559b37e50c401cf71332c2c4078d7643f72da59014ab7b41d47ec2a06a8b03",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-48",
+      "type": "figure",
+      "number": 48,
+      "page": 79,
+      "printed_page": "2-45",
+      "rotate": 0,
+      "body_px": [
+        299,
+        219,
+        2032,
+        2268
+      ],
+      "caption_px": [
+        1022,
+        2502,
+        584,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-48.png",
+          "width": 2080,
+          "height": 2404,
+          "bytes": 824547,
+          "sha256": "8d5ab901a7d5c6d9c70dd6ee475655590b393431d8d09956450e22bb6fe307d9"
+        },
+        "webp": {
+          "name": "fig-48.webp",
+          "width": 2080,
+          "height": 2404,
+          "bytes": 168382,
+          "sha256": "c01964b3a2962c9794561b62fb7c7a4d21104db385dc44b7f0b5c71bb2fa006f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-49",
+      "type": "figure",
+      "number": 49,
+      "page": 80,
+      "printed_page": "2-46",
+      "rotate": 0,
+      "body_px": [
+        143,
+        219,
+        2038,
+        1747
+      ],
+      "caption_px": [
+        871,
+        1981,
+        584,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-49.png",
+          "width": 2086,
+          "height": 1883,
+          "bytes": 166990,
+          "sha256": "37084234d046faadbe8f20a1695c17f3b35d7e4746ea5bca25f6f5177af33689"
+        },
+        "webp": {
+          "name": "fig-49.webp",
+          "width": 2086,
+          "height": 1883,
+          "bytes": 56904,
+          "sha256": "e9015738a64ab6076446c32b9b450ca0f2298c11076cbdb88e9ba0e812cd993f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-50",
+      "type": "figure",
+      "number": 50,
+      "page": 81,
+      "printed_page": "2-47",
+      "rotate": 0,
+      "body_px": [
+        292,
+        219,
+        2038,
+        1747
+      ],
+      "caption_px": [
+        818,
+        1981,
+        989,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-50.png",
+          "width": 2086,
+          "height": 1883,
+          "bytes": 200330,
+          "sha256": "76d1f62872d5bfdc3ba9f8767451c7d0d0a6ed90d122cd33ad06b53ff751abf4"
+        },
+        "webp": {
+          "name": "fig-50.webp",
+          "width": 2086,
+          "height": 1883,
+          "bytes": 72270,
+          "sha256": "fc3986494f2148eb874e3615afdc90ef46b582aa9f74d823b57e66ad7f2a5541",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-51",
+      "type": "figure",
+      "number": 51,
+      "page": 82,
+      "printed_page": "2-48",
+      "rotate": 0,
+      "body_px": [
+        150,
+        196,
+        2028,
+        2594
+      ],
+      "caption_px": [
+        861,
+        2806,
+        600,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-51.png",
+          "width": 2076,
+          "height": 2731,
+          "bytes": 135137,
+          "sha256": "3f0dc7be279bf752691f0e77403ad7006bb4cea74d5b8bbb22bc44a0ad564b37"
+        },
+        "webp": {
+          "name": "fig-51.webp",
+          "width": 2076,
+          "height": 2731,
+          "bytes": 73050,
+          "sha256": "692777c41c4c0e0f9b2e0333189c5fa39faf6962cb2bdc1cd2edefd2c138e114",
+          "lossless": true
+        }
+      }
+    },
+    {
+      "key": "fig-52",
+      "type": "figure",
+      "number": 52,
+      "page": 83,
+      "printed_page": "2-49",
+      "rotate": 0,
+      "body_px": [
+        443,
+        224,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        996,
+        2904,
+        633,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-52.png",
+          "width": 1782,
+          "height": 2801,
+          "bytes": 1437058,
+          "sha256": "3dd8fb349b5030bc48f9c73ba03831dd89bdc6d4106be1af49394172247fd7b6"
+        },
+        "webp": {
+          "name": "fig-52.webp",
+          "width": 1782,
+          "height": 2801,
+          "bytes": 349518,
+          "sha256": "d2c66446e6b5f583744bcf3c727926915ae94821e790ec662cdabc48d6501d05",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-53",
+      "type": "figure",
+      "number": 53,
+      "page": 84,
+      "printed_page": "2-50",
+      "rotate": 0,
+      "body_px": [
+        147,
+        219,
+        2033,
+        1366
+      ],
+      "caption_px": [
+        666,
+        1600,
+        994,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-53.png",
+          "width": 2081,
+          "height": 1502,
+          "bytes": 239753,
+          "sha256": "eaeffff2e551f4a7e27b53dcbd08900bc39d23683156cd22853bb18f7b627007"
+        },
+        "webp": {
+          "name": "fig-53.webp",
+          "width": 2081,
+          "height": 1502,
+          "bytes": 144668,
+          "sha256": "8d5a61902eb935e0946c14502778e2f529edaeebf74d5bb33387aa7ce82dd9a9",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-54",
+      "type": "figure",
+      "number": 54,
+      "page": 85,
+      "printed_page": "2-51",
+      "rotate": 0,
+      "body_px": [
+        284,
+        219,
+        2058,
+        1653
+      ],
+      "caption_px": [
+        912,
+        1887,
+        801,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-54.png",
+          "width": 2106,
+          "height": 1789,
+          "bytes": 166359,
+          "sha256": "5d690c1781e622e942bd580bb4177435922ce4fe367102b36ab76ee0371b2ef1"
+        },
+        "webp": {
+          "name": "fig-54.webp",
+          "width": 2106,
+          "height": 1789,
+          "bytes": 123260,
+          "sha256": "8bcab771b8f885578d7d4c607b7f11d32b7da0b6b867a21e111bccb20cea3988",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-55",
+      "type": "figure",
+      "number": 55,
+      "page": 86,
+      "printed_page": "2-52",
+      "rotate": 0,
+      "body_px": [
+        169,
+        224,
+        1985,
+        2256
+      ],
+      "caption_px": [
+        771,
+        2583,
+        783,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-55.png",
+          "width": 2033,
+          "height": 2480,
+          "bytes": 700058,
+          "sha256": "7a3b1dfcc0f08cc2a25093447ac9473bccbb21aeee72df3927b52916b14cee03"
+        },
+        "webp": {
+          "name": "fig-55.webp",
+          "width": 2033,
+          "height": 2480,
+          "bytes": 286594,
+          "sha256": "a47c9a83b0099672fb41a77df58277960eff394c1deb15b12a73b9f3cb8becc2",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-56",
+      "type": "figure",
+      "number": 56,
+      "page": 87,
+      "printed_page": "2-53",
+      "rotate": 0,
+      "body_px": [
+        297,
+        217,
+        2034,
+        2682
+      ],
+      "caption_px": [
+        822,
+        2914,
+        982,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-56.png",
+          "width": 2082,
+          "height": 2818,
+          "bytes": 426343,
+          "sha256": "0681d446222db2665c17702836e9d9ba66b150d607b5b3814be33dd2b72b29ac"
+        },
+        "webp": {
+          "name": "fig-56.webp",
+          "width": 2082,
+          "height": 2818,
+          "bytes": 262926,
+          "sha256": "469d9cdb7177a8e5550ddb5a221f304e1b4a329b26a3dbb5a36699f086177bc6",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-57",
+      "type": "figure",
+      "number": 57,
+      "page": 88,
+      "printed_page": "2-54",
+      "rotate": 90,
+      "body_px": [
+        265,
+        216,
+        1796,
+        2654
+      ],
+      "caption_px": [
+        665,
+        2903,
+        982,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-57.png",
+          "width": 2702,
+          "height": 1941,
+          "bytes": 499459,
+          "sha256": "4ece0c43c45126dbaa8d0d41a5a6ee80c17692861ee1eb828a377fd6b1d59839"
+        },
+        "webp": {
+          "name": "fig-57.webp",
+          "width": 2702,
+          "height": 1941,
+          "bytes": 437214,
+          "sha256": "d11b1037416cabda2bc338aba326f88ae7a078c5769577115fe066417bb56a80",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-58",
+      "type": "figure",
+      "number": 58,
+      "page": 89,
+      "printed_page": "2-55",
+      "rotate": 0,
+      "body_px": [
+        282,
+        217,
+        2067,
+        425
+      ],
+      "caption_px": [
+        1028,
+        657,
+        569,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-58.png",
+          "width": 2115,
+          "height": 561,
+          "bytes": 67398,
+          "sha256": "5b4a43de5b2d21ebf52665adb740c976e312cf50ec8f72ab2adc318c363fc64e"
+        },
+        "webp": {
+          "name": "fig-58.webp",
+          "width": 2115,
+          "height": 561,
+          "bytes": 49052,
+          "sha256": "09785978c31a617238848d7d501723477ae0faed83926cd033a2df6d7acf818a",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-59",
+      "type": "figure",
+      "number": 59,
+      "page": 90,
+      "printed_page": "2-56",
+      "rotate": 0,
+      "body_px": [
+        184,
+        220,
+        1955,
+        2753
+      ],
+      "caption_px": [
+        351,
+        2859,
+        1621,
+        119
+      ],
+      "files": {
+        "png": {
+          "name": "fig-59.png",
+          "width": 2003,
+          "height": 2806,
+          "bytes": 7974287,
+          "sha256": "bf9d36ea149926e4f9d3999238fad4e150b985a2ee8a805d676a24fbf85f0404"
+        },
+        "webp": {
+          "name": "fig-59.webp",
+          "width": 2003,
+          "height": 2806,
+          "bytes": 1648060,
+          "sha256": "11ffb203c0a2ea86deedf3118c0ba34927aee743c7e534a886438518eda7e21f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-60",
+      "type": "figure",
+      "number": 60,
+      "page": 91,
+      "printed_page": "2-57",
+      "rotate": 0,
+      "body_px": [
+        293,
+        219,
+        2038,
+        954
+      ],
+      "caption_px": [
+        883,
+        1188,
+        859,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-60.png",
+          "width": 2086,
+          "height": 1090,
+          "bytes": 151980,
+          "sha256": "160f60dd6abc726827ee5c6159bdd68f6f810fcfbe37a9349a002326c7b1101e"
+        },
+        "webp": {
+          "name": "fig-60.webp",
+          "width": 2086,
+          "height": 1090,
+          "bytes": 61412,
+          "sha256": "a4690048a6c665b78379fdaf88fd70bb1e6d0e630dfd97f14dd99633b80f6f88",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-61",
+      "type": "figure",
+      "number": 61,
+      "page": 92,
+      "printed_page": "2-58",
+      "rotate": 0,
+      "body_px": [
+        143,
+        219,
+        2055,
+        1011
+      ],
+      "caption_px": [
+        733,
+        1245,
+        859,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-61.png",
+          "width": 2103,
+          "height": 1147,
+          "bytes": 129702,
+          "sha256": "5710dc704058f2f769b2b2f73f8178ccf6b5d1ae5854cfad022f3419948a4eb1"
+        },
+        "webp": {
+          "name": "fig-61.webp",
+          "width": 2103,
+          "height": 1147,
+          "bytes": 50860,
+          "sha256": "8a14484ecc855770563f5db5dda806a0cde4fb4f96d0c4359b543c79c16c2007",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-62",
+      "type": "figure",
+      "number": 62,
+      "page": 93,
+      "printed_page": "2-59",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        1512
+      ],
+      "caption_px": [
+        977,
+        1746,
+        671,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-62.png",
+          "width": 2085,
+          "height": 1648,
+          "bytes": 359988,
+          "sha256": "05249d25cd99017eabc4f4b2d2f7cad88f066eab6dc3f41cb61c2b298a452fc7"
+        },
+        "webp": {
+          "name": "fig-62.webp",
+          "width": 2085,
+          "height": 1648,
+          "bytes": 119542,
+          "sha256": "e9fc8505ab57a2e7afe0f7333885a02986923b7506490c725c1dce43c5a02a22",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-63",
+      "type": "figure",
+      "number": 63,
+      "page": 94,
+      "printed_page": "2-60",
+      "rotate": 0,
+      "body_px": [
+        292,
+        221,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        846,
+        2875,
+        633,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-63.png",
+          "width": 1782,
+          "height": 2774,
+          "bytes": 1682760,
+          "sha256": "0e07630c48a8707fa62bed892d06b94e583af20ef442c0b53901a3dcaa68e749"
+        },
+        "webp": {
+          "name": "fig-63.webp",
+          "width": 1782,
+          "height": 2774,
+          "bytes": 405140,
+          "sha256": "cde2ab447be589cb7ca17b578fb7444c683306fd67e511271a29fd325ed5578f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-64",
+      "type": "figure",
+      "number": 64,
+      "page": 95,
+      "printed_page": "2-61",
+      "rotate": 0,
+      "body_px": [
+        293,
+        215,
+        2036,
+        2111
+      ],
+      "caption_px": [
+        1014,
+        2342,
+        597,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "fig-64.png",
+          "width": 2084,
+          "height": 2247,
+          "bytes": 144007,
+          "sha256": "60ace9525b24915459083a91c4d49bc457cb4c1e75a36a310a659d406a374a0a"
+        },
+        "webp": {
+          "name": "fig-64.webp",
+          "width": 2084,
+          "height": 2247,
+          "bytes": 91566,
+          "sha256": "5aef99649f85af19b548f8c34c3280422b8760a0554d176fb592055fdd6886d8",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-65",
+      "type": "figure",
+      "number": 65,
+      "page": 96,
+      "printed_page": "2-62",
+      "rotate": 0,
+      "body_px": [
+        214,
+        183,
+        1897,
+        2634
+      ],
+      "caption_px": [
+        849,
+        2845,
+        626,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-65.png",
+          "width": 1945,
+          "height": 2783,
+          "bytes": 204758,
+          "sha256": "2c2cb2163b3426b229a8fdf74049da0a7c134738806f5d0d7da502cd5fc183a7"
+        },
+        "webp": {
+          "name": "fig-65.webp",
+          "width": 1945,
+          "height": 2783,
+          "bytes": 119296,
+          "sha256": "2f4c3a49efc0e725ab2a8ac49a1ca87d5bcf62dd65ba14ed7db8c4f64f5a5c5c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-66",
+      "type": "figure",
+      "number": 66,
+      "page": 97,
+      "printed_page": "2-63",
+      "rotate": 0,
+      "body_px": [
+        294,
+        219,
+        2037,
+        1062
+      ],
+      "caption_px": [
+        1019,
+        1296,
+        588,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-66.png",
+          "width": 2085,
+          "height": 1198,
+          "bytes": 239767,
+          "sha256": "ce7af6928c01ae7001088f1b1d4090ff562d086ff9e4da0b01a39baee69f8102"
+        },
+        "webp": {
+          "name": "fig-66.webp",
+          "width": 2085,
+          "height": 1198,
+          "bytes": 69732,
+          "sha256": "caf3c581a69d8109f2a4f153c3e9801d917d5c2387fab23437e8e88114b2287e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-67",
+      "type": "figure",
+      "number": 67,
+      "page": 98,
+      "printed_page": "2-64",
+      "rotate": 0,
+      "body_px": [
+        144,
+        219,
+        2037,
+        2364
+      ],
+      "caption_px": [
+        764,
+        2598,
+        798,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-67.png",
+          "width": 2085,
+          "height": 2500,
+          "bytes": 627666,
+          "sha256": "3a944129e2552d7d6938fb77bbd74f65f3996d532e2f9afb153ae895e63c64d8"
+        },
+        "webp": {
+          "name": "fig-67.webp",
+          "width": 2085,
+          "height": 2500,
+          "bytes": 385772,
+          "sha256": "fbd2fda4062a3b95f58edeae94cc7cf7af7f23fd23fb7c65c6ee4f30875a78f0",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-68",
+      "type": "figure",
+      "number": 68,
+      "page": 99,
+      "printed_page": "2-65",
+      "rotate": 0,
+      "body_px": [
+        586,
+        219,
+        1452,
+        2643
+      ],
+      "caption_px": [
+        1041,
+        2889,
+        543,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-68.png",
+          "width": 1500,
+          "height": 2791,
+          "bytes": 231432,
+          "sha256": "92c81d655f3a8923f68ca2b593378b37010b8839182ff2344eba1724d49cee2f"
+        },
+        "webp": {
+          "name": "fig-68.webp",
+          "width": 1500,
+          "height": 2791,
+          "bytes": 77326,
+          "sha256": "c8605c16d0eb787081161a00f209148edc4b07b9d52c68b15d1b7b3a2d172860",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-69",
+      "type": "figure",
+      "number": 69,
+      "page": 100,
+      "printed_page": "2-66",
+      "rotate": 0,
+      "body_px": [
+        182,
+        219,
+        1955,
+        2735
+      ],
+      "caption_px": [
+        339,
+        2840,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-69.png",
+          "width": 2003,
+          "height": 2786,
+          "bytes": 7725496,
+          "sha256": "c5978ac4bf6bd294b5a8fce5165175ca77b576bd42ec8b55a65ff5f440cc7622"
+        },
+        "webp": {
+          "name": "fig-69.webp",
+          "width": 2003,
+          "height": 2786,
+          "bytes": 1553160,
+          "sha256": "0c5a969242775121649ec011b9427433f5a609f889066a484bb74d3370742755",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-70",
+      "type": "figure",
+      "number": 70,
+      "page": 101,
+      "printed_page": "2-67",
+      "rotate": 0,
+      "body_px": [
+        333,
+        221,
+        1955,
+        2748
+      ],
+      "caption_px": [
+        497,
+        2855,
+        1649,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-70.png",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 8299758,
+          "sha256": "15591c225706596a2fdebdaeb0113664ad9448e6317c613adc5beed20ac649e1"
+        },
+        "webp": {
+          "name": "fig-70.webp",
+          "width": 2003,
+          "height": 2799,
+          "bytes": 1689164,
+          "sha256": "e7812ee52617eb82e687d874e1aae427f9ae86fef02643278455ea06c8f6eab9",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-71",
+      "type": "figure",
+      "number": 71,
+      "page": 102,
+      "printed_page": "2-68",
+      "rotate": 0,
+      "body_px": [
+        197,
+        221,
+        1934,
+        2748
+      ],
+      "caption_px": [
+        329,
+        2855,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-71.png",
+          "width": 1982,
+          "height": 2799,
+          "bytes": 7883720,
+          "sha256": "e1bb7f171bf06591fed20ff1a5896b5f8ae13b2951f4376311d0ebc3a27f4679"
+        },
+        "webp": {
+          "name": "fig-71.webp",
+          "width": 1982,
+          "height": 2799,
+          "bytes": 1554464,
+          "sha256": "f71cedff10b38ff526f2e058ff430129c4e225119b4e95a08d9561393ca27656",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-72",
+      "type": "figure",
+      "number": 72,
+      "page": 103,
+      "printed_page": "2-69",
+      "rotate": 90,
+      "body_px": [
+        691,
+        220,
+        1237,
+        2664
+      ],
+      "caption_px": [
+        972,
+        2903,
+        681,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-72.png",
+          "width": 2712,
+          "height": 1382,
+          "bytes": 308612,
+          "sha256": "d02a4652860d5e13e57513e330acc65fcc2ed311379860a6d8b99d5008a7e7fb"
+        },
+        "webp": {
+          "name": "fig-72.webp",
+          "width": 2712,
+          "height": 1382,
+          "bytes": 200852,
+          "sha256": "edd1dbbf30df87aeadd61a671d89a90e55538ee82bd40132658198a853534a40",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-73",
+      "type": "figure",
+      "number": 73,
+      "page": 104,
+      "printed_page": "2-70",
+      "rotate": 0,
+      "body_px": [
+        154,
+        229,
+        2017,
+        762
+      ],
+      "caption_px": [
+        827,
+        1016,
+        671,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-73.png",
+          "width": 2065,
+          "height": 908,
+          "bytes": 1335010,
+          "sha256": "5029bd41c2d3bff531ccde7592718f76a8742ec97f00a83fa289f1449fb424c7"
+        },
+        "webp": {
+          "name": "fig-73.webp",
+          "width": 2065,
+          "height": 908,
+          "bytes": 175992,
+          "sha256": "276b141ff71cf33eb39167597900164a1b3da03025fa1f748e8039ab423f466e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-74",
+      "type": "figure",
+      "number": 74,
+      "page": 105,
+      "printed_page": "2-71",
+      "rotate": 0,
+      "body_px": [
+        331,
+        219,
+        1955,
+        2744
+      ],
+      "caption_px": [
+        489,
+        2849,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-74.png",
+          "width": 2003,
+          "height": 2795,
+          "bytes": 9021332,
+          "sha256": "303ddad9e8de0d887e85522ee063d7cdfa8762ece74f513a94366fd36bf40758"
+        },
+        "webp": {
+          "name": "fig-74.webp",
+          "width": 2003,
+          "height": 2795,
+          "bytes": 1890116,
+          "sha256": "3510ee1710fe1a27a994fe467b5d2c54d48802bc22c97a2f0cb3176251f6cd19",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-75",
+      "type": "figure",
+      "number": 75,
+      "page": 106,
+      "printed_page": "2-72",
+      "rotate": 0,
+      "body_px": [
+        184,
+        219,
+        1955,
+        2759
+      ],
+      "caption_px": [
+        338,
+        2864,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-75.png",
+          "width": 2003,
+          "height": 2810,
+          "bytes": 8552585,
+          "sha256": "68ce0e59a38f1236f05f08a3bb26f683caf72657d4d835f42c4b93b7340fd394"
+        },
+        "webp": {
+          "name": "fig-75.webp",
+          "width": 2003,
+          "height": 2810,
+          "bytes": 1387540,
+          "sha256": "c601ac29f638d72bd5af13ee837ecaddbac36f3eaa144b30b0236d3bb3b255c6",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-76",
+      "type": "figure",
+      "number": 76,
+      "page": 107,
+      "printed_page": "2-73",
+      "rotate": 0,
+      "body_px": [
+        336,
+        221,
+        1955,
+        2757
+      ],
+      "caption_px": [
+        488,
+        2864,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-76.png",
+          "width": 2003,
+          "height": 2808,
+          "bytes": 6623750,
+          "sha256": "ec629161105d86a729428656d4683711f78f72d08109b781213eec98f3557f3c"
+        },
+        "webp": {
+          "name": "fig-76.webp",
+          "width": 2003,
+          "height": 2808,
+          "bytes": 939214,
+          "sha256": "79077abd93fa24d3985422414470e363e6576a08a386f0601abaf9ecfccd956d",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-77",
+      "type": "figure",
+      "number": 77,
+      "page": 108,
+      "printed_page": "2-74",
+      "rotate": 0,
+      "body_px": [
+        297,
+        220,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        846,
+        2873,
+        633,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-77.png",
+          "width": 1782,
+          "height": 2774,
+          "bytes": 587130,
+          "sha256": "0cd08238edd17a6a4eac5dc3d300a99012fe6f91d3e6a91f6701029d197c6093"
+        },
+        "webp": {
+          "name": "fig-77.webp",
+          "width": 1782,
+          "height": 2774,
+          "bytes": 308308,
+          "sha256": "b1dd0974ea61a92a0e7bca9a528f5d40f077fdf16e9f168a6bd93e254ba96f0c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-78",
+      "type": "figure",
+      "number": 78,
+      "page": 109,
+      "printed_page": "2-75",
+      "rotate": 0,
+      "body_px": [
+        335,
+        221,
+        1955,
+        2745
+      ],
+      "caption_px": [
+        488,
+        2851,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-78.png",
+          "width": 2003,
+          "height": 2795,
+          "bytes": 6471019,
+          "sha256": "0ebc861153b9f55c1a1aa3dadf3c07035eebd39f3be6d31fe0655f3631badb4d"
+        },
+        "webp": {
+          "name": "fig-78.webp",
+          "width": 2003,
+          "height": 2795,
+          "bytes": 1182262,
+          "sha256": "2c5cc184cf1e586e5c57ffa8513889181726543512d9ab701d4ed24e190ab4f6",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-79",
+      "type": "figure",
+      "number": 79,
+      "page": 110,
+      "printed_page": "2-76",
+      "rotate": 0,
+      "body_px": [
+        298,
+        219,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        847,
+        2870,
+        633,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-79.png",
+          "width": 1782,
+          "height": 2772,
+          "bytes": 648197,
+          "sha256": "00003ededf628fc4b8313336df7363f3bedff44e7e691d8bc617734f9fbad6ff"
+        },
+        "webp": {
+          "name": "fig-79.webp",
+          "width": 1782,
+          "height": 2772,
+          "bytes": 341512,
+          "sha256": "c933005b74e34183b1e551f17ccfb9d3d95d9d1bbb16a3798e90052b376556b6",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-80",
+      "type": "figure",
+      "number": 80,
+      "page": 111,
+      "printed_page": "2-77",
+      "rotate": 0,
+      "body_px": [
+        333,
+        221,
+        1955,
+        2740
+      ],
+      "caption_px": [
+        488,
+        2847,
+        1648,
+        117
+      ],
+      "files": {
+        "png": {
+          "name": "fig-80.png",
+          "width": 2003,
+          "height": 2791,
+          "bytes": 7956809,
+          "sha256": "721ea46f7b8915742d9bfe28556b0bd9055b523ad08aff724899431c87aa4cb5"
+        },
+        "webp": {
+          "name": "fig-80.webp",
+          "width": 2003,
+          "height": 2791,
+          "bytes": 1607508,
+          "sha256": "5da3abf616fb6a76596b46cb990a21e1eadeff6d1542c40813b5c744989920e5",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "fig-81",
+      "type": "figure",
+      "number": 81,
+      "page": 112,
+      "printed_page": "2-78",
+      "rotate": 0,
+      "body_px": [
+        299,
+        224,
+        1734,
+        2634
+      ],
+      "caption_px": [
+        846,
+        2878,
+        633,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-81.png",
+          "width": 1782,
+          "height": 2775,
+          "bytes": 244892,
+          "sha256": "67dccba7df2fdd9d0c095e50b4b94448e2084cd344a227d8be0f6f862c8ae81a"
+        },
+        "webp": {
+          "name": "fig-81.webp",
+          "width": 1782,
+          "height": 2775,
+          "bytes": 125150,
+          "sha256": "244d9cfe0c3bced1b5ada5c370a7f581befd364158cd897465f020e0526e31bf",
+          "lossless": true
+        }
+      }
+    },
+    {
+      "key": "fig-82",
+      "type": "figure",
+      "number": 82,
+      "page": 113,
+      "printed_page": "2-79",
+      "rotate": 90,
+      "body_px": [
+        820,
+        216,
+        977,
+        2664
+      ],
+      "caption_px": [
+        1092,
+        2903,
+        442,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "fig-82.png",
+          "width": 2712,
+          "height": 1122,
+          "bytes": 580376,
+          "sha256": "ad068945c7e671cc9a42d5a126f025822967ca2a875677ba1ec96805791a007c"
+        },
+        "webp": {
+          "name": "fig-82.webp",
+          "width": 2712,
+          "height": 1122,
+          "bytes": 187600,
+          "sha256": "fdaa1d71e09f130be9b9812348b908e23ebeb488a4a5d7b1d92ef23acf2fb8c1",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-1",
+      "type": "legend",
+      "number": 1,
+      "page": 13,
+      "printed_page": "1-1",
+      "rotate": 90,
+      "body_px": [
+        362,
+        228,
+        1891,
+        2652
+      ],
+      "caption_px": [
+        893,
+        2913,
+        839,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-1.png",
+          "width": 2700,
+          "height": 2036,
+          "bytes": 942748,
+          "sha256": "5b9216ff8b10629001e899921a7e19fd0e41d5c5116d94d5a5ab3c61c722e24f"
+        },
+        "webp": {
+          "name": "legend-1.webp",
+          "width": 2700,
+          "height": 2036,
+          "bytes": 735814,
+          "sha256": "fb8e8dd6a77261c0d239290e72fc6f7499d88a6dd222de55ce4a96784879d8dc",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-2",
+      "type": "legend",
+      "number": 2,
+      "page": 14,
+      "printed_page": "1-2",
+      "rotate": 0,
+      "body_px": [
+        305,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        847,
+        2904,
+        630,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-2.png",
+          "width": 1760,
+          "height": 2806,
+          "bytes": 1818645,
+          "sha256": "71ed296458653c89edfdc602528e9e062d0c52fad95d705ac6a398856183d2a2"
+        },
+        "webp": {
+          "name": "legend-2.webp",
+          "width": 1760,
+          "height": 2806,
+          "bytes": 438306,
+          "sha256": "8db33b608500ae98ef961924f1b282eb8220ba0abb78b8026e7834a3cce80c78",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-3",
+      "type": "legend",
+      "number": 3,
+      "page": 15,
+      "printed_page": "1-3",
+      "rotate": 0,
+      "body_px": [
+        457,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        998,
+        2904,
+        631,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-3.png",
+          "width": 1760,
+          "height": 2806,
+          "bytes": 1202857,
+          "sha256": "6d48f6347cd0e26c53ace74fad1a097de2d8d2e04b175ee083b6ea64b70b2693"
+        },
+        "webp": {
+          "name": "legend-3.webp",
+          "width": 1760,
+          "height": 2806,
+          "bytes": 292442,
+          "sha256": "cfbbb2624dae0bc7b2800859db02f7292caa251e04d83885afea085ddf23a24c",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-4",
+      "type": "legend",
+      "number": 4,
+      "page": 16,
+      "printed_page": "1-4",
+      "rotate": 0,
+      "body_px": [
+        305,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        848,
+        2903,
+        630,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-4.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 2073311,
+          "sha256": "b1f7915c18642402ef4ac5d9164a5fda1e49b11c86db6d5959d3f715546b1cb7"
+        },
+        "webp": {
+          "name": "legend-4.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 553874,
+          "sha256": "93265accb7ce5d8ef5d0f20c028d8e9bb529ea78853525e2979bd5bfc3407d94",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-5",
+      "type": "legend",
+      "number": 5,
+      "page": 17,
+      "printed_page": "1-5",
+      "rotate": 0,
+      "body_px": [
+        457,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        998,
+        2903,
+        631,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-5.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1796195,
+          "sha256": "d0f269408d3f3a1b1ff1aa296e9960cd1163d75317feef694a5043f3b9730d83"
+        },
+        "webp": {
+          "name": "legend-5.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 464548,
+          "sha256": "79c2d71676ff05753037409971a3a66defdb535b48474f853836ef7bf70b329a",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-6",
+      "type": "legend",
+      "number": 6,
+      "page": 18,
+      "printed_page": "1-6",
+      "rotate": 0,
+      "body_px": [
+        305,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        848,
+        2903,
+        630,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-6.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1527163,
+          "sha256": "4bbb024a2eb6b98fd71e63072942a83d75d11c40b8a2a6df9a02a1198e7cb7d3"
+        },
+        "webp": {
+          "name": "legend-6.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 383402,
+          "sha256": "88fb373d3426ec5d9063e82b961b4cc4f226b28bd2278b62456b9ced8914688e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-7",
+      "type": "legend",
+      "number": 7,
+      "page": 19,
+      "printed_page": "1-7",
+      "rotate": 0,
+      "body_px": [
+        457,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        998,
+        2903,
+        631,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-7.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1754520,
+          "sha256": "8a93e71a04a05540bfc71b5cbfac46a16d21e41005ac5e67e30b0898a95087f8"
+        },
+        "webp": {
+          "name": "legend-7.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 455262,
+          "sha256": "0b8215b2abe09ea3a703f309dcfbfd0241cf991c0ea7195673d6760ec6218e68",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-8",
+      "type": "legend",
+      "number": 8,
+      "page": 20,
+      "printed_page": "1-8",
+      "rotate": 0,
+      "body_px": [
+        305,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        848,
+        2903,
+        630,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-8.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1817808,
+          "sha256": "013f7889b89b53911a073ca30f16e77b56e20805e951dfce985a9930d05cfd2d"
+        },
+        "webp": {
+          "name": "legend-8.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 466708,
+          "sha256": "2d5109778a06083ef325e3a57e0467df524b6de6026eed8c712a148fd6d93cd1",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-9",
+      "type": "legend",
+      "number": 9,
+      "page": 21,
+      "printed_page": "1-9",
+      "rotate": 0,
+      "body_px": [
+        457,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        998,
+        2903,
+        631,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-9.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1883355,
+          "sha256": "fb2c731bffa2c0b9dc4be779a6a5cb000e9903a528064d90575ec3ffc7f2bc47"
+        },
+        "webp": {
+          "name": "legend-9.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 485088,
+          "sha256": "ed8cd815dc3545ca46440c8205fa18b7d95db11bd477f12d3d8c571bbe581170",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-10",
+      "type": "legend",
+      "number": 10,
+      "page": 22,
+      "printed_page": "1-10",
+      "rotate": 0,
+      "body_px": [
+        307,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        836,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-10.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1443865,
+          "sha256": "a4f432604f841d6800f2e57a8c743bed194bb95ba0319a5d67cb26e79731a7bb"
+        },
+        "webp": {
+          "name": "legend-10.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 376802,
+          "sha256": "f0c2ca4be6127794cc3c9441856b987900334f14a573fa773474932edfda6015",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-11",
+      "type": "legend",
+      "number": 11,
+      "page": 23,
+      "printed_page": "1-11",
+      "rotate": 0,
+      "body_px": [
+        459,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        984,
+        2903,
+        654,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-11.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1155724,
+          "sha256": "860abc01490e00b8c11569bee624c1767247d6a6aafdace6ccd39bc057019af0"
+        },
+        "webp": {
+          "name": "legend-11.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 294902,
+          "sha256": "01c90c18bcc47c39a58df1a58293091d4aac5017931961fb481badbdd19d3839",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-12",
+      "type": "legend",
+      "number": 12,
+      "page": 24,
+      "printed_page": "1-12",
+      "rotate": 0,
+      "body_px": [
+        309,
+        219,
+        1713,
+        2654
+      ],
+      "caption_px": [
+        837,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-12.png",
+          "width": 1761,
+          "height": 2805,
+          "bytes": 1685623,
+          "sha256": "c8743c9ac303380c5432621e588093dae7c019fea033a95623897cfcc20d024b"
+        },
+        "webp": {
+          "name": "legend-12.webp",
+          "width": 1761,
+          "height": 2805,
+          "bytes": 435490,
+          "sha256": "8bc0ef90921775117ecaec4d96a4d7270c0c329f5ef8f2f1392ca374f960e41d",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-13",
+      "type": "legend",
+      "number": 13,
+      "page": 25,
+      "printed_page": "1-13",
+      "rotate": 0,
+      "body_px": [
+        457,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        986,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-13.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 2137983,
+          "sha256": "51fe0bef69f73419bde5a83fc31571a16751870cd67da8b83d1a5778910ce229"
+        },
+        "webp": {
+          "name": "legend-13.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 576640,
+          "sha256": "e77d5225a3dc898b796e171d331996ef0aa2b67fdd637d283eb18bf6e60ae43f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-14",
+      "type": "legend",
+      "number": 14,
+      "page": 26,
+      "printed_page": "1-14",
+      "rotate": 0,
+      "body_px": [
+        300,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        834,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-14.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 2022493,
+          "sha256": "b2dcddf8fbadbb43c9bb25ac1fb4d4b0cf9dae6f852b53c6496abdf9ddcbde5d"
+        },
+        "webp": {
+          "name": "legend-14.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 538522,
+          "sha256": "10c43b65eb8f8dad023632a250c6e1285a9513a79e3591a70dbff597324c6179",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-15",
+      "type": "legend",
+      "number": 15,
+      "page": 27,
+      "printed_page": "1-15",
+      "rotate": 0,
+      "body_px": [
+        460,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        983,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-15.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 1746853,
+          "sha256": "1cadfbec9060398177a090696b8a1c4ef90aae29612d747c2badf92ca8806aad"
+        },
+        "webp": {
+          "name": "legend-15.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 453762,
+          "sha256": "c99766f512af5b06d9b03353c8da84fc4fe23f14d62a5ddfa42bff0d1a4e2e3f",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-16",
+      "type": "legend",
+      "number": 16,
+      "page": 28,
+      "printed_page": "1-16",
+      "rotate": 0,
+      "body_px": [
+        304,
+        219,
+        1713,
+        2654
+      ],
+      "caption_px": [
+        833,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-16.png",
+          "width": 1761,
+          "height": 2805,
+          "bytes": 1155258,
+          "sha256": "d88e46499fe42988e882ceeaf19a44a7c2e70b7b5c28179c6cba9b2a1060ef29"
+        },
+        "webp": {
+          "name": "legend-16.webp",
+          "width": 1761,
+          "height": 2805,
+          "bytes": 330978,
+          "sha256": "e44e3af82ebe1e4081cc1dba67db8a4976f15b112ce95e1d0462a7d555b713cc",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-17",
+      "type": "legend",
+      "number": 17,
+      "page": 29,
+      "printed_page": "1-17",
+      "rotate": 0,
+      "body_px": [
+        460,
+        219,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        983,
+        2903,
+        656,
+        73
+      ],
+      "files": {
+        "png": {
+          "name": "legend-17.png",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 820775,
+          "sha256": "ed59e799e981d354fba01c8fd1b3f183e417e8f68d59b17baff1585a11eb8115"
+        },
+        "webp": {
+          "name": "legend-17.webp",
+          "width": 1760,
+          "height": 2805,
+          "bytes": 212874,
+          "sha256": "8217f8b145f62c42ee72fef1359fe3bb21ec4933bdeb6a85644193f5297e427e",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-18",
+      "type": "legend",
+      "number": 18,
+      "page": 30,
+      "printed_page": "1-18",
+      "rotate": 0,
+      "body_px": [
+        300,
+        216,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        834,
+        2905,
+        656,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "legend-18.png",
+          "width": 1760,
+          "height": 2809,
+          "bytes": 1543171,
+          "sha256": "1ca57cb854f5a46a8ad61c7121dc593ae3086de3461806f5c021829d4a860f2b"
+        },
+        "webp": {
+          "name": "legend-18.webp",
+          "width": 1760,
+          "height": 2809,
+          "bytes": 364352,
+          "sha256": "a9bb8f95ad2e838e98fc57b46e0d1925182b5ee5503f96d53da7d4e5376236a0",
+          "lossless": false
+        }
+      }
+    },
+    {
+      "key": "legend-19",
+      "type": "legend",
+      "number": 19,
+      "page": 31,
+      "printed_page": "1-19",
+      "rotate": 0,
+      "body_px": [
+        456,
+        216,
+        1712,
+        2654
+      ],
+      "caption_px": [
+        983,
+        2905,
+        656,
+        72
+      ],
+      "files": {
+        "png": {
+          "name": "legend-19.png",
+          "width": 1760,
+          "height": 2809,
+          "bytes": 1363546,
+          "sha256": "2dd19d1cc30b2bed9930a268567af6b07bae9eb3214e744f3a58f7182d7e6eff"
+        },
+        "webp": {
+          "name": "legend-19.webp",
+          "width": 1760,
+          "height": 2809,
+          "bytes": 318732,
+          "sha256": "fd245e79fb7f8ace0ded6d1d364d2f92d87d63849bc61b9c5c841b542a16a15f",
+          "lossless": false
+        }
+      }
+    }
+  ]
 }

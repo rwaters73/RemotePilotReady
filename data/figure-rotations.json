@@ -1,5 +1,71 @@
 {
   "source_doc": "akts-2h",
   "source_sha256": "738a0cd5c429e20888e94fd490d90ba09223ac4d350d06fe228788d4b502f4fd",
-  "rotations": []
+  "rotations": [
+    {
+      "key": "legend-1",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-3",
+      "rotate": 90,
+      "evidence": "visual"
+    },
+    {
+      "key": "fig-11",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-18",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-27",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-35",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-37",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-38",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-39",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-40",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-57",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-72",
+      "rotate": 90,
+      "evidence": "words"
+    },
+    {
+      "key": "fig-82",
+      "rotate": 90,
+      "evidence": "visual"
+    }
+  ]
 }
